@@ -22,7 +22,8 @@ class LogEngineServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setupConfig();
-        $this->setupQueueMonitoring($this->app->events, $this->app->config->get('logengine'));
+        $this->setupQueryMonitoring($this->app->events, $this->app->config->get('logengine'));
+        $this->setupQueueMonitoring($this->app->queue);
     }
 
     /**
