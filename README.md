@@ -36,7 +36,7 @@ use LogEngine\Laravel\Logger\CreateLogEngineLogger;
 ],
 ```
 
-If you want more control of the LOG Engine configuration publish and edit its configuration file:
+If you want more control of the LOG Engine setup publish and edit its configuration file:
 
 `php artisan vendor:publish`
 
