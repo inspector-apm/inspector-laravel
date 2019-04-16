@@ -1,6 +1,6 @@
 {
     "name": "log-engine/logengine-laravel",
-    "description": "LOG engine library for Laravel applications.",
+    "description": "LOG Engine package for Laravel applications.",
     "keywords": ["log", "php", "logengine", "laravel"],
     "license": "MIT",
     "authors": [
