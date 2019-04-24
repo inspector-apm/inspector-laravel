@@ -1,75 +1,12 @@
-# LOG Engine Laravel integration
+# LOG Engine for Laravel
 
-Package to real-time monitor healthy of your laravel application.
+LOG Engine is a PHP application monitoring system.
 
-- **Author:** Valerio Barbera - [support@logengine.dev](mailto:support@logengine.dev)
-- **Author Website:** [www.logengine.dev](https://www.logengine.dev)
+It allows engineers to collect, tail and search your application events in real time with one simple and easy to use web interface, even if your application or server is down.
 
+![](<https://www.logengine.dev/images/frontend/screenshot.png>)
 
-# Installation
-Install the latest version with `composer require log-engine/logengine-laravel`
-
-# Configuration
-
-Add a new logging channel in your `config/logging.php` file, and attach it to the stack:
-
-```php
-<?php
-use LogEngine\Laravel\Logger\CreateLogEngineLogger;
-
-'channels' => [
-    'stack' => [
-        'driver' => 'stack',
-        // Add logengine to the array:
-        'channels' => ['single', 'logengine'],
-    ],
-    
-    // ... others channels
-
-    'logengine' => [
-        'driver' => 'custom',
-        'via' => CreateLogEngineLogger::class,
-    ],
-],
-```
-
-If you want more control of the LOG Engine setup publish and edit its configuration file:
-
-`php artisan vendor:publish`
-
-# Environment variables
-
-Below there're all environment variables that you can use to keep under control the LOG Engine behaviour:
-
-```
-LOGENGINE_URL=
-LOGENGINE_API_KEY=
-LOGENGINE_SEVERITY_LEVEL=
-LOGENGINE_HOSTNAME=
-LOGENGINE_LOG_QUERY=
-LOGENGINE_QUERY_BINDINGS=
-LOGENGINE_USER=
-```
-
-By default LOGENGINE_LOG_LEVEL is considered as "debug", so the logger will report all query and job processing events.
-
-# Log an exception
-
-LOG Engine give you the ability to send exceptions intentionally to the platform for better investigation and reporting.
-
-You can use specialized `logException` method inside the `LogEngine` facade:
-
-```php
-use LogEngine\Laravel\Facades\LogEngine;
-
-try {
-    // Your dangerous code here
-    throw new UnauthorizedException("You don't have permission to access.");
-    
-} catch (UnauthorizedException $exception) {
-    LogEngine::logException($exception);
-}
-```
+**[See official documentation](https://www.logngine.dev/docs)**
 
 ## LICENSE
 
