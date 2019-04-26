@@ -6,7 +6,7 @@ It allows engineers to collect, tail and search your application events in real 
 
 ![](<https://www.logengine.dev/images/frontend/screenshot.png>)
 
-**[See official documentation](https://www.logngine.dev/docs)**
+**[See official documentation](https://www.logengine.dev/docs/1.0/platforms/laravel)**
 
 ## LICENSE
 
