@@ -1,7 +1,7 @@
 {
     "name": "log-engine/logengine-laravel",
     "description": "LOG Engine package for Laravel applications.",
-    "keywords": ["log", "php", "logengine", "laravel"],
+    "keywords": ["monitoring", "php", "logengine", "laravel"],
     "license": "MIT",
     "authors": [
         {
@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "illuminate/contracts": "^5.0",
-        "illuminate/support": "^5.0",
+        "illuminate/contracts": "^5.1",
+        "illuminate/support": "^5.1",
         "log-engine/logengine-php": "^1.1",
         "monolog/monolog": "^1.12"
     },
@@ -27,7 +27,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require-dev": {
-        "orchestra/testbench": "3.1.*"
+        "orchestra/testbench": "^3.1"
     },
     "autoload-dev": {
         "psr-4": {
