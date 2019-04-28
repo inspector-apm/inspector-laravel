@@ -118,7 +118,7 @@ class LogEngineServiceProvider extends ServiceProvider
     {
         // Bind log engine service
         $this->app->singleton('logengine', function (Container $app) {
-            $logengine = new LogEngine(config('logengine.url'), config('logengine.key'));
+            $logengine = new LogEngine(config('logengine.key'));
             return $logengine->setSeverityLevel(config('logengine.severity_level'));
         });
     }

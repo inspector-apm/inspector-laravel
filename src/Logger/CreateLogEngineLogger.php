@@ -4,7 +4,6 @@ namespace LogEngine\Laravel\Logger;
 
 
 use Illuminate\Contracts\Container\Container;
-use LogEngine\LogEngine;
 use Monolog\Handler\PsrHandler;
 use Monolog\Logger;
 
