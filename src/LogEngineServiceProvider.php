@@ -139,7 +139,7 @@ class LogEngineServiceProvider extends ServiceProvider
         foreach ($bindings as $index => $binding) {
             $data["binding {$index}"] = $binding;
         }
-        $data['time'] = "{$time}ms";
+        $data['time'] = $time; // milliseconds
         $data['connection'] = $connection;
         return $data;
     }
