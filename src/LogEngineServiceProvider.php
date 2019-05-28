@@ -4,13 +4,16 @@ namespace LogEngine\Laravel;
 
 
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Support\ServiceProvider;
-use LogEngine\LogEngine;
+use LogEngine\ApmAgent;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Queue\QueueManager;
+use LogEngine\Configuration;
+use LogEngine\Laravel\Middleware\InstrumentingWebRequest;
 
 class LogEngineServiceProvider extends ServiceProvider
 {
@@ -22,8 +25,9 @@ class LogEngineServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setupConfig();
+        $this->app->middleware(InstrumentingWebRequest::class);
         $this->setupQueryMonitoring($this->app->events, $this->app->config->get('logengine'));
-        $this->setupQueueMonitoring($this->app->queue);
+        //$this->setupQueueMonitoring($this->app->queue);
     }
 
     /**
@@ -31,7 +35,7 @@ class LogEngineServiceProvider extends ServiceProvider
      */
     public function setupConfig()
     {
-        $source = realpath($raw = __DIR__.'/../config/logengine.php') ?: $raw;
+        $source = realpath($raw = __DIR__ . '/../config/logengine.php') ?: $raw;
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
             $this->publishes([$source => config_path('logengine.php')]);
         } elseif ($this->app instanceof LumenApplication) {
@@ -57,25 +61,31 @@ class LogEngineServiceProvider extends ServiceProvider
 
         if (class_exists(QueryExecuted::class)) {
             $events->listen(QueryExecuted::class, function (QueryExecuted $query) use ($showBindings) {
+                $span = $this->app->logengine->startSpan('query');
 
-                $this->app->logengine->debug(
-                    'Query executed',
-                    [
-                        'query' => $this->formatQuery($query->sql, $showBindings ? $query->bindings : [], $query->time, $query->connectionName)
-                    ]
-                );
+                $span->getContext()->getDb()
+                    ->setType($query->connectionName)
+                    ->setSql($query->sql);
 
+                if($showBindings){
+                    $span->getContext()->getDb()->setBindings($query->bindings);
+                }
+
+                $span->end($query->time);
             });
         } else {
             $events->listen('illuminate.query', function ($sql, array $bindings, $time, $connection) use ($showBindings) {
+                $span = $this->app->logengine->startSpan('query');
 
-                $this->app->logengine->debug(
-                    'Query executed',
-                    [
-                        'query' => $this->formatQuery($sql, $showBindings ? $bindings : [], $time, $connection)
-                    ]
-                );
+                $span->getContext()->getDb()
+                    ->setType($connection)
+                    ->setSql($sql);
 
+                if($showBindings){
+                    $span->getContext()->getDb()->setBindings($bindings);
+                }
+
+                $span->end($time);
             });
         }
     }
@@ -85,29 +95,18 @@ class LogEngineServiceProvider extends ServiceProvider
      *
      * @param QueueManager $queue
      */
-    public function setupQueueMonitoring(QueueManager $queue)
+    /*public function setupQueueMonitoring(QueueManager $queue)
     {
-        $queue->looping(function () {
-            $this->app->logengine->flush();
-        });
-
         if (!class_exists(JobProcessing::class)) {
             return;
         }
 
         $queue->before(function (JobProcessing $event) {
-            $job = [
-                'name' => $event->job->getName(),
-                'queue' => $event->job->getQueue(),
-                'attempts' => $event->job->attempts(),
-                'connection' => $event->connectionName,
-            ];
-            if (method_exists($event->job, 'resolveName')) {
-                $job['resolved'] = $event->job->resolveName();
-            }
-            $this->app->logengine->debug('Job Processing', compact('job'));
         });
-    }
+
+        $queue->after(function (JobProcessed $event) {
+        });
+    }*/
 
     /**
      * Register the service provider.
@@ -118,29 +117,15 @@ class LogEngineServiceProvider extends ServiceProvider
     {
         // Bind log engine service
         $this->app->singleton('logengine', function (Container $app) {
-            $logengine = new LogEngine(config('logengine.key'));
-            return $logengine->setSeverityLevel(config('logengine.severity_level'));
-        });
-    }
+            $apm = new ApmAgent(
+                new Configuration(config('logengine.key'))
+            );
 
-    /**
-     * Format the query as breadcrumb metadata.
-     *
-     * @param string $sql
-     * @param array  $bindings
-     * @param float  $time
-     * @param string $connection
-     *
-     * @return array
-     */
-    protected function formatQuery($sql, array $bindings, $time, $connection)
-    {
-        $data = ['sql' => $sql];
-        foreach ($bindings as $index => $binding) {
-            $data["binding {$index}"] = $binding;
-        }
-        $data['time'] = $time; // milliseconds
-        $data['connection'] = $connection;
-        return $data;
+            if ($app->runningInConsole()) {
+                $apm->startTransaction(implode(' ', $_SERVER['argv']));
+            }
+
+            return $apm;
+        });
     }
 }

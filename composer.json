@@ -9,12 +9,17 @@
             "email": "support@logengine.dev"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/log-engine/logengine-php"
+        }
+    ],
     "require": {
         "php": ">=7.0.0",
         "illuminate/contracts": "^5.1",
         "illuminate/support": "^5.1",
-        "log-engine/logengine-php": "^1.2",
-        "monolog/monolog": "^1.12"
+        "log-engine/logengine-php": "dev-apm"
     },
     "autoload": {
         "psr-4": {

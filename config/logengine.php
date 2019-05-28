@@ -11,10 +11,10 @@ return [
     | You can find your API key on your LOG Engine project settings page.
     |
     | This api key points the LOG Engine notifier to the project in your account
-    | which should receive your application's logs & exceptions.
+    | which should receive your application's events & exceptions.
     |
     */
-    'key' => env('LOGENGINE_API_KEY', ''),
+    'key' => env('LOGENGINE_API_KEY'),
 
     /*
     |--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ return [
     | identify it by if needed.
     |
     */
-    'hostname' => env('LOGENGINE_HOSTNAME'),
+    'url' => env('LOGENGINE_URL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -72,17 +72,4 @@ return [
     |
     */
     'user' => env('LOGENGINE_USER', true),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Logger Notify Level
-    |--------------------------------------------------------------------------
-    |
-    | This sets the level at which a logged message will trigger a notification
-    | to LOG Engine.  By default this level will be 'notice'.
-    |
-    | Must be one of the Psr\Log\LogLevel levels from the Psr specification.
-    |
-    */
-    'severity_level' => env('LOGENGINE_SEVERITY_LEVEL', LogLevel::DEBUG),
 ];

@@ -3,7 +3,7 @@
 namespace LogEngine\Laravel\Tests;
 
 
-use LogEngine\Laravel\Facades\LogEngine;
+use LogEngine\Laravel\Facades\ApmAgent;
 use LogEngine\Laravel\LogEngineServiceProvider;
 use Orchestra\Testbench\TestCase;
 
@@ -31,7 +31,7 @@ class BasicTestCase extends TestCase
     protected function getPackageAliases($app)
     {
         return [
-            'logengine' => LogEngine::class,
+            'logengine' => ApmAgent::class,
         ];
     }
 
