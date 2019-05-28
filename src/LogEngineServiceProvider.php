@@ -25,7 +25,7 @@ class LogEngineServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setupConfig();
-        $this->app->middleware(InstrumentingWebRequest::class);
+        $this->registerMiddleware();
         $this->setupQueryMonitoring($this->app->events, $this->app->config->get('logengine'));
         //$this->setupQueueMonitoring($this->app->queue);
     }
@@ -43,6 +43,14 @@ class LogEngineServiceProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom($source, 'logengine');
+    }
+
+    /**
+     * Register middleware to intercept and instrumenting web requests.
+     */
+    protected function registerMiddleware()
+    {
+        $this->app->router->middleware(InstrumentingWebRequest::class);
     }
 
     /**
