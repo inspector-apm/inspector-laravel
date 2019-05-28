@@ -46,11 +46,12 @@ class LogEngineServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register middleware to intercept and instrumenting web requests.
+     * Register global middleware to intercept and instrumenting web requests.
      */
     protected function registerMiddleware()
     {
-        $this->app->router->middleware(InstrumentingWebRequest::class);
+        $kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
+        $kernel->pushMiddleware(InstrumentingWebRequest::class);
     }
 
     /**
