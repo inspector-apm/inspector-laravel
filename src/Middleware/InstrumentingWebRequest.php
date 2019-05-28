@@ -29,6 +29,8 @@ class InstrumentingWebRequest
                 Auth::user()->getAuthIdentifierName()
             );
         }
+
+        return $next($request);
     }
 
     /**
