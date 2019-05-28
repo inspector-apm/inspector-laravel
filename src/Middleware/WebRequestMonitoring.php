@@ -20,7 +20,7 @@ class WebRequestMonitoring
      */
     public function handle($request, Closure $next)
     {
-        $name = $request->route()->getActionMethod() . ' ' . $request->route()->uri();
+        $name = $request->method() . ' ' . $request->route()->uri();
 
         $transaction = ApmAgent::startTransaction($name);
 

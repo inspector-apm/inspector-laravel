@@ -4,15 +4,12 @@ namespace LogEngine\Laravel;
 
 
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Support\ServiceProvider;
-use LogEngine\ApmAgent;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
 use Illuminate\Database\Events\QueryExecuted;
-use Illuminate\Queue\Events\JobProcessing;
-use Illuminate\Queue\QueueManager;
 use LogEngine\Configuration;
+use LogEngine\Laravel\Facades\ApmAgent;
 
 class LogEngineServiceProvider extends ServiceProvider
 {
@@ -24,8 +21,7 @@ class LogEngineServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setupConfig();
-        $this->setupQueryMonitoring($this->app->events, $this->app->config->get('logengine'));
-        //$this->setupQueueMonitoring($this->app->queue);
+        $this->setupQueryMonitoring($this->app->events, config('logengine'));
     }
 
     /**
@@ -59,7 +55,7 @@ class LogEngineServiceProvider extends ServiceProvider
 
         if (class_exists(QueryExecuted::class)) {
             $events->listen(QueryExecuted::class, function (QueryExecuted $query) use ($showBindings) {
-                $span = $this->app->logengine->startSpan('query');
+                $span = ApmAgent::startSpan('query');
 
                 $span->getContext()->getDb()
                     ->setType($query->connectionName)
@@ -73,7 +69,7 @@ class LogEngineServiceProvider extends ServiceProvider
             });
         } else {
             $events->listen('illuminate.query', function ($sql, array $bindings, $time, $connection) use ($showBindings) {
-                $span = $this->app->logengine->startSpan('query');
+                $span = ApmAgent::startSpan('query');
 
                 $span->getContext()->getDb()
                     ->setType($connection)
@@ -87,24 +83,6 @@ class LogEngineServiceProvider extends ServiceProvider
             });
         }
     }
-
-    /**
-     * Register event for queue monitoring.
-     *
-     * @param QueueManager $queue
-     */
-    /*public function setupQueueMonitoring(QueueManager $queue)
-    {
-        if (!class_exists(JobProcessing::class)) {
-            return;
-        }
-
-        $queue->before(function (JobProcessing $event) {
-        });
-
-        $queue->after(function (JobProcessed $event) {
-        });
-    }*/
 
     /**
      * Register the service provider.
