@@ -13,7 +13,6 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Queue\QueueManager;
 use LogEngine\Configuration;
-use LogEngine\Laravel\Middleware\InstrumentingWebRequest;
 
 class LogEngineServiceProvider extends ServiceProvider
 {
@@ -25,7 +24,6 @@ class LogEngineServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setupConfig();
-        $this->registerMiddleware();
         $this->setupQueryMonitoring($this->app->events, $this->app->config->get('logengine'));
         //$this->setupQueueMonitoring($this->app->queue);
     }
@@ -43,15 +41,6 @@ class LogEngineServiceProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom($source, 'logengine');
-    }
-
-    /**
-     * Register global middleware to intercept and instrumenting web requests.
-     */
-    protected function registerMiddleware()
-    {
-        $kernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
-        $kernel->pushMiddleware(InstrumentingWebRequest::class);
     }
 
     /**
