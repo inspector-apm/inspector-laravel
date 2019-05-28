@@ -5,6 +5,7 @@ namespace LogEngine\Laravel\Middleware;
 
 
 use Closure;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +22,7 @@ class InstrumentingWebRequest
     {
         $name = Route::current()->getActionMethod() . ' ' . Route::current()->uri();
 
-        $transaction = app('logengine')->startTransaction($name);
+        $transaction = App::make('logengine')->startTransaction($name);
 
         if(Auth::check()){
             $transaction->withUser(
@@ -41,8 +42,8 @@ class InstrumentingWebRequest
      */
     public function terminate($request, $response)
     {
-        app('logengine')->currentTransaction()->setResult($response->status());
-        app('logengine')->currentTransaction()->getContext()->getResponse()->setHeaders($response->headers);
-        app('logengine')->currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
+        App::make('logengine')->currentTransaction()->setResult($response->status());
+        App::make('logengine')->currentTransaction()->getContext()->getResponse()->setHeaders($response->headers);
+        App::make('logengine')->currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
     }
 }
