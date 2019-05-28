@@ -97,7 +97,7 @@ class LogEngineServiceProvider extends ServiceProvider
             $configuration->setUrl(config('logengine.url'));
             $configuration->setOptions(config('logengine.options'));
 
-            $apm = new ApmAgent($configuration);
+            $apm = new \LogEngine\ApmAgent($configuration);
 
             if ($app->runningInConsole()) {
                 $apm->startTransaction(implode(' ', $_SERVER['argv']));
