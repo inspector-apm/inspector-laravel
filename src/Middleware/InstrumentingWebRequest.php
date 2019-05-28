@@ -42,7 +42,7 @@ class InstrumentingWebRequest
     public function terminate($request, $response)
     {
         app('logengine')->currentTransaction()->setResult($response->status());
-        app('logengine')->getContext()->getResponse()->setHeaders($response->headers);
-        app('logengine')->getContext()->getResponse()->setStatusCode($response->status());
+        app('logengine')->currentTransaction()->getContext()->getResponse()->setHeaders($response->headers);
+        app('logengine')->currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
     }
 }
