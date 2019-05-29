@@ -32,11 +32,10 @@ return [
     | Hostname
     |--------------------------------------------------------------------------
     |
-    | You can set the hostname of your server to something specific for you to
-    | identify it by if needed.
+    | You can set the url of the remote endpoint to send data to.
     |
     */
-    'url' => env('LOGENGINE_URL'),
+    'url' => env('LOGENGINE_URL', 'https://app.logengine.dev/api'),
 
     /*
     |--------------------------------------------------------------------------
