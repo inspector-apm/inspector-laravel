@@ -94,8 +94,9 @@ class LogEngineServiceProvider extends ServiceProvider
         // Bind log engine service
         $this->app->singleton('logengine', function (Container $app) {
             $configuration = new Configuration(config('logengine.key'));
-            $configuration->setUrl(config('logengine.url'));
-            $configuration->setOptions(config('logengine.options'));
+            $configuration->setUrl(config('logengine.url'))
+                ->setOptions(config('logengine.options'))
+                ->setEnabled(config('logengine.enable'));
 
             $apm = new \LogEngine\ApmAgent($configuration);
 

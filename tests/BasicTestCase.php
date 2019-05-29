@@ -37,20 +37,4 @@ class BasicTestCase extends TestCase
             'logengine' => ApmAgent::class,
         ];
     }
-
-    public function testBinding()
-    {
-        $this->assertInstanceOf(\LogEngine\ApmAgent::class, $this->app['logengine']);
-    }
-
-    public function testMiddleware()
-    {
-        $req = new Request();
-
-        $middleware = new WebRequestMonitoring();
-
-        $middleware->handle($req, function ($request){
-            $this->assertInstanceOf(ApmAgent::currentTransaction(), Transaction::class);
-        });
-    }
 }

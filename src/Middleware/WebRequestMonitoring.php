@@ -42,7 +42,7 @@ class WebRequestMonitoring
      */
     public function terminate($request, $response)
     {
-        ApmAgent::currentTransaction()->setResult($response->status());
+        ApmAgent::currentTransaction()->setResult('HTTP ' . substr($response->status(), 0, 1) . 'XX');
         ApmAgent::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
         ApmAgent::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
     }

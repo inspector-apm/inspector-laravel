@@ -12,6 +12,19 @@ return [
     | which should receive your application's events & exceptions.
     |
     */
+    'enable' => env('LOGENGINE_ENABLE', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | API Key
+    |--------------------------------------------------------------------------
+    |
+    | You can find your API key on your LOG Engine project settings page.
+    |
+    | This api key points the LOG Engine notifier to the project in your account
+    | which should receive your application's events & exceptions.
+    |
+    */
     'key' => env('LOGENGINE_API_KEY'),
 
     /*

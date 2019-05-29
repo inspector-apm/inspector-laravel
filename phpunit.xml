@@ -28,5 +28,7 @@
         <env name="APP_ENV" value="testing"/>
         <env name="APP_NAME" value="Package Testing"/>
         <env name="LOGENGINE_API_KEY" value="logengine-api-key"/>
+        <env name="LOGENGINE_URL" value="http://logengine.locl/api"/>
+        <env name="LOGENGINE_ENABLE" value="false"/>
     </php>
 </phpunit>
