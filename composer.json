@@ -9,17 +9,11 @@
             "email": "support@logengine.dev"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/log-engine/logengine-php"
-        }
-    ],
     "require": {
         "php": ">=7.0.0",
         "illuminate/contracts": "^5.1",
         "illuminate/support": "^5.1",
-        "log-engine/logengine-php": "dev-apm"
+        "log-engine/logengine-php": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -45,7 +39,10 @@
         "laravel": {
             "providers": [
                 "LogEngine\\Laravel\\LogEngineServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "ApmAgent": "LogEngine\\Laravel\\Facades\\ApmAgent"
+            }
         }
     }
 }
