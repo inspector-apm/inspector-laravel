@@ -15,10 +15,11 @@ class MiddlewareTest extends BasicTestCase
     {
         $request = new Request();
         $request->setRouteResolver(function () use ($request) {
-            return (new Route('GET', 'testing', []))->bind($request);
+            return (new Route('GET', 'testing/{name}', []))->bind($request);
         });
 
         $this->assertInstanceOf(Route::class, $request->route());
+        $this->assertSame('testing/{name}', $request->route()->uri());
 
         $middleware = new WebRequestMonitoring();
 
