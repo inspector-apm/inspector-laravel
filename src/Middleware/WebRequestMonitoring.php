@@ -5,6 +5,7 @@ namespace LogEngine\Laravel\Middleware;
 
 
 use Closure;
+use Illuminate\Http\Request;
 use LogEngine\Laravel\Facades\ApmAgent;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,9 +21,9 @@ class WebRequestMonitoring
      */
     public function handle($request, Closure $next)
     {
-        $name = $request->method() . ' ' . $request->route()->uri();
-
-        $transaction = ApmAgent::startTransaction($name);
+        $transaction = ApmAgent::startTransaction(
+            $this->buildTransactionName($request)
+        );
 
         if (Auth::check()) {
             $transaction->withUser(
@@ -37,7 +38,7 @@ class WebRequestMonitoring
     /**
      * Called before release the response.
      *
-     * @param $request
+     * @param \Illuminate\Http\Request $request
      * @param $response
      */
     public function terminate($request, $response)
@@ -45,5 +46,27 @@ class WebRequestMonitoring
         ApmAgent::currentTransaction()->setResult('HTTP ' . substr($response->status(), 0, 1) . 'XX');
         ApmAgent::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
         ApmAgent::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
+    }
+
+    /**
+     * Generate readable name.
+     *
+     * @param Request $request
+     * @return string
+     */
+    protected function buildTransactionName(Request $request)
+    {
+        return $request->method() . ' ' . $this->normalizeUri($request->route()->uri());
+    }
+
+    /**
+     * Normalize URI string.
+     *
+     * @param $uri
+     * @return string
+     */
+    protected function normalizeUri($uri)
+    {
+        return '/' . trim($uri, '/');
     }
 }
