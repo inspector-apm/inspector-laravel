@@ -22,6 +22,7 @@ class LogEngineServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setupConfigFile();
+        $this->interceptLogs();
         $this->setupQueryMonitoring(config('logengine'));
     }
 
@@ -45,11 +46,11 @@ class LogEngineServiceProvider extends ServiceProvider
         if (class_exists(MessageLogged::class)) {
             // starting from L5.4 MessageLogged event class was introduced
             // https://github.com/laravel/framework/commit/57c82d095c356a0fe0f9381536afec768cdcc072
-            $this->app['events']->listen(MessageLogged::class, function($log) {
+            $this->app['events']->listen(MessageLogged::class, function ($log) {
                 $this->handleExceptionLog($log->message, $log->context);
             });
         } else {
-            $this->app['events']->listen('illuminate.log', function($level, $message, $context) {
+            $this->app['events']->listen('illuminate.log', function ($level, $message, $context) {
                 $this->handleExceptionLog($message, $context);
             });
         }
@@ -57,14 +58,18 @@ class LogEngineServiceProvider extends ServiceProvider
 
     protected function handleExceptionLog($message, $context)
     {
-        if(
+        if (!ApmAgent::hasTransaction()) {
+            ApmAgent::startTransaction('Error');
+        }
+
+        if (
             isset($context['exception']) &&
             ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
-        ){
+        ) {
             ApmAgent::reportException($context['exception']);
         }
 
-        if($message instanceof \Exception || $message instanceof \Throwable){
+        if ($message instanceof \Exception || $message instanceof \Throwable) {
             ApmAgent::reportException($message);
         }
     }
@@ -80,37 +85,42 @@ class LogEngineServiceProvider extends ServiceProvider
             return;
         }
 
-        $showBindings = isset($config['bindings']) && $config['bindings'];
-
         if (class_exists(QueryExecuted::class)) {
-            $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) use ($showBindings) {
-                $span = ApmAgent::startSpan('query');
-
-                $span->getContext()->getDb()
-                    ->setType($query->connectionName)
-                    ->setSql($query->sql);
-
-                if($showBindings){
-                    $span->getContext()->getDb()->setBindings($query->bindings);
-                }
-
-                $span->end($query->time);
+            $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) {
+                $this->handleQueryReport($query->sql, $query->bindings, $query->time, $query->connectionName);
             });
         } else {
-            $this->app['events']->listen('illuminate.query', function ($sql, array $bindings, $time, $connection) use ($showBindings) {
-                $span = ApmAgent::startSpan('query');
-
-                $span->getContext()->getDb()
-                    ->setType($connection)
-                    ->setSql($sql);
-
-                if($showBindings){
-                    $span->getContext()->getDb()->setBindings($bindings);
-                }
-
-                $span->end($time);
+            $this->app['events']->listen('illuminate.query', function ($sql, array $bindings, $time, $connection) {
+                $this->handleQueryReport($sql, $bindings, $time, $connection);
             });
         }
+    }
+
+    /**
+     * Attach a span to monitor query execution.
+     *
+     * @param $sql
+     * @param array $bindings
+     * @param $time
+     * @param $connection
+     */
+    protected function handleQueryReport($sql, array $bindings, $time, $connection)
+    {
+        if (!ApmAgent::hasTransaction()) {
+            return;
+        }
+
+        $span = ApmAgent::startSpan('DB');
+
+        $span->getContext()->getDb()
+            ->setType($connection)
+            ->setSql($sql);
+
+        if (config('bindings')) {
+            $span->getContext()->getDb()->setBindings($bindings);
+        }
+
+        $span->end($time);
     }
 
     /**
