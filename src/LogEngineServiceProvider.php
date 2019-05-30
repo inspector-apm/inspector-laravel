@@ -4,6 +4,7 @@ namespace LogEngine\Laravel;
 
 
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
@@ -20,14 +21,14 @@ class LogEngineServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->setupConfig();
-        $this->setupQueryMonitoring($this->app->events, config('logengine'));
+        $this->setupConfigFile();
+        $this->setupQueryMonitoring(config('logengine'));
     }
 
     /**
      * Setup configuration file.
      */
-    public function setupConfig()
+    protected function setupConfigFile()
     {
         $source = realpath($raw = __DIR__ . '/../config/logengine.php') ?: $raw;
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
@@ -39,13 +40,41 @@ class LogEngineServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($source, 'logengine');
     }
 
+    protected function interceptLogs()
+    {
+        if (class_exists(MessageLogged::class)) {
+            // starting from L5.4 MessageLogged event class was introduced
+            // https://github.com/laravel/framework/commit/57c82d095c356a0fe0f9381536afec768cdcc072
+            $this->app['events']->listen(MessageLogged::class, function($log) {
+                $this->handleExceptionLog($log->message, $log->context);
+            });
+        } else {
+            $this->app['events']->listen('illuminate.log', function($level, $message, $context) {
+                $this->handleExceptionLog($message, $context);
+            });
+        }
+    }
+
+    protected function handleExceptionLog($message, $context)
+    {
+        if(
+            isset($context['exception']) &&
+            ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
+        ){
+            ApmAgent::reportException($context['exception']);
+        }
+
+        if($message instanceof \Exception || $message instanceof \Throwable){
+            ApmAgent::reportException($message);
+        }
+    }
+
     /**
      * Register event for database interaction monitoring.
      *
-     * @param \Illuminate\Contracts\Events\Dispatcher $events
      * @param array $config
      */
-    public function setupQueryMonitoring($events, $config)
+    protected function setupQueryMonitoring($config)
     {
         if (isset($config['query']) && !$config['query']) {
             return;
@@ -54,7 +83,7 @@ class LogEngineServiceProvider extends ServiceProvider
         $showBindings = isset($config['bindings']) && $config['bindings'];
 
         if (class_exists(QueryExecuted::class)) {
-            $events->listen(QueryExecuted::class, function (QueryExecuted $query) use ($showBindings) {
+            $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) use ($showBindings) {
                 $span = ApmAgent::startSpan('query');
 
                 $span->getContext()->getDb()
@@ -68,7 +97,7 @@ class LogEngineServiceProvider extends ServiceProvider
                 $span->end($query->time);
             });
         } else {
-            $events->listen('illuminate.query', function ($sql, array $bindings, $time, $connection) use ($showBindings) {
+            $this->app['events']->listen('illuminate.query', function ($sql, array $bindings, $time, $connection) use ($showBindings) {
                 $span = ApmAgent::startSpan('query');
 
                 $span->getContext()->getDb()
