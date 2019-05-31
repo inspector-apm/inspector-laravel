@@ -5,7 +5,7 @@ namespace Inspector\Laravel\Tests;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Inspector\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Middleware\WebRequestMonitoring;
 use Inspector\Models\Transaction;
 
@@ -24,7 +24,7 @@ class MiddlewareTest extends BasicTestCase
         $middleware = new WebRequestMonitoring();
 
         $middleware->handle($request, function ($req){
-            $this->assertInstanceOf(Transaction::class, ApmAgent::currentTransaction());
+            $this->assertInstanceOf(Transaction::class, Inspector::currentTransaction());
         });
     }
 }

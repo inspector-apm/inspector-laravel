@@ -3,10 +3,8 @@
 namespace Inspector\Laravel\Tests;
 
 
-use Illuminate\Http\Request;
-use Inspector\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\LogEngineServiceProvider;
-use Inspector\Models\Transaction;
 use Orchestra\Testbench\TestCase;
 
 class BasicTestCase extends TestCase
@@ -33,7 +31,7 @@ class BasicTestCase extends TestCase
     protected function getPackageAliases($app)
     {
         return [
-            'logengine' => ApmAgent::class,
+            'inspector' => Inspector::class,
         ];
     }
 }

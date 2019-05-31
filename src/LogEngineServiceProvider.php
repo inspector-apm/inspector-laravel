@@ -10,7 +10,7 @@ use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
 use Illuminate\Database\Events\QueryExecuted;
 use Inspector\Configuration;
-use Inspector\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\Facades\Inspector;
 
 class LogEngineServiceProvider extends ServiceProvider
 {
@@ -58,19 +58,19 @@ class LogEngineServiceProvider extends ServiceProvider
 
     protected function handleExceptionLog($message, $context)
     {
-        if (!ApmAgent::hasTransaction()) {
-            ApmAgent::startTransaction('Error');
+        if (!Inspector::hasTransaction()) {
+            Inspector::startTransaction('Error');
         }
 
         if (
             isset($context['exception']) &&
             ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
         ) {
-            ApmAgent::reportException($context['exception']);
+            Inspector::reportException($context['exception']);
         }
 
         if ($message instanceof \Exception || $message instanceof \Throwable) {
-            ApmAgent::reportException($message);
+            Inspector::reportException($message);
         }
     }
 
@@ -106,11 +106,11 @@ class LogEngineServiceProvider extends ServiceProvider
      */
     protected function handleQueryReport($sql, array $bindings, $time, $connection)
     {
-        if (!ApmAgent::hasTransaction()) {
+        if (!Inspector::hasTransaction()) {
             return;
         }
 
-        $span = ApmAgent::startSpan('DB');
+        $span = Inspector::startSpan('DB');
 
         $span->getContext()->getDb()
             ->setType($connection)
@@ -137,7 +137,7 @@ class LogEngineServiceProvider extends ServiceProvider
                 ->setOptions(config('inspector.options'))
                 ->setEnabled(config('inspector.enable'));
 
-            $apm = new \Inspector\ApmAgent($configuration);
+            $apm = new \Inspector\Inspector($configuration);
 
             if ($app->runningInConsole()) {
                 $apm->startTransaction(implode(' ', $_SERVER['argv']));

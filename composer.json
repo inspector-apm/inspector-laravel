@@ -41,7 +41,7 @@
                 "Inspector\\Laravel\\LogEngineServiceProvider"
             ],
             "aliases": {
-                "ApmAgent": "Inspector\\Laravel\\Facades\\ApmAgent"
+                "Inspector": "Inspector\\Laravel\\Facades\\Inspector"
             }
         }
     }

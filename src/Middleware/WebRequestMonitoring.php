@@ -6,7 +6,7 @@ namespace Inspector\Laravel\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Inspector\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Support\Facades\Auth;
 
 class WebRequestMonitoring
@@ -21,7 +21,7 @@ class WebRequestMonitoring
      */
     public function handle($request, Closure $next)
     {
-        $transaction = ApmAgent::startTransaction(
+        $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
         );
 
@@ -43,9 +43,9 @@ class WebRequestMonitoring
      */
     public function terminate($request, $response)
     {
-        ApmAgent::currentTransaction()->setResult('HTTP ' . substr($response->status(), 0, 1) . 'XX');
-        ApmAgent::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
-        ApmAgent::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
+        Inspector::currentTransaction()->setResult('HTTP ' . substr($response->status(), 0, 1) . 'XX');
+        Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
+        Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
     }
 
     /**

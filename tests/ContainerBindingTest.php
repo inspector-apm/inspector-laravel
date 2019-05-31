@@ -8,6 +8,6 @@ class ContainerBindingTest extends BasicTestCase
 {
     public function testBinding()
     {
-        $this->assertInstanceOf(\Inspector\ApmAgent::class, $this->app['inspector']);
+        $this->assertInstanceOf(\Inspector\Inspector::class, $this->app['inspector']);
     }
 }
