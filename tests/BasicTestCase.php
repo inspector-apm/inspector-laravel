@@ -1,13 +1,12 @@
 <?php
 
-namespace LogEngine\Laravel\Tests;
+namespace Inspector\Laravel\Tests;
 
 
 use Illuminate\Http\Request;
-use LogEngine\Laravel\Facades\ApmAgent;
-use LogEngine\Laravel\LogEngineServiceProvider;
-use LogEngine\Laravel\Middleware\WebRequestMonitoring;
-use LogEngine\Models\Transaction;
+use Inspector\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\LogEngineServiceProvider;
+use Inspector\Models\Transaction;
 use Orchestra\Testbench\TestCase;
 
 class BasicTestCase extends TestCase

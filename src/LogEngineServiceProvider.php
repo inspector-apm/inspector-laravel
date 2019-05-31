@@ -1,6 +1,6 @@
 <?php
 
-namespace LogEngine\Laravel;
+namespace Inspector\Laravel;
 
 
 use Illuminate\Contracts\Container\Container;
@@ -9,8 +9,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
 use Illuminate\Database\Events\QueryExecuted;
-use LogEngine\Configuration;
-use LogEngine\Laravel\Facades\ApmAgent;
+use Inspector\Configuration;
+use Inspector\Laravel\Facades\ApmAgent;
 
 class LogEngineServiceProvider extends ServiceProvider
 {
@@ -23,7 +23,7 @@ class LogEngineServiceProvider extends ServiceProvider
     {
         $this->setupConfigFile();
         $this->interceptLogs();
-        $this->setupQueryMonitoring(config('logengine'));
+        $this->setupQueryMonitoring(config('inspector'));
     }
 
     /**
@@ -31,14 +31,14 @@ class LogEngineServiceProvider extends ServiceProvider
      */
     protected function setupConfigFile()
     {
-        $source = realpath($raw = __DIR__ . '/../config/logengine.php') ?: $raw;
+        $source = realpath($raw = __DIR__ . '/../config/inspector.php') ?: $raw;
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
-            $this->publishes([$source => config_path('logengine.php')]);
+            $this->publishes([$source => config_path('inspector.php')]);
         } elseif ($this->app instanceof LumenApplication) {
-            $this->app->configure('logengine');
+            $this->app->configure('inspector');
         }
 
-        $this->mergeConfigFrom($source, 'logengine');
+        $this->mergeConfigFrom($source, 'inspector');
     }
 
     protected function interceptLogs()
@@ -131,13 +131,13 @@ class LogEngineServiceProvider extends ServiceProvider
     public function register()
     {
         // Bind log engine service
-        $this->app->singleton('logengine', function (Container $app) {
-            $configuration = new Configuration(config('logengine.key'));
-            $configuration->setUrl(config('logengine.url'))
-                ->setOptions(config('logengine.options'))
-                ->setEnabled(config('logengine.enable'));
+        $this->app->singleton('inspector', function (Container $app) {
+            $configuration = new Configuration(config('inspector.key'));
+            $configuration->setUrl(config('inspector.url'))
+                ->setOptions(config('inspector.options'))
+                ->setEnabled(config('inspector.enable'));
 
-            $apm = new \LogEngine\ApmAgent($configuration);
+            $apm = new \Inspector\ApmAgent($configuration);
 
             if ($app->runningInConsole()) {
                 $apm->startTransaction(implode(' ', $_SERVER['argv']));

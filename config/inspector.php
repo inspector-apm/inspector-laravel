@@ -3,39 +3,36 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | API Key
+    | Enabling
     |--------------------------------------------------------------------------
     |
-    | You can find your API key on your LOG Engine project settings page.
-    |
-    | This api key points the LOG Engine notifier to the project in your account
-    | which should receive your application's events & exceptions.
+    | Setting "false" the package stop sending data to Inspector silently.
     |
     */
-    'enable' => env('LOGENGINE_ENABLE', true),
+    'enable' => env('INSPECTOR_ENABLE', true),
 
     /*
     |--------------------------------------------------------------------------
     | API Key
     |--------------------------------------------------------------------------
     |
-    | You can find your API key on your LOG Engine project settings page.
+    | You can find your API key on your Inspector project settings page.
     |
-    | This api key points the LOG Engine notifier to the project in your account
+    | This api key points the Inspector notifier to the project in your account
     | which should receive your application's events & exceptions.
     |
     */
-    'key' => env('LOGENGINE_API_KEY'),
+    'key' => env('INSPECTOR_API_KEY'),
 
     /*
     |--------------------------------------------------------------------------
-    | Hostname
+    | Remote URL
     |--------------------------------------------------------------------------
     |
     | You can set the url of the remote endpoint to send data to.
     |
     */
-    'url' => env('LOGENGINE_URL', 'https://app.logengine.dev/api'),
+    'url' => env('INSPECTOR_URL', 'https://app.inspector.dev/api'),
 
     /*
     |--------------------------------------------------------------------------
@@ -43,7 +40,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | This is where you can set the transport option settings you'd like us to use when
-    | communicating with LOG Engine.
+    | communicating with Inspector.
     |
     */
     'options' => [
@@ -59,7 +56,7 @@ return [
     | Enable this if you'd like us to automatically record all queries executed.
     |
     */
-    'query' => env('LOGENGINE_LOG_QUERY', true),
+    'query' => env('INSPECTOR_LOG_QUERY', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,10 +64,10 @@ return [
     |--------------------------------------------------------------------------
     |
     | Enable this if you'd like us to include the query bindings in our query
-    | breadcrumbs.
+    | spans.
     |
     */
-    'bindings' => env('LOGENGINE_QUERY_BINDINGS', false),
+    'bindings' => env('INSPECTOR_QUERY_BINDINGS', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -81,5 +78,5 @@ return [
     | Laravel's authentication system.
     |
     */
-    'user' => env('LOGENGINE_USER', true),
+    'user' => env('INSPECTOR_USER', true),
 ];

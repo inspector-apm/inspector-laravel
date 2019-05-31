@@ -1,12 +1,12 @@
 <?php
 
 
-namespace LogEngine\Laravel\Middleware;
+namespace Inspector\Laravel\Middleware;
 
 
 use Closure;
 use Illuminate\Http\Request;
-use LogEngine\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\Facades\ApmAgent;
 use Illuminate\Support\Facades\Auth;
 
 class WebRequestMonitoring

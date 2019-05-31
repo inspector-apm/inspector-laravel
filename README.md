@@ -1,4 +1,4 @@
-# Laravel APM
+# Laravel Inspector
 
 [![Build Status](https://travis-ci.org/log-engine/logengine-laravel.svg?branch=master)](https://travis-ci.org/log-engine/logengine-laravel)
 [![Latest Stable Version](https://poser.pugx.org/log-engine/logengine-laravel/v/stable)](https://packagist.org/packages/log-engine/logengine-laravel)
@@ -8,34 +8,36 @@
 - [Full configuration](#config)
 - [Laravel >= 5.0, < 5.1](#compatibility)
 
+![](<https://app.inspector.dev/images/frontend/demo.gif>)
+
 <a name="install"></a>
 
 ## Install
 
 Install the latest version of our Laravel package by:
 
-```
-composer require log-engine/logengine-laravel
+```sehll
+composer require inspector-apm/inspector-laravel
 ```
 
 ### Configure the API Key
 
-First put the LOG Engine API KEY in your environment file:
+First put the Inspector API KEY in your environment file:
 
 ```bash
-LOGENGINE_API_KEY=[api key]
+INSPECTOR_API_KEY=[api key]
 ```
 
-You can obtain `LOGENGINE_API_KEY` creating a new project in your [LOG Engine](https://www.logengine.dev) dashboard.
+You can obtain `INSPECTOR_API_KEY` creating a new project in your [Inspector](https://www.inspector.dev) dashboard.
 
 <a name="middleware"></a>
 
 ### Attach the Middleware
 
-To monitor web requests you can attach the WebMonitoringMiddleware in your http kernel or use in one or more route groups.
+To monitor web requests you can attach the `WebMonitoringMiddleware` in your http kernel or use in one or more route groups.
 
 ```php
-use LogEngine\Laravel\Middleware\WebRequestMonitoring;
+use Inspector\Laravel\Middleware\WebRequestMonitoring;
 
 /**
  * The application's route middleware groups.
@@ -63,7 +65,7 @@ By default every exception fired in your laravel app will be reported automatica
 You can also report exceptions programmatically for which you will be able to access detailed information gathered by LOG Engine in real time:
 
 ```php
-use LogEngine\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\Facades\ApmAgent;
 
 try {
   	
@@ -82,19 +84,19 @@ try {
 If you want full control of the package behaviour publish the configuration file:
 
 ```bash
-php artisan vendor:publish --provider="LogEngine\LogEngineServiceProvider"
+php artisan vendor:publish --provider="Inspector\LogEngineServiceProvider"
 ```
 
-That will add `config/logengine.php` in your Laravel configuration directory.
+That will add `config/inspector.php` in your Laravel configuration directory.
 
 You can set the environment variables below:
 
 ```bash
-LOGENGINE_API_KEY=[api key]
-LOGENGINE_ENABLE=
-LOGENGINE_LOG_QUERY=
-LOGENGINE_QUERY_BINDINGS=
-LOGENGINE_USER=
+INSPECTOR_API_KEY=[api key]
+INSPECTOR_ENABLE=
+INSPECTOR_LOG_QUERY=
+INSPECTOR_QUERY_BINDINGS=
+INSPECTOR_USER=
 ```
 
 <a name="compatibility"></a>
@@ -113,8 +115,6 @@ public function report(Exception $e)
 ```
 
 
-
-![](<https://app.logengine.dev/images/frontend/demo.gif>)
 
 **[See official documentation](https://www.logengine.dev/docs/1.0/platforms/laravel)**
 

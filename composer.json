@@ -1,23 +1,23 @@
 {
-    "name": "log-engine/logengine-laravel",
-    "description": "LOG Engine package for Laravel applications.",
-    "keywords": ["monitoring", "php", "logengine", "laravel"],
+    "name": "inspector/inspector-laravel",
+    "description": "Real Time monitoring for Laravel applications.",
+    "keywords": ["monitoring", "php", "inspector", "laravel"],
     "license": "MIT",
     "authors": [
         {
             "name": "Valerio Barbera",
-            "email": "support@logengine.dev"
+            "email": "support@inspector.dev"
         }
     ],
     "require": {
         "php": ">=7.0.0",
         "illuminate/contracts": "^5.1",
         "illuminate/support": "^5.1",
-        "log-engine/logengine-php": "^2.0"
+        "inspector-apm/inspector-php": "^2.0"
     },
     "autoload": {
         "psr-4": {
-            "LogEngine\\Laravel\\": "src/"
+            "Inspector\\Laravel\\": "src/"
         }
     },
     "config": {
@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LogEngine\\Laravel\\Tests\\": "tests/"
+            "Inspector\\Laravel\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -38,10 +38,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "LogEngine\\Laravel\\LogEngineServiceProvider"
+                "Inspector\\Laravel\\LogEngineServiceProvider"
             ],
             "aliases": {
-                "ApmAgent": "LogEngine\\Laravel\\Facades\\ApmAgent"
+                "ApmAgent": "Inspector\\Laravel\\Facades\\ApmAgent"
             }
         }
     }

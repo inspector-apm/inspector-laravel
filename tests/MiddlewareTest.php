@@ -1,13 +1,13 @@
 <?php
 
-namespace LogEngine\Laravel\Tests;
+namespace Inspector\Laravel\Tests;
 
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use LogEngine\Laravel\Facades\ApmAgent;
-use LogEngine\Laravel\Middleware\WebRequestMonitoring;
-use LogEngine\Models\Transaction;
+use Inspector\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\Middleware\WebRequestMonitoring;
+use Inspector\Models\Transaction;
 
 class MiddlewareTest extends BasicTestCase
 {
