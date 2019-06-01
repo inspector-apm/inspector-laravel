@@ -12,7 +12,7 @@ use Illuminate\Database\Events\QueryExecuted;
 use Inspector\Configuration;
 use Inspector\Laravel\Facades\Inspector;
 
-class LogEngineServiceProvider extends ServiceProvider
+class InspectorServiceProvider extends ServiceProvider
 {
     /**
      * Booting of services.

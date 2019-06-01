@@ -4,7 +4,7 @@ namespace Inspector\Laravel\Tests;
 
 
 use Inspector\Laravel\Facades\Inspector;
-use Inspector\Laravel\LogEngineServiceProvider;
+use Inspector\Laravel\InspectorServiceProvider;
 use Orchestra\Testbench\TestCase;
 
 class BasicTestCase extends TestCase
@@ -18,7 +18,7 @@ class BasicTestCase extends TestCase
      */
     protected function getPackageProviders($app)
     {
-        return [LogEngineServiceProvider::class];
+        return [InspectorServiceProvider::class];
     }
 
     /**
