@@ -38,7 +38,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Inspector\\Laravel\\LogEngineServiceProvider"
+                "Inspector\\Laravel\\InspectorServiceProvider"
             ],
             "aliases": {
                 "Inspector": "Inspector\\Laravel\\Facades\\Inspector"
