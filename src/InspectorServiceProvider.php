@@ -130,7 +130,7 @@ class InspectorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Bind log engine service
+        // Bind Inspector service
         $this->app->singleton('inspector', function (Container $app) {
             $configuration = new Configuration(config('inspector.key'));
             $configuration->setUrl(config('inspector.url'))
