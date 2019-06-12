@@ -1,12 +1,13 @@
 # Laravel Inspector
 
-[![Build Status](https://travis-ci.org/log-engine/logengine-laravel.svg?branch=master)](https://travis-ci.org/log-engine/logengine-laravel)
-[![Latest Stable Version](https://poser.pugx.org/log-engine/logengine-laravel/v/stable)](https://packagist.org/packages/log-engine/logengine-laravel)
+[![Build Status](https://travis-ci.org/inspector-apm/inspector-laravel.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-laravel)
+[![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-laravel/v/stable)](https://packagist.org/packages/inspector-apm/inspector-laravel)
 
 - [Install](#install)
 - [Report Exception](#exception)
 - [Full configuration](#config)
 - [Laravel >= 5.0, < 5.1](#compatibility)
+- [Enrich your timeline](#timeline)
 
 ![](<https://app.inspector.dev/images/frontend/demo.gif>)
 
@@ -65,15 +66,15 @@ By default every exception fired in your laravel app will be reported automatica
 You can also report exceptions programmatically for which you will be able to access detailed information gathered by LOG Engine in real time:
 
 ```php
-use Inspector\Laravel\Facades\ApmAgent;
+use Inspector\Laravel\Facades\Inspector;
 
 try {
   	
     // Your dangerous code...
     
 } catch(LogicException $exception) {
-    // Log an exception intentionally to report diagnostics data to your LOG Engine dashboard
-    ApmAgent::reportException($excetion);
+    // report an exception intentionally without blocking the application flow
+    Inspector::reportException($excetion);
 }
 ```
 
@@ -84,7 +85,7 @@ try {
 If you want full control of the package behaviour publish the configuration file:
 
 ```bash
-php artisan vendor:publish --provider="Inspector\LogEngineServiceProvider"
+php artisan vendor:publish --provider="Inspector\InspectorServiceProvider"
 ```
 
 That will add `config/inspector.php` in your Laravel configuration directory.
@@ -103,20 +104,60 @@ INSPECTOR_USER=
 
 ## Laravel >= 5.0, < 5.1
 
-Laravel's (`>= 5.0, < 5.1`) exception logger doesn't use event dispatcher (<https://github.com/laravel/framework/pull/10922>) and that's why you need to add the following line to your `App\Exceptions\Handler.php` class (otherwise Laravel's exceptions will not be sent to Log Engine):
+Laravel's (`>= 5.0, < 5.1`) exception logger doesn't use event dispatcher (<https://github.com/laravel/framework/pull/10922>) and that's why you need to add the following line to your `App\Exceptions\Handler.php` class (otherwise Laravel's exceptions will not be sent to Inspector):
 
 ```php
 public function report(Exception $e)
 {
-    \ApmAgent::reportException($e);
+    \Inspector::reportException($e);
 
     return parent::report($e);
 }
 ```
 
+<a name="timeline"></a>
 
+## Enrich Your Timeline
 
-**[See official documentation](https://www.logengine.dev/docs/1.0/platforms/laravel)**
+You can add custom span in your timeline to measure the impact that a code block has on a transaction performance.
+
+Suppose to have an artisan command that execute some database checks and data manipulation in background. Queries are reported automatically by Inspector but for data manipulation could be interesting to have a measure of their performance.
+
+Simply use `Inspector` facade:
+
+```php
+use Inspector\Laravel\Facades\Inspector;
+
+class TagUserAsActive extends Command
+{
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $users = Users::whereHas('project')->get();
+        
+        // Measure the impact of entire iteration
+        $spanIteration = Inspector::startSpan('process');
+        
+        foreach ($users as $user) {
+            // Measure http post
+            $span = Inspector::startSpan('http');
+            $this->guzzle->post('/mail-marketing/add_tag', [
+                'email' => $user->email,
+                'tag' => 'active',
+            ]);
+            $span->end();
+        }
+        
+        $spanIteration->end();
+    }
+}
+```
+
+**[See official documentation](https://app.inspector.dev/docs/2.0/platforms/laravel)**
 
 ## LICENSE
 
