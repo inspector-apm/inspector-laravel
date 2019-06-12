@@ -5,6 +5,8 @@ namespace Inspector\Laravel;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Log\Events\MessageLogged;
+use Illuminate\Queue\Events\JobProcessed;
+use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
@@ -14,6 +16,13 @@ use Inspector\Laravel\Facades\Inspector;
 
 class InspectorServiceProvider extends ServiceProvider
 {
+    /**
+     * Key/Value map to match job-processing with job-processed.
+     *
+     * @var array
+     */
+    protected $spansForJobs = [];
+
     /**
      * Booting of services.
      *
@@ -94,6 +103,22 @@ class InspectorServiceProvider extends ServiceProvider
                 $this->handleQueryReport($sql, $bindings, $time, $connection);
             });
         }
+    }
+
+    protected function setupJobProcessMonitoring()
+    {
+        $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
+            $span = Inspector::startSpan('job')
+                ->setMessage($event->job->getName());
+
+            $this->spansForJobs[$event->job->getJobId()] = $span;
+        });
+
+        $this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
+            if(array_key_exists($event->job->getJobId(), $this->spansForJobs)){
+                $this->spansForJobs[$event->job->getJobId()]->end();
+            }
+        });
     }
 
     /**
