@@ -111,12 +111,15 @@ class InspectorServiceProvider extends ServiceProvider
     {
         Queue::looping(function () {
             Inspector::flush();
-            Inspector::startTransaction(implode(' ', $_SERVER['argv']));
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
-            $span = Inspector::startSpan('job')
-                ->setMessage($event->job->getName());
+            if(!Inspector::hasTransaction()){
+                Inspector::startTransaction($event->job->getName());
+            }
+
+            $span = Inspector::startSpan('job');
+            $span->getContext()->setCustom($event->job->payload());
 
             $this->spansForJobs[$event->job->getJobId()] = $span;
         });
