@@ -5,7 +5,6 @@ namespace Inspector\Laravel;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Log\Events\MessageLogged;
-use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
@@ -17,13 +16,6 @@ use Inspector\Laravel\Facades\Inspector;
 
 class InspectorServiceProvider extends ServiceProvider
 {
-    /**
-     * Key/Value map to match job-processing with job-processed.
-     *
-     * @var array
-     */
-    protected $spansForJobs = [];
-
     /**
      * Booting of services.
      *
@@ -115,18 +107,7 @@ class InspectorServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
             if(!Inspector::hasTransaction()){
-                Inspector::startTransaction($event->job->getName());
-            }
-
-            $span = Inspector::startSpan('job');
-            $span->getContext()->setCustom($event->job->payload());
-
-            $this->spansForJobs[$event->job->getJobId()] = $span;
-        });
-
-        $this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
-            if(array_key_exists($event->job->getJobId(), $this->spansForJobs)){
-                $this->spansForJobs[$event->job->getJobId()]->end();
+                Inspector::startTransaction($event->job->resolveName());
             }
         });
     }
