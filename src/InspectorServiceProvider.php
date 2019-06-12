@@ -111,7 +111,7 @@ class InspectorServiceProvider extends ServiceProvider
     {
         Queue::looping(function () {
             Inspector::flush();
-            //Inspector::startTransaction(implode(' ', $_SERVER['argv']));
+            Inspector::startTransaction(implode(' ', $_SERVER['argv']));
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
