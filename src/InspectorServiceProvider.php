@@ -7,6 +7,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
@@ -108,6 +109,11 @@ class InspectorServiceProvider extends ServiceProvider
 
     protected function setupJobProcessMonitoring()
     {
+        Queue::looping(function () {
+            Inspector::flush();
+            //Inspector::startTransaction(implode(' ', $_SERVER['argv']));
+        });
+
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
             $span = Inspector::startSpan('job')
                 ->setMessage($event->job->getName());
@@ -163,13 +169,13 @@ class InspectorServiceProvider extends ServiceProvider
                 ->setOptions(config('inspector.options'))
                 ->setEnabled(config('inspector.enable'));
 
-            $apm = new \Inspector\Inspector($configuration);
+            $inspector = new \Inspector\Inspector($configuration);
 
             if ($app->runningInConsole()) {
-                $apm->startTransaction(implode(' ', $_SERVER['argv']));
+                $inspector->startTransaction(implode(' ', $_SERVER['argv']));
             }
 
-            return $apm;
+            return $inspector;
         });
     }
 }
