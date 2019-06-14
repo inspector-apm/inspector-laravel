@@ -36,6 +36,7 @@ class InspectorServiceProvider extends ServiceProvider
         $this->interceptLogs();
         $this->setupQueryMonitoring(config('inspector'));
         $this->setupJobProcessMonitoring();
+        $this->setupEmailMonitoring();
     }
 
     /**
