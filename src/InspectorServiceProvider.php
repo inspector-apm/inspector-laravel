@@ -5,6 +5,8 @@ namespace Inspector\Laravel;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Log\Events\MessageLogged;
+use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
@@ -16,6 +18,13 @@ use Inspector\Laravel\Facades\Inspector;
 
 class InspectorServiceProvider extends ServiceProvider
 {
+    /**
+     * Collection of mail event spans.
+     *
+     * @var array
+     */
+    protected $spansMail = [];
+
     /**
      * Booting of services.
      *
@@ -108,6 +117,19 @@ class InspectorServiceProvider extends ServiceProvider
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
             if(!Inspector::hasTransaction()){
                 Inspector::startTransaction($event->job->resolveName());
+            }
+        });
+    }
+
+    protected function setupEmailMonitoring()
+    {
+        $this->app['events']->listen(MessageSending::class, function (MessageSending $event){
+            $this->spansMail[$event->message->getId()] = Inspector::startSpan('email');
+        });
+
+        $this->app['events']->listen(MessageSent::class, function (MessageSent $event){
+            if(array_key_exists($event->message->getId(), $this->spansMail)){
+                $this->spansMail[$event->message->getId()]->end();
             }
         });
     }
