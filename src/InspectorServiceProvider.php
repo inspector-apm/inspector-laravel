@@ -149,9 +149,10 @@ class InspectorServiceProvider extends ServiceProvider
             return;
         }
 
-        $span = Inspector::startSpan('DB');
+        $span = Inspector::startSpan($connection);
 
-        $span->getContext()->getDb()
+        $span->getContext()
+            ->getDb()
             ->setType($connection)
             ->setSql($sql);
 
