@@ -25,7 +25,7 @@ class WebRequestMonitoring
             $this->buildTransactionName($request)
         );
 
-        if (Auth::check()) {
+        if (Auth::check() && config('inspector.user')) {
             $transaction->withUser(
                 Auth::user()->getAuthIdentifier(),
                 Auth::user()->getAuthIdentifierName()
