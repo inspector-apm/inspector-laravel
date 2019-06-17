@@ -99,9 +99,7 @@ class InspectorServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register event for database interaction monitoring.
-     *
-     * @param array $config
+     * Add a span for database interaction.
      */
     protected function setupQueryMonitoring()
     {
@@ -116,6 +114,9 @@ class InspectorServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * Add a span for scheduled job executions.
+     */
     protected function setupJobProcessMonitoring()
     {
         Queue::looping(function () {
@@ -129,6 +130,9 @@ class InspectorServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Add a span for email.
+     */
     protected function setupEmailMonitoring()
     {
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event){
