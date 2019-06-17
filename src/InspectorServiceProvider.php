@@ -33,10 +33,22 @@ class InspectorServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->setupConfigFile();
-        $this->interceptLogs();
-        $this->setupQueryMonitoring(config('inspector'));
-        $this->setupJobProcessMonitoring();
-        $this->setupEmailMonitoring();
+
+        if(config('inspector.unhandled_exceptions')){
+            $this->reportUnhandledExceptions();
+        }
+
+        if(config('inspector.query', false)) {
+            $this->setupQueryMonitoring();
+        }
+
+        if(config('inspector.job', false)) {
+            $this->setupJobProcessMonitoring();
+        }
+
+        if(config('inspector.email', false)) {
+            $this->setupEmailMonitoring();
+        }
     }
 
     /**
@@ -54,7 +66,7 @@ class InspectorServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($source, 'inspector');
     }
 
-    protected function interceptLogs()
+    protected function reportUnhandledExceptions()
     {
         if (class_exists(MessageLogged::class)) {
             // starting from L5.4 MessageLogged event class was introduced
@@ -92,12 +104,8 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @param array $config
      */
-    protected function setupQueryMonitoring($config)
+    protected function setupQueryMonitoring()
     {
-        if (isset($config['query']) && !$config['query']) {
-            return;
-        }
-
         if (class_exists(QueryExecuted::class)) {
             $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) {
                 $this->handleQueryReport($query->sql, $query->bindings, $query->time, $query->connectionName);
@@ -156,7 +164,7 @@ class InspectorServiceProvider extends ServiceProvider
             ->setType($connection)
             ->setSql($sql);
 
-        if (config('bindings')) {
+        if (config('inspector.bindings', false)) {
             $span->getContext()->getDb()->setBindings($bindings);
         }
 

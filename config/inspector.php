@@ -79,4 +79,34 @@ return [
     |
     */
     'user' => env('INSPECTOR_USER', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Email
+    |--------------------------------------------------------------------------
+    |
+    | Enable this if you'd like us to monitor email sending.
+    |
+    */
+    'email' => env('INSPECTOR_EMAIL', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Job
+    |--------------------------------------------------------------------------
+    |
+    | Enable this if you'd like us to monitor background job processing.
+    |
+    */
+    'job' => env('INSPECTOR_JOB', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Exceptions
+    |--------------------------------------------------------------------------
+    |
+    | Enable this if you'd like us to report unhandled exceptions.
+    |
+    */
+    'unhandled_exceptions' => env('INSPECTOR_UNHANDLED_EXCEPTIONS', true),
 ];
