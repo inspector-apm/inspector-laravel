@@ -36,13 +36,6 @@
     "scripts": {
     },
     "extra": {
-        "laravel": {
-            "providers": [
-                "Inspector\\Laravel\\InspectorServiceProvider"
-            ],
-            "aliases": {
-                "Inspector": "Inspector\\Laravel\\Facades\\Inspector"
-            }
-        }
+        "laravel": {}
     }
 }

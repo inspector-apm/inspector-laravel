@@ -14,7 +14,6 @@ use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
 use Illuminate\Database\Events\QueryExecuted;
 use Inspector\Configuration;
-use Inspector\Laravel\Facades\Inspector;
 
 class InspectorServiceProvider extends ServiceProvider
 {
@@ -83,19 +82,19 @@ class InspectorServiceProvider extends ServiceProvider
 
     protected function handleExceptionLog($message, $context)
     {
-        if (!Inspector::hasTransaction()) {
-            Inspector::startTransaction('Error');
+        if (!$this->app['inspector']->hasTransaction()) {
+            $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
         }
 
         if (
             isset($context['exception']) &&
             ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
         ) {
-            Inspector::reportException($context['exception']);
+            $this->app['inspector']->reportException($context['exception']);
         }
 
         if ($message instanceof \Exception || $message instanceof \Throwable) {
-            Inspector::reportException($message);
+            $this->app['inspector']->reportException($message);
         }
     }
 
@@ -120,12 +119,12 @@ class InspectorServiceProvider extends ServiceProvider
     protected function setupJobProcessMonitoring()
     {
         Queue::looping(function () {
-            Inspector::flush();
+            $this->app['inspector']->flush();
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
-            if(!Inspector::hasTransaction()){
-                Inspector::startTransaction($event->job->resolveName());
+            if(!$this->app['inspector']->hasTransaction()){
+                $this->app['inspector']->startTransaction($event->job->resolveName());
             }
         });
     }
@@ -133,7 +132,7 @@ class InspectorServiceProvider extends ServiceProvider
     protected function setupEmailMonitoring()
     {
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event){
-            $this->spansMail[$event->message->getId()] = Inspector::startSpan('email');
+            $this->spansMail[$event->message->getId()] = $this->app['inspector']->startSpan('email');
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event){
@@ -153,11 +152,11 @@ class InspectorServiceProvider extends ServiceProvider
      */
     protected function handleQueryReport($sql, array $bindings, $time, $connection)
     {
-        if (!Inspector::hasTransaction()) {
+        if (!$this->app['inspector']->hasTransaction()) {
             return;
         }
 
-        $span = Inspector::startSpan($connection);
+        $span = $this->app['inspector']->startSpan($connection);
 
         $span->getContext()
             ->getDb()
