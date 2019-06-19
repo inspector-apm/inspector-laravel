@@ -23,7 +23,7 @@ class WebRequestMonitoring
     {
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
-        );
+        )->start(LARAVEL_START);
 
         if (Auth::check() && config('inspector.user')) {
             $transaction->withUser(
@@ -43,7 +43,7 @@ class WebRequestMonitoring
      */
     public function terminate($request, $response)
     {
-        Inspector::currentTransaction()->setResult('HTTP ' . substr($response->status(), 0, 1) . 'XX');
+        Inspector::currentTransaction()->setResult('HTTP ' . $response->status());
         Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
         Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
     }
