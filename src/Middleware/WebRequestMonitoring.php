@@ -23,7 +23,7 @@ class WebRequestMonitoring
     {
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
-        )->start(LARAVEL_START);
+        );
 
         if (Auth::check() && config('inspector.user')) {
             $transaction->withUser(
