@@ -6,8 +6,9 @@ namespace Inspector\Laravel;
 
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;
+use Illuminate\Support\ServiceProvider;
 
-class EmailServiceProvider
+class EmailServiceProvider extends ServiceProvider
 {
     /**
      * Collection of mail event spans.

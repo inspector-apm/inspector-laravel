@@ -5,8 +5,9 @@ namespace Inspector\Laravel;
 
 
 use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\ServiceProvider;
 
-class DatabaseQueryServiceProvider
+class DatabaseQueryServiceProvider extends ServiceProvider
 {
     /**
      * Booting of services.

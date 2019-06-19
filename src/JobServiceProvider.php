@@ -6,8 +6,9 @@ namespace Inspector\Laravel;
 
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\ServiceProvider;
 
-class JobServiceProvider
+class JobServiceProvider extends ServiceProvider
 {
     /**
      * Booting of services.

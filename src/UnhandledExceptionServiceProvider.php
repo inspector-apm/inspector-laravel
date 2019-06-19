@@ -5,8 +5,9 @@ namespace Inspector\Laravel;
 
 
 use Illuminate\Log\Events\MessageLogged;
+use Illuminate\Support\ServiceProvider;
 
-class UnhandledExceptionServiceProvider
+class UnhandledExceptionServiceProvider extends ServiceProvider
 {
     /**
      * Booting of services.
