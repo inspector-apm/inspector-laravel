@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Inspector\Laravel;
+namespace Inspector\Laravel\Providers;
 
 
 use Illuminate\Mail\Events\MessageSending;
