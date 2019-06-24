@@ -46,4 +46,14 @@ class UnhandledExceptionServiceProvider extends ServiceProvider
             $this->app['inspector']->reportException($message);
         }
     }
+
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
 }
