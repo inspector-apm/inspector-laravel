@@ -15,7 +15,7 @@ class EmailServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $spanCollection = [];
+    protected $segmentCollection = [];
 
     /**
      * Booting of services.
@@ -25,12 +25,12 @@ class EmailServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event){
-            $this->spanCollection[$event->message->getId()] = $this->app['inspector']->startSpan('email');
+            $this->segmentCollection[$event->message->getId()] = $this->app['inspector']->startSegment('email');
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event){
-            if(array_key_exists($event->message->getId(), $this->spanCollection)){
-                $this->spanCollection[$event->message->getId()]->end();
+            if(array_key_exists($event->message->getId(), $this->segmentCollection)){
+                $this->segmentCollection[$event->message->getId()]->end();
             }
         });
     }

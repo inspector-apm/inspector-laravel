@@ -41,18 +41,18 @@ class DatabaseQueryServiceProvider extends ServiceProvider
             return;
         }
 
-        $span = $this->app['inspector']->startSpan($connection);
+        $segment = $this->app['inspector']->startSegment($connection);
 
-        $span->getContext()
+        $segment->getContext()
             ->getDb()
             ->setType($connection)
             ->setSql($sql);
 
         if (config('inspector.bindings', false)) {
-            $span->getContext()->getDb()->setBindings($bindings);
+            $segment->getContext()->getDb()->setBindings($bindings);
         }
 
-        $span->end($time);
+        $segment->end($time);
     }
 
     /**

@@ -119,11 +119,11 @@ public function report(Exception $e)
 
 ## Enrich Your Timeline
 
-You can add custom span in your timeline to measure the impact that a code block has on a transaction performance.
+You can add custom segments in your timeline to measure the impact that a code block has on a transaction performance.
 
 Suppose to have an artisan command that execute some database checks and data manipulation in background. Queries are reported automatically by Inspector but for data manipulation could be interesting to have a measure of their performance.
 
-Simply use `Inspector` facade:
+Simply use `Inspector` facade to start new `segment`:
 
 ```php
 use Inspector\Laravel\Facades\Inspector;
@@ -140,19 +140,19 @@ class TagUserAsActive extends Command
         $users = Users::whereHas('project')->get();
         
         // Measure the impact of entire iteration
-        $spanIteration = Inspector::startSpan('process');
+        $segmentProcess = Inspector::startSegment('process');
         
         foreach ($users as $user) {
             // Measure http post
-            $span = Inspector::startSpan('http');
+            $segment = Inspector::startSegment('http');
             $this->guzzle->post('/mail-marketing/add_tag', [
                 'email' => $user->email,
                 'tag' => 'active',
             ]);
-            $span->end();
+            $segment->end();
         }
         
-        $spanIteration->end();
+        $segmentProcess->end();
     }
 }
 ```
