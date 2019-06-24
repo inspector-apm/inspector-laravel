@@ -12,7 +12,7 @@
          syntaxCheck="false">
 
     <testsuites>
-        <testsuite name="Inspector Test Suite">
+        <testsuite name="Inspector Laravel Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
@@ -27,8 +27,6 @@
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/> <!-- Example key to work with encryption -->
         <env name="APP_ENV" value="testing"/>
         <env name="APP_NAME" value="Package Testing"/>
-        <env name="INSPECTOR_API_KEY" value="inspector-api-key"/>
-        <env name="INSPECTOR_URL" value="http://inspector.locl/api"/>
         <env name="INSPECTOR_ENABLE" value="false"/>
     </php>
 </phpunit>

@@ -31,7 +31,7 @@ class BasicTestCase extends TestCase
     protected function getPackageAliases($app)
     {
         return [
-            'inspector' => Inspector::class,
+            'Inspector' => Inspector::class,
         ];
     }
 }

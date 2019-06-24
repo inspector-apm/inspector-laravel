@@ -31,14 +31,11 @@ class InspectorServiceProvider extends ServiceProvider
      */
     protected function setupConfigFile()
     {
-        $source = realpath($raw = __DIR__ . '/../config/inspector.php') ?: $raw;
         if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
-            $this->publishes([$source => config_path('inspector.php')]);
+            $this->publishes([__DIR__ . '/../config/inspector.php' => config_path('inspector.php')]);
         } elseif ($this->app instanceof LumenApplication) {
             $this->app->configure('inspector');
         }
-
-        $this->mergeConfigFrom($source, 'inspector');
     }
 
     /**
@@ -48,15 +45,14 @@ class InspectorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if(!config('inspector.enable')) {
-            return;
-        }
+        $this->mergeConfigFrom(__DIR__ . '/../config/inspector.php', 'inspector');
 
         // Bind Inspector service
         $this->app->singleton('inspector', function (Container $app) {
             $configuration = new Configuration(config('inspector.key'));
             $configuration->setUrl(config('inspector.url'))
-                ->setOptions(config('inspector.options'));
+                ->setOptions(config('inspector.options'))
+                ->setEnabled(config('inspector.enable'));
 
             $inspector = new Inspector($configuration);
 
@@ -64,23 +60,23 @@ class InspectorServiceProvider extends ServiceProvider
                 $inspector->startTransaction(implode(' ', $_SERVER['argv']));
             }
 
+            if(config('inspector.unhandled_exceptions')){
+                $app->register(UnhandledExceptionServiceProvider::class);
+            }
+
+            if(config('inspector.query')) {
+                $app->register(DatabaseQueryServiceProvider::class);
+            }
+
+            if(config('inspector.job')) {
+                $app->register(JobServiceProvider::class);
+            }
+
+            if(config('inspector.email')) {
+                $app->register(EmailServiceProvider::class);
+            }
+
             return $inspector;
         });
-
-        if(config('inspector.unhandled_exceptions')){
-            $this->app->register(UnhandledExceptionServiceProvider::class);
-        }
-
-        if(config('inspector.query', false)) {
-            $this->app->register(DatabaseQueryServiceProvider::class);
-        }
-
-        if(config('inspector.job', false)) {
-            $this->app->register(JobServiceProvider::class);
-        }
-
-        if(config('inspector.email', false)) {
-            $this->app->register(EmailServiceProvider::class);
-        }
     }
 }

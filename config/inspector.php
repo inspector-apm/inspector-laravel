@@ -6,7 +6,7 @@ return [
     | Enabling
     |--------------------------------------------------------------------------
     |
-    | Setting "false" the package stop sending data to Inspector silently.
+    | Setting "false" the package stop sending data to Inspector.
     |
     */
     'enable' => env('INSPECTOR_ENABLE', true),
@@ -18,7 +18,7 @@ return [
     |
     | You can find your API key on your Inspector project settings page.
     |
-    | This api key points the Inspector notifier to the project in your account
+    | This API key points the Inspector notifier to the project in your account
     | which should receive your application's events & exceptions.
     |
     */
@@ -53,7 +53,7 @@ return [
     | Query
     |--------------------------------------------------------------------------
     |
-    | Enable this if you'd like us to automatically record all queries executed.
+    | Enable this if you'd like us to automatically add all queries executed in the timeline.
     |
     */
     'query' => env('INSPECTOR_LOG_QUERY', true),
@@ -63,8 +63,7 @@ return [
     | Bindings
     |--------------------------------------------------------------------------
     |
-    | Enable this if you'd like us to include the query bindings in our query
-    | spans.
+    | Enable this if you'd like us to include the query bindings in query spans.
     |
     */
     'bindings' => env('INSPECTOR_QUERY_BINDINGS', false),
