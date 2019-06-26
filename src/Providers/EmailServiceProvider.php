@@ -24,12 +24,15 @@ class EmailServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app['events']->listen(MessageSending::class, function (MessageSending $event){
+        $this->app['events']->listen(MessageSending::class, function (MessageSending $event) {
+            if (!$this->app['inspector']->hasTransaction()) {
+                return;
+            }
             $this->segmentCollection[$event->message->getId()] = $this->app['inspector']->startSegment('email');
         });
 
-        $this->app['events']->listen(MessageSent::class, function (MessageSent $event){
-            if(array_key_exists($event->message->getId(), $this->segmentCollection)){
+        $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {
+            if (array_key_exists($event->message->getId(), $this->segmentCollection)) {
                 $this->segmentCollection[$event->message->getId()]->end();
             }
         });
