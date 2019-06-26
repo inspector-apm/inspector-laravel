@@ -35,7 +35,7 @@ You can obtain `INSPECTOR_API_KEY` creating a new project in your [Inspector](ht
 
 ### Attach the Middleware
 
-To monitor web requests you can attach the `WebMonitoringMiddleware` in your http kernel or use in one or more route groups.
+To monitor web requests you can attach the `WebMonitoringMiddleware` in your http kernel or use in one or more route groups based on your personal needs.
 
 ```php
 use Inspector\Laravel\Middleware\WebRequestMonitoring;
@@ -63,7 +63,7 @@ protected $middlewareGroups = [
 
 By default every exception fired in your laravel app will be reported automatically.
 
-You can also report exceptions programmatically for which you will be able to access detailed information gathered by LOG Engine in real time:
+You can also report exceptions programmatically for which you will be able to access detailed information gathered by Inspector in real time:
 
 ```php
 use Inspector\Laravel\Facades\Inspector;
@@ -95,7 +95,7 @@ You can set the environment variables below:
 ```bash
 INSPECTOR_API_KEY=[api key]
 INSPECTOR_ENABLE=
-INSPECTOR_LOG_QUERY=
+INSPECTOR_QUERY=
 INSPECTOR_QUERY_BINDINGS=
 INSPECTOR_USER=
 ```
