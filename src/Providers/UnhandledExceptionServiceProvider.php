@@ -5,6 +5,7 @@ namespace Inspector\Laravel\Providers;
 
 
 use Illuminate\Log\Events\MessageLogged;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 
 class UnhandledExceptionServiceProvider extends ServiceProvider
@@ -31,19 +32,31 @@ class UnhandledExceptionServiceProvider extends ServiceProvider
 
     protected function handleExceptionLog($message, $context)
     {
-        if (!$this->app['inspector']->hasTransaction()) {
-            $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
-        }
-
         if (
             isset($context['exception']) &&
             ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
         ) {
-            $this->app['inspector']->reportException($context['exception']);
+            $this->report($context['exception']);
         }
 
         if ($message instanceof \Exception || $message instanceof \Throwable) {
-            $this->app['inspector']->reportException($message);
+            $this->report($message);
+        }
+    }
+
+    protected function report(\Throwable $exception)
+    {
+        if (!$this->app['inspector']->hasTransaction()) {
+            $this->app['inspector']->startTransaction(get_class($exception));
+        }
+
+        $error = $this->app['inspector']->reportException($exception);
+
+        if (Auth::check() && config('inspector.user')) {
+            $error->withUser(
+                Auth::user()->getAuthIdentifier(),
+                Auth::user()->getAuthIdentifierName()
+            );
         }
     }
 

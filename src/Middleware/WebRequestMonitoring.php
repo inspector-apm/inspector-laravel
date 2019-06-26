@@ -43,9 +43,11 @@ class WebRequestMonitoring
      */
     public function terminate($request, $response)
     {
-        Inspector::currentTransaction()->setResult('HTTP ' . $response->status());
-        Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
-        Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
+        if(Inspector::hasTransaction()) {
+            Inspector::currentTransaction()->setResult('HTTP ' . $response->status());
+            Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
+            Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
+        }
     }
 
     /**

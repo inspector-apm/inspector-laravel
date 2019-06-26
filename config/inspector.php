@@ -56,7 +56,7 @@ return [
     | Enable this if you'd like us to automatically add all queries executed in the timeline.
     |
     */
-    'query' => env('INSPECTOR_LOG_QUERY', true),
+    'query' => env('INSPECTOR_QUERY', true),
 
     /*
     |--------------------------------------------------------------------------
