@@ -5,11 +5,8 @@
 
 - [Install](#install)
 - [Report Exception](#exception)
-- [Full configuration](#config)
 - [Laravel >= 5.0, < 5.1](#compatibility)
 - [Enrich your timeline](#timeline)
-
-![](<https://app.inspector.dev/images/frontend/demo.gif>)
 
 <a name="install"></a>
 
@@ -78,28 +75,6 @@ try {
 }
 ```
 
-<a name="config"></a>
-
-## Full configuration
-
-If you want full control of the package behaviour publish the configuration file:
-
-```bash
-php artisan vendor:publish --provider="Inspector\InspectorServiceProvider"
-```
-
-That will add `config/inspector.php` in your Laravel configuration directory.
-
-You can set the environment variables below:
-
-```bash
-INSPECTOR_API_KEY=[api key]
-INSPECTOR_ENABLE=
-INSPECTOR_QUERY=
-INSPECTOR_QUERY_BINDINGS=
-INSPECTOR_USER=
-```
-
 <a name="compatibility"></a>
 
 ## Laravel >= 5.0, < 5.1
@@ -137,7 +112,7 @@ class TagUserAsActive extends Command
      */
     public function handle()
     {
-        $users = Users::whereHas('project')->get();
+        $users = Users::all();
         
         // Measure the impact of entire iteration
         $segmentProcess = Inspector::startSegment('process');
