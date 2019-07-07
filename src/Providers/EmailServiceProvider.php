@@ -15,7 +15,7 @@ class EmailServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $segmentCollection = [];
+    protected $segments = [];
 
     /**
      * Booting of services.
@@ -28,12 +28,12 @@ class EmailServiceProvider extends ServiceProvider
             if (!$this->app['inspector']->hasTransaction()) {
                 return;
             }
-            $this->segmentCollection[$event->message->getId()] = $this->app['inspector']->startSegment('email');
+            $this->segments[$event->message->getId()] = $this->app['inspector']->startSegment('email');
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {
-            if (array_key_exists($event->message->getId(), $this->segmentCollection)) {
-                $this->segmentCollection[$event->message->getId()]->end();
+            if (array_key_exists($event->message->getId(), $this->segments)) {
+                $this->segments[$event->message->getId()]->end();
             }
         });
     }

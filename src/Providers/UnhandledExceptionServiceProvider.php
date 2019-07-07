@@ -32,21 +32,25 @@ class UnhandledExceptionServiceProvider extends ServiceProvider
 
     protected function handleExceptionLog($message, $context)
     {
+        if(!config('inspector.unhandled_exceptions')){
+            return;
+        }
+
         if (
             isset($context['exception']) &&
             ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
         ) {
-            $this->report($context['exception']);
+            $this->reportException($context['exception']);
         }
 
         if ($message instanceof \Exception || $message instanceof \Throwable) {
-            $this->report($message);
+            $this->reportException($message);
         }
     }
 
-    protected function report(\Throwable $exception)
+    protected function reportException(\Throwable $exception)
     {
-        if (!$this->app['inspector']->hasTransaction()) {
+        if (!$this->app['inspector']->isRecording()) {
             $this->app['inspector']->startTransaction(get_class($exception));
         }
 

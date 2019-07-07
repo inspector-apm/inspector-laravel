@@ -56,27 +56,32 @@ class InspectorServiceProvider extends ServiceProvider
 
             $inspector = new Inspector($configuration);
 
-            if ($app->runningInConsole()) {
+            if ($app->runningInConsole() && $this->runningApprovedArtisanCommand()) {
                 $inspector->startTransaction(implode(' ', $_SERVER['argv']));
             }
 
-            if (config('inspector.unhandled_exceptions')) {
-                $app->register(UnhandledExceptionServiceProvider::class);
-            }
-
-            if (config('inspector.query')) {
-                $app->register(DatabaseQueryServiceProvider::class);
-            }
-
-            if (config('inspector.job')) {
+            /*if (config('inspector.job')) {
                 $app->register(JobServiceProvider::class);
             }
 
             if (config('inspector.email')) {
                 $app->register(EmailServiceProvider::class);
-            }
+            }*/
 
             return $inspector;
         });
+
+        $this->app->register(UnhandledExceptionServiceProvider::class);
+        $this->app->register(DatabaseQueryServiceProvider::class);
+    }
+
+    /**
+     * Determine if current execution should be monitored.
+     *
+     * @return bool
+     */
+    protected function runningApprovedArtisanCommand(): bool
+    {
+        return in_array($_SERVER['argv'][1] ?? null, config('inspector.ignore_commands'));
     }
 }

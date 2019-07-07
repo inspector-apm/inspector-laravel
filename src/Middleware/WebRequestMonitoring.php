@@ -21,6 +21,20 @@ class WebRequestMonitoring
      */
     public function handle($request, Closure $next)
     {
+        if($this->handlingApprovedRequest($request)){
+            $this->recordRequest($request);
+        }
+
+        return $next($request);
+    }
+
+    /**
+     * Start a transaction for the incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     */
+    protected function recordRequest($request)
+    {
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
         );
@@ -31,8 +45,6 @@ class WebRequestMonitoring
                 Auth::user()->getAuthIdentifierName()
             );
         }
-
-        return $next($request);
     }
 
     /**
@@ -43,7 +55,7 @@ class WebRequestMonitoring
      */
     public function terminate($request, $response)
     {
-        if(Inspector::hasTransaction()) {
+        if(Inspector::isRecording()) {
             Inspector::currentTransaction()->setResult('HTTP ' . $response->status());
             Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
             Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
@@ -51,9 +63,20 @@ class WebRequestMonitoring
     }
 
     /**
+     * Determine if the incoming request should be reported.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return bool
+     */
+    protected function handlingApprovedRequest(Request $request)
+    {
+        return !$request->is(config('inspector.ignore_url'));
+    }
+
+    /**
      * Generate readable name.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      * @return string
      */
     protected function buildTransactionName(Request $request)

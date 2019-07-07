@@ -37,7 +37,7 @@ class DatabaseQueryServiceProvider extends ServiceProvider
      */
     protected function handleQueryReport($sql, array $bindings, $time, $connection)
     {
-        if (!$this->app['inspector']->hasTransaction()) {
+        if (!$this->app['inspector']->isRecording() && config('inspector.query')) {
             return;
         }
 
@@ -48,7 +48,7 @@ class DatabaseQueryServiceProvider extends ServiceProvider
             ->setType($connection)
             ->setSql($sql);
 
-        if (config('inspector.bindings', false)) {
+        if (config('inspector.bindings')) {
             $segment->getContext()->getDb()->setBindings($bindings);
         }
 

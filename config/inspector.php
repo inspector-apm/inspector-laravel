@@ -108,4 +108,40 @@ return [
     |
     */
     'unhandled_exceptions' => env('INSPECTOR_UNHANDLED_EXCEPTIONS', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Artisan command to ignore
+    |--------------------------------------------------------------------------
+    |
+    | Add at this list all command signature that you don't want monitoring
+    | in your Inspector dashboard.
+    |
+    */
+    'ignore_commands' => [
+        'migrate:rollback',
+        'migrate:fresh',
+        'migrate:reset',
+        'migrate:install',
+        'package:discover',
+        'queue:listen',
+        'queue:work',
+        'horizon',
+        'horizon:work',
+        'horizon:supervisor',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Web request url to ignore
+    |--------------------------------------------------------------------------
+    |
+    | Add at this list the url schemes that you don't want monitoring
+    | in your Inspector dashboard. You can also use wildcard expression (*).
+    |
+    */
+    'ignore_url' => [
+        'telescope*',
+        'nova*',
+    ],
 ];
