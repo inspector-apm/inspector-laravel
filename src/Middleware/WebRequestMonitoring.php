@@ -70,7 +70,13 @@ class WebRequestMonitoring
      */
     protected function handlingApprovedRequest(Request $request)
     {
-        return !$request->is(config('inspector.ignore_url'));
+        foreach (config('inspector.ignore_url') as $pattern) {
+            if ($request->is($pattern)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
