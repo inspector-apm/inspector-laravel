@@ -37,7 +37,7 @@ class DatabaseQueryServiceProvider extends ServiceProvider
      */
     protected function handleQueryReport($sql, array $bindings, $time, $connection)
     {
-        if (!$this->app['inspector']->isRecording() && config('inspector.query')) {
+        if (!$this->app['inspector']->isRecording()) {
             return;
         }
 

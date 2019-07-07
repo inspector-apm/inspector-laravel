@@ -25,10 +25,9 @@ class EmailServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event) {
-            if (!$this->app['inspector']->hasTransaction()) {
-                return;
+            if ($this->app['inspector']->isRecording()) {
+                $this->segments[$event->message->getId()] = $this->app['inspector']->startSegment('email');
             }
-            $this->segments[$event->message->getId()] = $this->app['inspector']->startSegment('email');
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {

@@ -60,19 +60,24 @@ class InspectorServiceProvider extends ServiceProvider
                 $inspector->startTransaction(implode(' ', $_SERVER['argv']));
             }
 
-            /*if (config('inspector.job')) {
+            if (config('inspector.unhandled_exceptions')) {
+                $app->register(UnhandledExceptionServiceProvider::class);
+            }
+
+            if(config('inspector.query')){
+                $this->app->register(DatabaseQueryServiceProvider::class);
+            }
+
+            if (config('inspector.job')) {
                 $app->register(JobServiceProvider::class);
             }
 
             if (config('inspector.email')) {
                 $app->register(EmailServiceProvider::class);
-            }*/
+            }
 
             return $inspector;
         });
-
-        $this->app->register(UnhandledExceptionServiceProvider::class);
-        $this->app->register(DatabaseQueryServiceProvider::class);
     }
 
     /**

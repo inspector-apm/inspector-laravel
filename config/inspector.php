@@ -142,6 +142,8 @@ return [
     */
     'ignore_url' => [
         'telescope*',
-        'nova*',
+        'vendor/telescope*',
+        'horizon*',
+        'vendor/horizon*',
     ],
 ];

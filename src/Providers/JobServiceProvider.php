@@ -22,7 +22,7 @@ class JobServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
-            if(!$this->app['inspector']->hasTransaction()){
+            if(!$this->app['inspector']->isRecording()){
                 $this->app['inspector']->startTransaction($event->job->resolveName());
             }
         });

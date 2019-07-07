@@ -32,10 +32,6 @@ class UnhandledExceptionServiceProvider extends ServiceProvider
 
     protected function handleExceptionLog($message, $context)
     {
-        if(!config('inspector.unhandled_exceptions')){
-            return;
-        }
-
         if (
             isset($context['exception']) &&
             ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
