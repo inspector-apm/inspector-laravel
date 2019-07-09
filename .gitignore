@@ -1,6 +1,7 @@
 composer.phar
 composer.lock
 composer-test.lock
+phpunit.xml
 vendor/
 build/artifacts/
 artifacts/
