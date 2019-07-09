@@ -47,7 +47,7 @@ protected $middlewareGroups = [
         ...,
         WebRequestMonitoring::class,
     ],
-    
+
     'api' => [
         ...,
         WebRequestMonitoring::class,
@@ -66,12 +66,12 @@ You can also report exceptions programmatically for which you will be able to ac
 use Inspector\Laravel\Facades\Inspector;
 
 try {
-  	
+
     // Your dangerous code...
-    
+
 } catch(LogicException $exception) {
     // report an exception intentionally without blocking the application flow
-    Inspector::reportException($excetion);
+    Inspector::reportException($exception);
 }
 ```
 
@@ -113,10 +113,10 @@ class TagUserAsActive extends Command
     public function handle()
     {
         $users = Users::all();
-        
+
         // Measure the impact of entire iteration
         $segmentProcess = Inspector::startSegment('process');
-        
+
         foreach ($users as $user) {
             // Measure http post
             $segment = Inspector::startSegment('http');
@@ -126,7 +126,7 @@ class TagUserAsActive extends Command
             ]);
             $segment->end();
         }
-        
+
         $segmentProcess->end();
     }
 }
