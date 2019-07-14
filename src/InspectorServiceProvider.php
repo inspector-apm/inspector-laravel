@@ -2,7 +2,6 @@
 
 namespace Inspector\Laravel;
 
-
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
@@ -13,6 +12,7 @@ use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Inspector\Configuration;
+use Symfony\Component\Console\Input\ArgvInput;
 
 class InspectorServiceProvider extends ServiceProvider
 {
@@ -87,6 +87,8 @@ class InspectorServiceProvider extends ServiceProvider
      */
     protected function runningApprovedArtisanCommand(): bool
     {
-        return in_array($_SERVER['argv'][1] ?? null, config('inspector.ignore_commands'));
+        $input = new ArgvInput();
+
+        return ! in_array($input->getFirstArgument(), config('inspector.ignore_commands'));
     }
 }
