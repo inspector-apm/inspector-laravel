@@ -25,6 +25,7 @@ class MiddlewareTest extends BasicTestCase
 
         $middleware->handle($request, function ($req){
             $this->assertInstanceOf(Transaction::class, Inspector::currentTransaction());
+            $this->assertSame('GET /' . $req->route()->uri(), Inspector::currentTransaction()->getName());
         });
     }
 }
