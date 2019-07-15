@@ -14,7 +14,8 @@ class FilterClassTest extends BasicTestCase
     public function testRequestApproved()
     {
         $this->app->router->get('test', function (Request $request) {
-            $this->assertTrue(Filters::isApprovedRequest($request) && Inspector::isRecording());
+            $this->assertTrue(Filters::isApprovedRequest($request));
+            $this->assertTrue(Inspector::isRecording());
         })->middleware(WebRequestMonitoring::class);
 
         $this->call('GET', 'test');
@@ -23,7 +24,8 @@ class FilterClassTest extends BasicTestCase
     public function testRequestNotApproved()
     {
         $this->app->router->get('nova', function (Request $request) {
-            $this->assertFalse(Filters::isApprovedRequest($request) || Inspector::isRecording());
+            $this->assertFalse(Filters::isApprovedRequest($request));
+            $this->assertFalse(Inspector::isRecording());
         })->middleware(WebRequestMonitoring::class);
 
         $this->call('GET', 'nova');
