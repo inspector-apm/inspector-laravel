@@ -80,6 +80,6 @@ class InspectorServiceProvider extends ServiceProvider
             return $inspector;
         });
 
-        $this->app->register(HttpResponseCollectorProvider::class);
+        //$this->app->register(HttpResponseCollectorProvider::class);
     }
 }

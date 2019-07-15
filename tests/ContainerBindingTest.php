@@ -18,7 +18,7 @@ class ContainerBindingTest extends BasicTestCase
         $this->assertInstanceOf(\Inspector\Inspector::class, $this->app['inspector']);
 
         // Register service providers
-        $this->assertInstanceOf(HttpResponseCollectorProvider::class, $this->app->getProvider(HttpResponseCollectorProvider::class));
+        //$this->assertInstanceOf(HttpResponseCollectorProvider::class, $this->app->getProvider(HttpResponseCollectorProvider::class));
         $this->assertInstanceOf(EmailServiceProvider::class, $this->app->getProvider(EmailServiceProvider::class));
         $this->assertInstanceOf(JobServiceProvider::class, $this->app->getProvider(JobServiceProvider::class));
         $this->assertInstanceOf(UnhandledExceptionServiceProvider::class, $this->app->getProvider(UnhandledExceptionServiceProvider::class));

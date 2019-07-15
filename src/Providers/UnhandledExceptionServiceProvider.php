@@ -50,8 +50,7 @@ class UnhandledExceptionServiceProvider extends ServiceProvider
             $this->app['inspector']->startTransaction(get_class($exception));
         }
 
-        $error = $this->app['inspector']->reportException($exception);
-        $error->unhandled();
+        $error = $this->app['inspector']->reportException($exception, false);;
 
         if (Auth::check() && config('inspector.user')) {
             $error->withUser(
