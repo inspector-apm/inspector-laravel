@@ -145,5 +145,6 @@ return [
         'vendor/telescope*',
         'horizon*',
         'vendor/horizon*',
+        'nova*'
     ],
 ];

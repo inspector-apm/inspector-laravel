@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Support\Facades\Auth;
+use Inspector\Laravel\Filters;
 
 class WebRequestMonitoring
 {
@@ -21,7 +22,7 @@ class WebRequestMonitoring
      */
     public function handle($request, Closure $next)
     {
-        if($this->handlingApprovedRequest($request)){
+        if(Filters::isApprovedRequest($request)){
             $this->recordRequest($request);
         }
 
@@ -45,38 +46,6 @@ class WebRequestMonitoring
                 Auth::user()->getAuthIdentifierName()
             );
         }
-    }
-
-    /**
-     * Called before release the response.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param $response
-     */
-    public function terminate($request, $response)
-    {
-        if(Inspector::isRecording()) {
-            Inspector::currentTransaction()->setResult('HTTP ' . $response->status());
-            Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
-            Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->status());
-        }
-    }
-
-    /**
-     * Determine if the incoming request should be reported.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return bool
-     */
-    protected function handlingApprovedRequest(Request $request)
-    {
-        foreach (config('inspector.ignore_url') as $pattern) {
-            if ($request->is($pattern)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**

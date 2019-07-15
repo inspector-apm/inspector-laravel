@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application as LaravelApplication;
 use Inspector\Inspector;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
+use Inspector\Laravel\Providers\HttpResponseCollectorProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
@@ -56,7 +57,7 @@ class InspectorServiceProvider extends ServiceProvider
 
             $inspector = new Inspector($configuration);
 
-            if ($app->runningInConsole() && $this->runningApprovedArtisanCommand()) {
+            if ($app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
                 $inspector->startTransaction(implode(' ', $_SERVER['argv']));
             }
 
@@ -78,17 +79,7 @@ class InspectorServiceProvider extends ServiceProvider
 
             return $inspector;
         });
-    }
 
-    /**
-     * Determine if current execution should be monitored.
-     *
-     * @return bool
-     */
-    protected function runningApprovedArtisanCommand(): bool
-    {
-        $input = new ArgvInput();
-
-        return ! in_array($input->getFirstArgument(), config('inspector.ignore_commands'));
+        $this->app->register(HttpResponseCollectorProvider::class);
     }
 }
