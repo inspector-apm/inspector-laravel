@@ -11,11 +11,11 @@ class ResponseDataTest extends BasicTestCase
 {
     public function testResponseData()
     {
-        $this->app->router->get('test', function () {
+        $this->app->router->get('approved', function () {
             $this->assertTrue(Inspector::isRecording());
         })->middleware(WebRequestMonitoring::class);
 
-        $response = $this->call('GET', 'test');
+        $response = $this->call('GET', 'approved');
 
         $this->assertEquals(
             $response->getStatusCode(),
