@@ -4,8 +4,6 @@
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-laravel/v/stable)](https://packagist.org/packages/inspector-apm/inspector-laravel)
 
 - [Install](#install)
-- [Report Exception](#exception)
-- [Laravel >= 5.0, < 5.1](#compatibility)
 - [Enrich your timeline](#timeline)
 
 <a name="install"></a>
@@ -54,41 +52,18 @@ protected $middlewareGroups = [
     ]
 ```
 
-<a name="exception"></a>
+### Test everything is working
 
-## Report Exception intentionally
-
-By default every exception fired in your laravel app will be reported automatically.
-
-You can also report exceptions programmatically for which you will be able to access detailed information gathered by Inspector in real time:
+Create a test route using the code below:
 
 ```php
-use Inspector\Laravel\Facades\Inspector;
-
-try {
-
-    // Your dangerous code...
-
-} catch(LogicException $exception) {
-    // report an exception intentionally without blocking the application flow
-    Inspector::reportException($exception);
-}
+Route::get('test', function () {
+    \Inspector\Laravel\Facades\Inspector::reportException(new Excetpion('Test'));
+    return "Inspector works";
+})
 ```
 
-<a name="compatibility"></a>
-
-## Laravel >= 5.0, < 5.1
-
-Laravel's (`>= 5.0, < 5.1`) exception logger doesn't use event dispatcher (<https://github.com/laravel/framework/pull/10922>) and that's why you need to add the following line to your `App\Exceptions\Handler.php` class (otherwise Laravel's exceptions will not be sent to Inspector):
-
-```php
-public function report(Exception $e)
-{
-    \Inspector::reportException($e);
-
-    return parent::report($e);
-}
-```
+Open this route in you browser to test connection between your app and Inspection API.
 
 <a name="timeline"></a>
 
@@ -105,6 +80,8 @@ use Inspector\Laravel\Facades\Inspector;
 
 class TagUserAsActive extends Command
 {
+    protected $guzzle;
+    
     /**
      * Execute the console command.
      *
@@ -118,7 +95,7 @@ class TagUserAsActive extends Command
         $segmentProcess = Inspector::startSegment('process');
 
         foreach ($users as $user) {
-            // Measure http post
+            // Measure http call
             $segment = Inspector::startSegment('http');
             $this->guzzle->post('/mail-marketing/add_tag', [
                 'email' => $user->email,
