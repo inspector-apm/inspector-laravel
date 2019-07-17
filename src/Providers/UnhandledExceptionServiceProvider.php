@@ -53,10 +53,7 @@ class UnhandledExceptionServiceProvider extends ServiceProvider
         $error = $this->app['inspector']->reportException($exception, false);;
 
         if (Auth::check() && config('inspector.user')) {
-            $error->withUser(
-                Auth::user()->getAuthIdentifier(),
-                Auth::user()->getAuthIdentifierName()
-            );
+            $error->withUser(Auth::user()->getAuthIdentifier());
         }
     }
 
