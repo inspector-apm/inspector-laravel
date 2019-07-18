@@ -46,12 +46,14 @@ class InspectorServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        //
         $this->mergeConfigFrom(__DIR__ . '/../config/inspector.php', 'inspector');
 
         // Bind Inspector service
         $this->app->singleton('inspector', function (Container $app) {
             $configuration = new Configuration(config('inspector.key'));
             $configuration->setUrl(config('inspector.url'))
+                ->setTransport(config('inspector.transport'))
                 ->setOptions(config('inspector.options'))
                 ->setEnabled(config('inspector.enable'));
 
