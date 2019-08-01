@@ -33,19 +33,15 @@ class JobServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
-            // Start a transaction id there's not one
             // todo: add "&& Filters::isApprovedJob($event->job)"
+
+            // Start a transaction id there's not one
             if(!$this->app['inspector']->isRecording()){
                 $this->app['inspector']->startTransaction($event->job->resolveName());
+            } else {
+                // Open a segment if a transaction already exists
+                $this->initializeSegment($event->job);
             }
-
-            $segment = $this->app['inspector']
-                ->startSegment('job')
-                ->setLabel($event->job->resolveName())
-                ->setContext($event->job->payload());
-
-            // Jot down the job with a unique ID
-            $this->segments[$this->getJobId($event->job)] = $segment;
         });
 
         $this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
@@ -59,6 +55,17 @@ class JobServiceProvider extends ServiceProvider
         $this->app['events']->listen(JobExceptionOccurred::class, function (JobExceptionOccurred $event) {
             $this->handleJobEnd($event->job, true);
         });
+    }
+
+    protected function initializeSegment(Job $job)
+    {
+        $segment = $this->app['inspector']
+            ->startSegment('job')
+            ->setLabel($job->resolveName())
+            ->setContext($job->payload());
+
+        // Jot down the job with a unique ID
+        $this->segments[$this->getJobId($job)] = $segment;
     }
 
     /**
