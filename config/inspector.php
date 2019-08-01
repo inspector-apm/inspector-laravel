@@ -43,7 +43,7 @@ return [
     | Supported options: "sync", "async"
     |
     */
-    'transport' => env('INSPECTOR_TRANSPORT', 'async'),
+    'transport' => env('INSPECTOR_TRANSPORT', 'sync'),
 
     /*
     |--------------------------------------------------------------------------
