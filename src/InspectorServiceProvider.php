@@ -8,12 +8,10 @@ use Illuminate\Foundation\Application as LaravelApplication;
 use Inspector\Inspector;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
-use Inspector\Laravel\Providers\HttpResponseCollectorProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Inspector\Configuration;
-use Symfony\Component\Console\Input\ArgvInput;
 
 class InspectorServiceProvider extends ServiceProvider
 {
