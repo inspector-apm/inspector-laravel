@@ -30,11 +30,15 @@ class JobServiceProvider extends ServiceProvider
     {
         Queue::looping(function () {
             $this->app['inspector']->flush();
-
-            $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
+            // Start a transaction id there's not one
+            // todo: add "&& Filters::isApprovedJob($event->job)"
+            if(!$this->app['inspector']->isRecording()){
+                $this->app['inspector']->startTransaction($event->job->resolveName());
+            }
+
             $segment = $this->app['inspector']
                 ->startSegment('job')
                 ->setLabel($event->job->resolveName())
@@ -53,8 +57,6 @@ class JobServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(JobExceptionOccurred::class, function (JobExceptionOccurred $event) {
-            $this->app['inspector']->reportException($event->exception);
-
             $this->handleJobEnd($event->job, true);
         });
     }
