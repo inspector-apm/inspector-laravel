@@ -14,7 +14,7 @@
         "illuminate/console": "^5.1",
         "illuminate/contracts": "^5.1",
         "illuminate/support": "^5.1",
-        "inspector-apm/inspector-php": "^2.0"
+        "inspector-apm/inspector-php": "dev-develop"
     },
     "autoload": {
         "psr-4": {
