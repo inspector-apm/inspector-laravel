@@ -57,7 +57,7 @@ class WebRequestMonitoring implements TerminableInterface
     public function terminate(TerminableRequest $request, TerminableResponse $response)
     {
         if(Inspector::isRecording()){
-            Inspector::currentTransaction()->setResult('HTTP ' . $response->getStatusCode());
+            Inspector::currentTransaction()->setResult($response->getStatusCode());
             Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
             Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->getStatusCode());
         }
