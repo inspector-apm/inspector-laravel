@@ -35,7 +35,8 @@ class JobServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
-            $segment = $this->app['inspector']->startSegment('job')
+            $segment = $this->app['inspector']
+                ->startSegment('job')
                 ->setLabel($event->job->resolveName())
                 ->setContext($event->job->payload());
 

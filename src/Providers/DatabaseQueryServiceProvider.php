@@ -41,7 +41,7 @@ class DatabaseQueryServiceProvider extends ServiceProvider
             return;
         }
 
-        $segment = $this->app['inspector']->startSegment($connection, substr($sql, 0, 50));
+        $segment = $this->app['inspector']->startSegment($connection, substr($sql, 0, 50))->start(microtime(true) - $time);
 
         $segment->getContext()
             ->getDb()
