@@ -78,13 +78,13 @@ class JobServiceProvider extends ServiceProvider
     {
         if (!array_key_exists($this->getJobId($job), $this->segments)) {
             return;
+        } else {
+            // If a segment doesn't exists it means that job is registered as transaction
+            // If it fails we can set the result accordingly
+            $this->app['inspector']->currentTransaction()->setResult($failed ? 'failed' : 'success');
         }
 
         $this->segments[$this->getJobId($job)]->end();
-
-        if($failed){
-            $this->app['inspector']->currentTransaction()->setResult('error');
-        }
     }
 
     /**
