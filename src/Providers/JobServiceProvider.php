@@ -19,7 +19,7 @@ class JobServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $jobs = [];
+    protected $segments = [];
 
     /**
      * Booting of services.
@@ -35,27 +35,26 @@ class JobServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
+            $segment = $this->app['inspector']->startSegment('job')
+                ->setLabel($event->job->resolveName())
+                ->setContext($event->job->payload());
+
             // Jot down the job with a unique ID
-            $this->jobs[$this->getJobId($event->job)] = [
-                'name' => $event->job->resolveName(),
-                'queue' => $event->job->getQueue(),
-                'started_at' => microtime(true),
-                'payload' => $event->job->payload(),
-            ];
+            $this->segments[$this->getJobId($event->job)] = $segment;
         });
 
         $this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
-            $this->reportJob($event->job);
+            $this->handleJobEnd($event->job);
         });
 
         $this->app['events']->listen(JobFailed::class, function (JobFailed $event) {
-            $this->reportJob($event->job, true);
+            $this->handleJobEnd($event->job, true);
         });
 
         $this->app['events']->listen(JobExceptionOccurred::class, function (JobExceptionOccurred $event) {
             $this->app['inspector']->reportException($event->exception);
 
-            $this->reportJob($event->job, true);
+            $this->handleJobEnd($event->job, true);
         });
     }
 
@@ -65,25 +64,23 @@ class JobServiceProvider extends ServiceProvider
      * @param Job $job
      * @param bool $failed
      */
-    public function reportJob(Job $job, $failed = false)
+    public function handleJobEnd(Job $job, $failed = false)
     {
-        if(!array_key_exists($this->getJobId($job), $this->jobs)){
+        if (!array_key_exists($this->getJobId($job), $this->segments)) {
             return;
         }
 
-        $item = $this->jobs[$this->getJobId($job)];
+        $this->segments[$this->getJobId($job)]->end();
 
-        $this->app['inspector']->startSegment('job')
-            ->setLabel($item['name'])
-            ->start($item['started_at'])
-            ->setContext($item['payload'])
-            ->end(microtime(true) - $item['started_at']);
+        if($failed){
+            $this->app['inspector']->currentTransaction()->setResult('error');
+        }
     }
 
     /**
      * Get Job ID.
      *
-     * @param  Job $job
+     * @param Job $job
      * @return string|int
      */
     public static function getJobId(Job $job)
