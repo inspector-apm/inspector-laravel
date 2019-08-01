@@ -73,11 +73,11 @@ class JobServiceProvider extends ServiceProvider
 
         $item = $this->jobs[$this->getJobId($job)];
 
-        $segment = $this->app['inspector']->startSegment('job')
+        $this->app['inspector']->startSegment('job')
             ->setLabel($item['name'])
+            ->start($item['started_at'])
+            ->setContext($item['payload'])
             ->end(microtime(true) - $item['started_at']);
-
-        $segment->setContext($item['payload']);
     }
 
     /**
