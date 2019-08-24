@@ -42,6 +42,8 @@ class UnhandledExceptionServiceProvider extends ServiceProvider
         if ($message instanceof \Exception || $message instanceof \Throwable) {
             $this->reportException($message);
         }
+
+
     }
 
     protected function reportException(\Throwable $exception)
@@ -55,6 +57,8 @@ class UnhandledExceptionServiceProvider extends ServiceProvider
         if (Auth::check() && config('inspector.user')) {
             $error->withUser(Auth::user()->getAuthIdentifier());
         }
+
+        $this->app['inspector']->currentTransaction()->setResult('error');
     }
 
     /**
