@@ -35,7 +35,7 @@ class JobServiceProvider extends ServiceProvider
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
             // todo: add "&& Filters::isApprovedJob($event->job)"
 
-            // Start a transaction id there's not one
+            // Start a transaction if there's not one
             if(!$this->app['inspector']->isRecording()){
                 $this->app['inspector']->startTransaction($event->job->resolveName());
             } else {
@@ -62,7 +62,7 @@ class JobServiceProvider extends ServiceProvider
         $segment = $this->app['inspector']
             ->startSegment('job')
             ->setLabel($job->resolveName())
-            ->setContext($job->payload());
+            ->setContext(['payload' => $job->payload()]);
 
         // Jot down the job with a unique ID
         $this->segments[$this->getJobId($job)] = $segment;
@@ -76,15 +76,13 @@ class JobServiceProvider extends ServiceProvider
      */
     public function handleJobEnd(Job $job, $failed = false)
     {
+        // If a segment doesn't exists it means that job is registered as transaction
+        // we can set the result accordingly
         if (!array_key_exists($this->getJobId($job), $this->segments)) {
-            return;
-        } else {
-            // If a segment doesn't exists it means that job is registered as transaction
-            // If it fails we can set the result accordingly
             $this->app['inspector']->currentTransaction()->setResult($failed ? 'failed' : 'success');
+        } else {
+            $this->segments[$this->getJobId($job)]->end();
         }
-
-        $this->segments[$this->getJobId($job)]->end();
     }
 
     /**
