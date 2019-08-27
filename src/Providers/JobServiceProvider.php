@@ -44,7 +44,10 @@ class JobServiceProvider extends ServiceProvider
             }
         });
 
-        $this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
+        /*$this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
+            $this->handleJobEnd($event->job);
+        });*/
+        Queue::after(function (JobProcessed $event) {
             $this->handleJobEnd($event->job);
         });
 
