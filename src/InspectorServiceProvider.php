@@ -57,6 +57,7 @@ class InspectorServiceProvider extends ServiceProvider
 
             $inspector = new Inspector($configuration);
 
+            // Start a transaction if the app is running in console
             if ($app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
                 $inspector->startTransaction(implode(' ', $_SERVER['argv']));
             }

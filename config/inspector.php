@@ -131,6 +131,7 @@ return [
     */
     'ignore_commands' => [
         'migrate:rollback',
+        'migrate:refresh',
         'migrate:fresh',
         'migrate:reset',
         'migrate:install',
