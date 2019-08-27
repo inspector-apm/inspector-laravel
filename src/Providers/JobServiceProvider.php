@@ -44,10 +44,7 @@ class JobServiceProvider extends ServiceProvider
             }
         });
 
-        /*$this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
-            $this->handleJobEnd($event->job);
-        });*/
-        Queue::after(function (JobProcessed $event) {
+        $this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
             $this->handleJobEnd($event->job);
         });
 
@@ -81,8 +78,7 @@ class JobServiceProvider extends ServiceProvider
     {
         // If a segment doesn't exists it means that job is registered as transaction
         // we can set the result accordingly
-        if (!array_key_exists($this->getJobId($job), $this->segments)) {
-            \Log::debug('Handle Job as transaction: '.($failed ? 'error' : 'success'));
+        if (!array_key_exists($this->getJobId($job), $this->segments) && $this->app['inspector']->isRecording()) {
             $this->app['inspector']->currentTransaction()->setResult($failed ? 'error' : 'success');
         } else {
             $this->segments[$this->getJobId($job)]->end();
