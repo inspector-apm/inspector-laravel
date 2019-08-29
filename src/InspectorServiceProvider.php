@@ -47,13 +47,12 @@ class InspectorServiceProvider extends ServiceProvider
 
         // Bind Inspector service class
         $this->app->singleton('inspector', function () {
-            return new Inspector(
-                (new Configuration(config('inspector.key')))
-                    ->setUrl(config('inspector.url'))
-                    ->setTransport(config('inspector.transport'))
-                    ->setOptions(config('inspector.options'))
-                    ->setEnabled(config('inspector.enable'))
-            );
+            $configuration = (new Configuration(config('inspector.enable') ? config('inspector.key') : null))
+                ->setUrl(config('inspector.url'))
+                ->setTransport(config('inspector.transport'))
+                ->setOptions(config('inspector.options'));
+
+            return new Inspector($configuration);
         });
 
         // Start a transaction if the app is running in console
