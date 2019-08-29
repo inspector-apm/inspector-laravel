@@ -52,21 +52,20 @@ class InspectorServiceProvider extends ServiceProvider
                     ->setUrl(config('inspector.url'))
                     ->setTransport(config('inspector.transport'))
                     ->setOptions(config('inspector.options'))
+                    ->setEnabled(config('inspector.enable'))
             );
         });
 
-        if(config('inspector.enable')){
-            // Start a transaction if the app is running in console
-            if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
-                $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
-            }
-
-            $this->registerInspectorServiceProviders();
+        // Start a transaction if the app is running in console
+        if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
+            $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
         }
+
+        $this->registerInspectorServiceProviders();
     }
 
     /**
-     * Bind Inspector service and providers
+     * Bind Inspector service providers based on package configuration.
      */
     public function registerInspectorServiceProviders()
     {
