@@ -25,11 +25,22 @@ class WebRequestMonitoring implements TerminableInterface
      */
     public function handle($request, Closure $next)
     {
-        if(config('inspector.enable') && Filters::isApprovedRequest($request)){
-            $this->recordRequest($request);
+        if($this->shouldRecorded($request)){
+            $this->startTransaction($request);
         }
 
         return $next($request);
+    }
+
+    /**
+     * Determine if the middleware should record current request.
+     *
+     * @param $request
+     * @return bool
+     */
+    protected function shouldRecorded($request): bool
+    {
+        return config('inspector.enable') && Filters::isApprovedRequest($request);
     }
 
     /**
@@ -37,7 +48,7 @@ class WebRequestMonitoring implements TerminableInterface
      *
      * @param \Illuminate\Http\Request $request
      */
-    protected function recordRequest($request)
+    protected function startTransaction($request)
     {
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
