@@ -43,25 +43,9 @@ class InspectorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
         $this->mergeConfigFrom(__DIR__ . '/../config/inspector.php', 'inspector');
 
-        if(config('inspector.enable')){
-            $this->registerInspectorService();
-
-            // Start a transaction if the app is running in console
-            if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
-                $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
-            }
-        }
-    }
-
-    /**
-     * Bind Inspector service and providers
-     */
-    public function registerInspectorService()
-    {
-        // Bind Inspector service
+        // Bind Inspector service class
         $this->app->singleton('inspector', function () {
             return new Inspector(
                 (new Configuration(config('inspector.key')))
@@ -71,6 +55,21 @@ class InspectorServiceProvider extends ServiceProvider
             );
         });
 
+        if(config('inspector.enable')){
+            // Start a transaction if the app is running in console
+            if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
+                $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
+            }
+
+            $this->registerInspectorServiceProviders();
+        }
+    }
+
+    /**
+     * Bind Inspector service and providers
+     */
+    public function registerInspectorServiceProviders()
+    {
         if (config('inspector.unhandled_exceptions')) {
             $this->app->register(UnhandledExceptionServiceProvider::class);
         }
