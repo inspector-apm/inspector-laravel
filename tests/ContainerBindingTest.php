@@ -6,7 +6,6 @@ namespace Inspector\Laravel\Tests;
 
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
-use Inspector\Laravel\Providers\HttpResponseCollectorProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
 

@@ -26,6 +26,5 @@
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/> <!-- Example key to work with encryption -->
         <env name="APP_ENV" value="testing"/>
         <env name="APP_NAME" value="Package Testing"/>
-        <env name="INSPECTOR_ENABLE" value="false"/>
     </php>
 </phpunit>

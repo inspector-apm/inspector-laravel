@@ -2,7 +2,6 @@
 
 namespace Inspector\Laravel;
 
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Inspector\Inspector;
@@ -47,38 +46,45 @@ class InspectorServiceProvider extends ServiceProvider
         //
         $this->mergeConfigFrom(__DIR__ . '/../config/inspector.php', 'inspector');
 
-        // Bind Inspector service
-        $this->app->singleton('inspector', function (Container $app) {
-            $configuration = new Configuration(config('inspector.key'));
-            $configuration->setUrl(config('inspector.url'))
-                ->setTransport(config('inspector.transport'))
-                ->setOptions(config('inspector.options'))
-                ->setEnabled(config('inspector.enable'));
-
-            $inspector = new Inspector($configuration);
+        if(config('inspector.enable')){
+            $this->registerInspectorService();
 
             // Start a transaction if the app is running in console
-            if ($app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
-                $inspector->startTransaction(implode(' ', $_SERVER['argv']));
+            if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
+                $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
             }
+        }
+    }
 
-            if (config('inspector.unhandled_exceptions')) {
-                $app->register(UnhandledExceptionServiceProvider::class);
-            }
-
-            if(config('inspector.query')){
-                $this->app->register(DatabaseQueryServiceProvider::class);
-            }
-
-            if (config('inspector.job')) {
-                $app->register(JobServiceProvider::class);
-            }
-
-            if (config('inspector.email')) {
-                $app->register(EmailServiceProvider::class);
-            }
-
-            return $inspector;
+    /**
+     * Bind Inspector service and providers
+     */
+    public function registerInspectorService()
+    {
+        // Bind Inspector service
+        $this->app->singleton('inspector', function () {
+            return new Inspector(
+                (new Configuration(config('inspector.key')))
+                    ->setUrl(config('inspector.url'))
+                    ->setTransport(config('inspector.transport'))
+                    ->setOptions(config('inspector.options'))
+            );
         });
+
+        if (config('inspector.unhandled_exceptions')) {
+            $this->app->register(UnhandledExceptionServiceProvider::class);
+        }
+
+        if(config('inspector.query')){
+            $this->app->register(DatabaseQueryServiceProvider::class);
+        }
+
+        if (config('inspector.job')) {
+            $this->app->register(JobServiceProvider::class);
+        }
+
+        if (config('inspector.email')) {
+            $this->app->register(EmailServiceProvider::class);
+        }
     }
 }

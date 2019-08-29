@@ -5,6 +5,7 @@ namespace Inspector\Laravel\Middleware;
 
 
 use Closure;
+use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Request as TerminableRequest;
 use Symfony\Component\HttpFoundation\Response as TerminableResponse;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class WebRequestMonitoring implements TerminableInterface
      */
     public function handle($request, Closure $next)
     {
-        if(Filters::isApprovedRequest($request)){
+        if(App::bound('inspector') && Filters::isApprovedRequest($request)){
             $this->recordRequest($request);
         }
 
@@ -56,7 +57,7 @@ class WebRequestMonitoring implements TerminableInterface
      */
     public function terminate(TerminableRequest $request, TerminableResponse $response)
     {
-        if(Inspector::isRecording()){
+        if(App::bound('inspector') && Inspector::isRecording()){
             Inspector::currentTransaction()->setResult($response->getStatusCode());
             Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
             Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->getStatusCode());
