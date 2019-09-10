@@ -74,7 +74,7 @@ return [
     | Bindings
     |--------------------------------------------------------------------------
     |
-    | Enable this if you'd like us to include the query bindings in query spans.
+    | Enable this if you'd like us to include the query bindings.
     |
     */
     'bindings' => env('INSPECTOR_QUERY_BINDINGS', false),
@@ -130,6 +130,7 @@ return [
     |
     */
     'ignore_commands' => [
+        'schedule:run',
         'migrate:rollback',
         'migrate:refresh',
         'migrate:fresh',
