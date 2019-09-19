@@ -1,20 +1,36 @@
-# Laravel Inspector
+# Real-Time monitoring package for Laravel
 
 [![Build Status](https://travis-ci.org/inspector-apm/inspector-laravel.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-laravel)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-laravel/v/stable)](https://packagist.org/packages/inspector-apm/inspector-laravel)
 
+- [Version Compatibility](#versions)
 - [Install](#install)
-- [Enrich your timeline](#timeline)
+- [Midleware](#middleware)
+
+<a name="versions"></a>
+
+| Laravel | Inspector package |
+| ------- | ----------------- |
+| 5.x     | 2.x               |
+| 6.x     | 3.x               |
 
 <a name="install"></a>
 
 ## Install
 
-Install the latest version of our Laravel package by:
+Install the latest version of our `Laravel 6.x` package by:
 
 ```sehll
 composer require inspector-apm/inspector-laravel
 ```
+
+If your application is  using a `5.x` version of the Laravel framework use the command below:
+
+```shell
+composer require "inspector-apm/inspector-laravel=^2.0"
+```
+
+
 
 ### Configure the API Key
 
@@ -58,56 +74,13 @@ Create a test route using the code below:
 
 ```php
 Route::get('test', function () {
-    \Inspector\Laravel\Facades\Inspector::reportException(new Excetpion('Test'));
-    return "Inspector works";
+    throw new Excetpion('Test'));
 })
 ```
 
 Open this route in you browser to test connection between your app and Inspection API.
 
-<a name="timeline"></a>
-
-## Enrich Your Timeline
-
-You can add custom segments in your timeline to measure the impact that a code block has on a transaction performance.
-
-Suppose to have an artisan command that execute some database checks and data manipulation in background. Queries are reported automatically by Inspector but for data manipulation could be interesting to have a measure of their performance.
-
-Simply use `Inspector` facade to start new `segment`:
-
-```php
-use Inspector\Laravel\Facades\Inspector;
-
-class TagUserAsActive extends Command
-{
-    protected $guzzle;
-    
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
-        $users = Users::all();
-
-        // Measure the impact of entire iteration
-        $segmentProcess = Inspector::startSegment('process');
-
-        foreach ($users as $user) {
-            // Measure http call
-            $segment = Inspector::startSegment('http');
-            $this->guzzle->post('/mail-marketing/add_tag', [
-                'email' => $user->email,
-                'tag' => 'active',
-            ]);
-            $segment->end();
-        }
-
-        $segmentProcess->end();
-    }
-}
-```
+## Official documentartion
 
 **[See official documentation](https://app.inspector.dev/docs/2.0/platforms/laravel)**
 
