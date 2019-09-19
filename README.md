@@ -9,6 +9,8 @@
 
 <a name="versions"></a>
 
+## Version Compatibility
+
 | Laravel | Inspector package |
 | ------- | ----------------- |
 | 5.x     | 2.x               |
