@@ -1,12 +1,12 @@
 language: php
 
 php:
-  - 7.2
-  - 7.3
+    - 7.2
+    - 7.3
 
 before_script:
-  - composer install --no-interaction
-  - composer require --dev "laravel/laravel" --no-update
-  - composer update
+    - composer install --no-interaction
+    - composer require --dev "laravel/laravel" --no-update
+    - composer update
 
 script: vendor/bin/phpunit
