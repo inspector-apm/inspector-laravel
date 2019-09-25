@@ -84,7 +84,7 @@ Open this route in you browser to test connection between your app and Inspectio
 
 ## Official documentartion
 
-**[See official documentation](https://app.inspector.dev/docs/2.0/platforms/laravel)**
+**[See official documentation](https://app.inspector.dev/docs)**
 
 ## LICENSE
 
