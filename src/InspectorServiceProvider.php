@@ -8,6 +8,7 @@ use Inspector\Inspector;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
+use Inspector\Laravel\Providers\NotificationServiceProvider;
 use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Inspector\Configuration;
@@ -82,6 +83,10 @@ class InspectorServiceProvider extends ServiceProvider
 
         if (config('inspector.email')) {
             $this->app->register(EmailServiceProvider::class);
+        }
+
+        if (config('inspector.notifications')) {
+            $this->app->register(NotificationServiceProvider::class);
         }
     }
 }

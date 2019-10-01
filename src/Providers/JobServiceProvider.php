@@ -15,7 +15,7 @@ use Illuminate\Support\ServiceProvider;
 class JobServiceProvider extends ServiceProvider
 {
     /**
-     * Current Jobs.
+     * Jobs to inspect.
      *
      * @var array
      */
