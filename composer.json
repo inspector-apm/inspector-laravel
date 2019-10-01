@@ -11,10 +11,10 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "illuminate/console": "^5.1",
-        "illuminate/contracts": "^5.1",
-        "illuminate/support": "^5.1",
-        "inspector-apm/inspector-php": "^2.3"
+        "illuminate/console": "^5.4",
+        "illuminate/contracts": "^5.4",
+        "illuminate/support": "^5.4",
+        "inspector-apm/inspector-php": "^2.4"
     },
     "autoload": {
         "psr-4": {
