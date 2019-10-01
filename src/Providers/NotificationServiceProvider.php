@@ -30,11 +30,11 @@ class NotificationServiceProvider extends ServiceProvider
                     ->startSegment('notifications')
                     ->setLabel(get_class($event->notification))
                     ->setContext([
-                        'data' => [
+                        'Data' => [
                             'channel' => $event->channel,
                             'notifiable' => get_class($event->notifiable),
                         ],
-                        'response' => $event->response,
+                        'Response' => $event->response,
                     ]);
 
                 $this->segments[$event->notification->id] = $segment;
