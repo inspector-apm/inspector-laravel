@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 class NotificationServiceProvider extends ServiceProvider
 {
     /**
-     * Notifications to trace.
+     * Notifications to inspect.
      *
      * @var array
      */

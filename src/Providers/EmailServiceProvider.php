@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 class EmailServiceProvider extends ServiceProvider
 {
     /**
-     * Collection of mail event spans.
+     * Email messages to inspect.
      *
      * @var array
      */

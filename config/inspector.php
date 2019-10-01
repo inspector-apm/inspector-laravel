@@ -102,10 +102,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Email
+    | Notifications
     |--------------------------------------------------------------------------
     |
-    | Enable this if you'd like us to monitor email sending.
+    | Enable this if you'd like us to monitor notifications.
     |
     */
     'notifications' => env('INSPECTOR_NOTIFICATIONS', true),
