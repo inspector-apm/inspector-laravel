@@ -1,12 +1,12 @@
 {
     "name": "inspector-apm/inspector-laravel",
-    "description": "Real Time monitoring for Laravel applications.",
+    "description": "Real-Time monitoring for Laravel applications.",
     "keywords": ["monitoring", "php", "inspector", "laravel"],
     "license": "MIT",
     "authors": [
         {
             "name": "Valerio Barbera",
-            "email": "support@inspector.dev"
+            "email": "valerio@inspector.dev"
         }
     ],
     "require": {
