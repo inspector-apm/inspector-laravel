@@ -10,6 +10,11 @@ use Illuminate\Support\ServiceProvider;
 
 class NotificationServiceProvider extends ServiceProvider
 {
+    /**
+     * Notifications to trace.
+     *
+     * @var array
+     */
     protected $segments = [];
 
     /**
