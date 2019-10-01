@@ -16,15 +16,9 @@ class DatabaseQueryServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (class_exists(QueryExecuted::class)) {
-            $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) {
-                $this->handleQueryReport($query->sql, $query->bindings, $query->time, $query->connectionName);
-            });
-        } else {
-            $this->app['events']->listen('illuminate.query', function ($sql, array $bindings, $time, $connection) {
-                $this->handleQueryReport($sql, $bindings, $time, $connection);
-            });
-        }
+        $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) {
+            $this->handleQueryReport($query->sql, $query->bindings, $query->time, $query->connectionName);
+        });
     }
 
     /**
