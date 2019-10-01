@@ -33,8 +33,7 @@ class NotificationServiceProvider extends ServiceProvider
                         'Data' => [
                             'channel' => $event->channel,
                             'notifiable' => get_class($event->notifiable),
-                        ],
-                        'Response' => $event->response,
+                        ]
                     ]);
 
                 $this->segments[$event->notification->id] = $segment;
@@ -43,7 +42,9 @@ class NotificationServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(NotificationSent::class, function (NotificationSent $event) {
             if (array_key_exists($event->notification->id, $this->segments)) {
-                $this->segments[$event->notification->id]->end();
+                $this->segments[$event->notification->id]
+                    ->setContext(['Response' => $event->response])
+                    ->end();
             }
         });
     }
