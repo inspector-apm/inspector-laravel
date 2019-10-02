@@ -19,7 +19,10 @@
     "autoload": {
         "psr-4": {
             "Inspector\\Laravel\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "config": {
         "preferred-install": "dist"
