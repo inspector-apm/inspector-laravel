@@ -40,7 +40,7 @@ class WebRequestMonitoring implements TerminableInterface
      */
     protected function shouldRecorded($request): bool
     {
-        return config('inspector.enable') && Filters::isApprovedRequest($request);
+        return config('inspector.enable') && Filters::isApprovedRequest(config('inspector.ignore_url'), $request);
     }
 
     /**

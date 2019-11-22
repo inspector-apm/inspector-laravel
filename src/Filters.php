@@ -12,12 +12,13 @@ class Filters
     /**
      * Determine if the current request should be monitored.
      *
+     * @param array $notAllowedPatterns
      * @param Request $request
      * @return bool
      */
-    public static function isApprovedRequest(Request $request): bool
+    public static function isApprovedRequest(array $notAllowedPatterns, Request $request): bool
     {
-        foreach (config('inspector.ignore_url') as $pattern) {
+        foreach ($notAllowedPatterns as $pattern) {
             if ($request->is($pattern)) {
                 return false;
             }
@@ -29,12 +30,13 @@ class Filters
     /**
      * Determine if current command should be monitored.
      *
+     * @param array $notAllowedCommands
      * @return bool
      */
-    public static function isApprovedArtisanCommand(): bool
+    public static function isApprovedArtisanCommand(array $notAllowedCommands): bool
     {
         $input = new ArgvInput();
 
-        return ! in_array($input->getFirstArgument(), config('inspector.ignore_commands'));
+        return ! in_array($input->getFirstArgument(), $notAllowedCommands);
     }
 }

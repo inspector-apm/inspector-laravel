@@ -57,7 +57,7 @@ class InspectorServiceProvider extends ServiceProvider
         });
 
         // Start a transaction if the app is running in console
-        if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand()) {
+        if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand(config('inspector.ignore_commands'))) {
             $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
         }
 
