@@ -26,7 +26,9 @@ class EmailServiceProvider extends ServiceProvider
     {
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event) {
             if ($this->app['inspector']->isRecording()) {
-                $this->segments[$event->message->getId()] = $this->app['inspector']->startSegment('email');
+                $this->segments[$event->message->getId()] = $this->app['inspector']
+                    ->startSegment('email', get_class($event->message))
+                    ->setContext(['data' => $event->data]);
             }
         });
 
