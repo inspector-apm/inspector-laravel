@@ -51,8 +51,6 @@ You can obtain `INSPECTOR_API_KEY` creating a new project in your [Inspector](ht
 To monitor web requests you can attach the `WebMonitoringMiddleware` in your http kernel or use in one or more route groups based on your personal needs.
 
 ```php
-use Inspector\Laravel\Middleware\WebRequestMonitoring;
-
 /**
  * The application's route middleware groups.
  *
@@ -61,12 +59,12 @@ use Inspector\Laravel\Middleware\WebRequestMonitoring;
 protected $middlewareGroups = [
     'web' => [
         ...,
-        WebRequestMonitoring::class,
+        \Inspector\Laravel\Middleware\WebRequestMonitoring::class,
     ],
 
     'api' => [
         ...,
-        WebRequestMonitoring::class,
+        \Inspector\Laravel\Middleware\WebRequestMonitoring::class,
     ]
 ```
 
