@@ -141,17 +141,20 @@ return [
     */
     'ignore_commands' => [
         'schedule:run',
+        'vendor:publish',
+        'package:discover',
         'migrate:rollback',
         'migrate:refresh',
         'migrate:fresh',
         'migrate:reset',
         'migrate:install',
-        'package:discover',
         'queue:listen',
         'queue:work',
+        'queue:restart',
         'horizon',
         'horizon:work',
         'horizon:supervisor',
+        'horizon:terminate',
     ],
 
     /*
