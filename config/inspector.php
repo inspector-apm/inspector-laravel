@@ -155,6 +155,7 @@ return [
         'horizon:work',
         'horizon:supervisor',
         'horizon:terminate',
+        'horizon:snapshot',
     ],
 
     /*
