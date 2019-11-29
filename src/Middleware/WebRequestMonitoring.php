@@ -41,7 +41,7 @@ class WebRequestMonitoring implements TerminableInterface
     /**
      * Determine if the middleware should record current request.
      *
-     * @param $request
+     * @param \Illuminate\Http\Request $request
      * @return bool
      */
     protected function shouldRecorded($request): bool
