@@ -174,4 +174,15 @@ return [
         'vendor/horizon*',
         'nova*'
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | User agents to ignore
+    |--------------------------------------------------------------------------
+    |
+    | Add at this list the user agents which requests you don't want monitoring
+    | in your Inspector dashboard.
+    |
+    */
+    'ignore_user_agents' => [],
 ];

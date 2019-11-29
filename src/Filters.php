@@ -16,10 +16,16 @@ class Filters
      * @param Request $request
      * @return bool
      */
-    public static function isApprovedRequest(array $notAllowedPatterns, Request $request): bool
+    public static function isApprovedRequest(array $notAllowedPatterns, array $notAllowedUserAgents, Request $request): bool
     {
         foreach ($notAllowedPatterns as $pattern) {
             if ($request->is($pattern)) {
+                return false;
+            }
+        }
+
+        foreach ($notAllowedUserAgents as $userAgent) {
+            if ($request->userAgent() === $userAgent) {
                 return false;
             }
         }
