@@ -39,7 +39,7 @@ class WebRequestMonitoring implements TerminableInterface
     }
 
     /**
-     * Determine if the middleware should record current request.
+     * Determine if Inspector should monitor current request.
      *
      * @param \Illuminate\Http\Request $request
      * @return bool
@@ -61,7 +61,7 @@ class WebRequestMonitoring implements TerminableInterface
         );
 
         if (Auth::check() && config('inspector.user')) {
-            $transaction->withUser(Auth::user()->getAuthIdentifier());
+            $transaction->withUser(Auth::user()->getAuthIdentifier(), Auth::user()->getAuthIdentifierName());
         }
     }
 
@@ -75,8 +75,6 @@ class WebRequestMonitoring implements TerminableInterface
     {
         if (Inspector::isRecording()) {
             Inspector::currentTransaction()->setResult($response->getStatusCode());
-            Inspector::currentTransaction()->getContext()->getResponse()->setHeaders($response->headers->all());
-            Inspector::currentTransaction()->getContext()->getResponse()->setStatusCode($response->getStatusCode());
         }
     }
 

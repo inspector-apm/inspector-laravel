@@ -9,7 +9,7 @@ use Inspector\Laravel\Middleware\WebRequestMonitoring;
 
 class ResponseDataTest extends BasicTestCase
 {
-    public function testResponseData()
+    public function testResult()
     {
         $this->app->router->get('approved', function () {
             $this->assertTrue(Inspector::isRecording());
@@ -19,7 +19,7 @@ class ResponseDataTest extends BasicTestCase
 
         $this->assertEquals(
             $response->getStatusCode(),
-            Inspector::currentTransaction()->getContext()->getResponse()->getStatusCode()
+            Inspector::currentTransaction()->result
         );
     }
 }
