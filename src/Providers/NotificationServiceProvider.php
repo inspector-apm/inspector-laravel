@@ -29,11 +29,9 @@ class NotificationServiceProvider extends ServiceProvider
                 $segment = $this->app['inspector']
                     ->startSegment('notifications')
                     ->setLabel(get_class($event->notification))
-                    ->setContext([
-                        'Data' => [
-                            'channel' => $event->channel,
-                            'notifiable' => get_class($event->notifiable),
-                        ]
+                    ->addContext('Data', [
+                        'channel' => $event->channel,
+                        'notifiable' => get_class($event->notifiable),
                     ]);
 
                 $this->segments[$event->notification->id] = $segment;
@@ -43,7 +41,7 @@ class NotificationServiceProvider extends ServiceProvider
         $this->app['events']->listen(NotificationSent::class, function (NotificationSent $event) {
             if (array_key_exists($event->notification->id, $this->segments)) {
                 $this->segments[$event->notification->id]
-                    ->setContext(['Response' => $event->response])
+                    ->addContext('Response', $event->response)
                     ->end();
             }
         });

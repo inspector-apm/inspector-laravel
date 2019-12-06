@@ -38,16 +38,16 @@ class DatabaseQueryServiceProvider extends ServiceProvider
         $segment = $this->app['inspector']->startSegment($connection, substr($sql, 0, 50))
             ->start(microtime(true) - $time/1000);
 
-        $segment->getContext()
-            ->getDb()
-            ->setType($connection)
-            ->setSql($sql);
+        $context = [
+            'connection' => $connection,
+            'sql' => $sql,
+        ];
 
         if (config('inspector.bindings')) {
-            $segment->getContext()->getDb()->setBindings($bindings);
+            $context['bindings'] = $bindings;
         }
 
-        $segment->end($time);
+        $segment->addContext('db', $context)->end($time);
     }
 
     /**

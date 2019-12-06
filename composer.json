@@ -9,6 +9,12 @@
             "email": "support@inspector.dev"
         }
     ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/inspector-apm/inspector-php.git"
+        }
+    ],
     "require": {
         "php": ">=7.2.0",
         "illuminate/console": ">=5.5|^6.0",

@@ -62,7 +62,7 @@ class JobServiceProvider extends ServiceProvider
         $segment = $this->app['inspector']
             ->startSegment('job')
             ->setLabel($job->resolveName())
-            ->setContext(['payload' => $job->payload()]);
+            ->addContext('payload', $job->payload());
 
         // Jot down the job with a unique ID
         $this->segments[$this->getJobId($job)] = $segment;
