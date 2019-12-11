@@ -3,42 +3,29 @@
 [![Build Status](https://travis-ci.org/inspector-apm/inspector-laravel.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-laravel)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-laravel/v/stable)](https://packagist.org/packages/inspector-apm/inspector-laravel)
 
-- [Version Compatibility](#versions)
 - [Install](#install)
+- [Configure the API key](#api-key)
 - [Midleware](#middleware)
-
-<a name="versions"></a>
-
-## Version Compatibility
-
-| Laravel | Inspector package |
-| ------- | ----------------- |
-| 5.x     | 2.x               |
-| 6.x     | 3.x               |
+- [Test everything is working](#test)
+- [See official Documentation](https://docs.inspector.dev)
 
 <a name="install"></a>
 
 ## Install
 
-Install the latest version of our `Laravel 6.x` package by:
+Install the latest version of our package by:
 
-```sehll
+```
 composer require inspector-apm/inspector-laravel
 ```
 
-If your application is  using a `5.x` version of the Laravel framework use the command below:
-
-```shell
-composer require "inspector-apm/inspector-laravel=^2.0"
-```
-
-
+<a name="api-keyt"></a>
 
 ### Configure the API Key
 
 First put the Inspector API KEY in your environment file:
 
-```bash
+```
 INSPECTOR_API_KEY=[api key]
 ```
 
@@ -68,21 +55,23 @@ protected $middlewareGroups = [
     ]
 ```
 
+<a name="test"></a>
+
 ### Test everything is working
 
 Create a test route using the code below:
 
 ```php
 Route::get('test', function () {
-    throw new Excetpion('Test'));
-})
+    throw new Excetpion('First exception detected'));
+});
 ```
 
 Open this route in you browser to test connection between your app and Inspection API.
 
 ## Official documentartion
 
-**[See official documentation](https://app.inspector.dev/docs)**
+**[See official documentation](https://docs.inspector.dev)**
 
 ## LICENSE
 
