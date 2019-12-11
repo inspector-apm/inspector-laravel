@@ -3,11 +3,19 @@
 [![Build Status](https://travis-ci.org/inspector-apm/inspector-laravel.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-laravel)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-laravel/v/stable)](https://packagist.org/packages/inspector-apm/inspector-laravel)
 
+- [Requirements](#requirements)
 - [Install](#install)
 - [Configure the API key](#api-key)
 - [Midleware](#middleware)
 - [Test everything is working](#test)
 - [See official Documentation](https://docs.inspector.dev)
+
+<a name="requirements"></a>
+
+## Requirements
+
+- PHP >= 7.0.0
+- Laravel >= 5.5
 
 <a name="install"></a>
 
