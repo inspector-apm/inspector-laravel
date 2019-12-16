@@ -33,10 +33,12 @@ class Filters
      * @param array $notAllowedCommands
      * @return bool
      */
-    public static function isApprovedArtisanCommand(array $notAllowedCommands): bool
+    public static function isApprovedArtisanCommand(array $notAllowedCommands = null): bool
     {
         $input = new ArgvInput();
 
-        return ! in_array($input->getFirstArgument(), $notAllowedCommands);
+        return is_null($notAllowedCommands)
+            ? true
+            : !in_array($input->getFirstArgument(), $notAllowedCommands);
     }
 }
