@@ -35,35 +35,30 @@ class InspectorTest extends Command
         $this->line("I'm testing your Inspector integration.");
 
         // Check Inspector API key
-        $this->info(!empty($config->get('inspector.key'))
-            ? '✅ Inspector key installed.'
-            : '❌ Inspector key not specified. Make sure you specify a value in the `key` field of the `inspector` config file.');
+        inspector()->addSegment(function ($segment) use ($config) {
+            sleep(0.5);
 
-        // Check enabled flag
-        $this->info($config->get('inspector.enable')
-            ? '✅ Inspector is enabled.'
-            : '❌ Inspector is actually disabled, turn to true the `enable` field of the `inspector` config file.');
+            $this->info(!empty($config->get('inspector.key'))
+                ? '✅ Inspector key installed.'
+                : '❌ Inspector key not specified. Make sure you specify a value in the `key` field of the `inspector` config file.');
 
-        $this->createSegments();
+            $segment->addContext('example payload', ['foo' => 'bar']);
+        }, 'test', 'Check API key');
+
+        // Check Inspector is enabled
+        inspector()->addSegment(function ($segment) use ($config) {
+            sleep(0.5);
+
+            $this->info($config->get('inspector.enable')
+                ? '✅ Inspector is enabled.'
+                : '❌ Inspector is actually disabled, turn to true the `enable` field of the `inspector` config file.');
+
+            $segment->addContext('another payload', ['foo' => 'bar']);
+        }, 'test', 'Check if Inspector is enabled');
 
         $this->reportException();
 
         $this->line('Done! Explore your data on https://app.inspector.dev/home');
-    }
-
-    protected function createSegments()
-    {
-        foreach (['Segment 1', 'Segment 2'] as $label) {
-            inspector()->addSegment(function ($segment) {
-
-                // Code block
-                sleep(0.5);
-                $segment->addContext('payload', ['foo' => 'bar']);
-
-            }, 'test', $label);
-
-            $this->line($label);
-        }
     }
 
     protected function reportException()
