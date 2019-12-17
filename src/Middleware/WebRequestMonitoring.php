@@ -86,7 +86,15 @@ class WebRequestMonitoring implements TerminableInterface
      */
     protected function buildTransactionName(Request $request)
     {
-        return $request->method() . ' ' . $this->normalizeUri($request->route()->uri());
+        $route = $request->route();
+
+        if($route instanceof \Illuminate\Routing\Route) {
+            $uri = $request->route()->uri();
+        } else {
+            $uri = $_SERVER['REQUEST_URI'];
+        }
+
+        return $request->method() . ' ' . $this->normalizeUri($uri);
     }
 
     /**
