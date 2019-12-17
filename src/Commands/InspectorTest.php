@@ -36,7 +36,7 @@ class InspectorTest extends Command
 
         // Check Inspector API key
         inspector()->addSegment(function ($segment) use ($config) {
-            sleep(0.5);
+            sleep(1);
 
             $this->info(!empty($config->get('inspector.key'))
                 ? '✅ Inspector key installed.'
@@ -47,7 +47,7 @@ class InspectorTest extends Command
 
         // Check Inspector is enabled
         inspector()->addSegment(function ($segment) use ($config) {
-            sleep(0.5);
+            sleep(1);
 
             $this->info($config->get('inspector.enable')
                 ? '✅ Inspector is enabled.'
@@ -57,6 +57,8 @@ class InspectorTest extends Command
         }, 'test', 'Check if Inspector is enabled');
 
         $this->reportException();
+
+        sleep(1);
 
         $this->line('Done! Explore your data on https://app.inspector.dev/home');
     }
