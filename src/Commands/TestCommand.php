@@ -7,7 +7,7 @@ namespace Inspector\Laravel\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Config\Repository;
 
-class InspectorTest extends Command
+class TestCommand extends Command
 {
     /**
      * The name and signature of the console command.
