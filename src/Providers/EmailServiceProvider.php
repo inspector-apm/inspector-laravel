@@ -7,13 +7,14 @@ namespace Inspector\Laravel\Providers;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\ServiceProvider;
+use Inspector\Models\Segment;
 
 class EmailServiceProvider extends ServiceProvider
 {
     /**
-     * Email messages to inspect.
+     * Segments to monitor.
      *
-     * @var array
+     * @var Segment[]
      */
     protected $segments = [];
 
@@ -26,17 +27,30 @@ class EmailServiceProvider extends ServiceProvider
     {
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event) {
             if ($this->app['inspector']->isRecording()) {
-                $this->segments[$event->message->getId()] = $this->app['inspector']
+                $this->segments[$this->generateKey($event->data)] = $this->app['inspector']
                     ->startSegment('email', get_class($event->message))
                     ->addContext('data', $event->data);
             }
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {
-            if (array_key_exists($event->message->getId(), $this->segments)) {
-                $this->segments[$event->message->getId()]->end();
+            $key = $this->generateKey($event->data);
+
+            if (array_key_exists($key, $this->segments)) {
+                $this->segments[$key]->end();
             }
         });
+    }
+
+    /**
+     * Generate a unique key for a given data.
+     *
+     * @param array $data
+     * @return string
+     */
+    protected function generateKey($data): string
+    {
+        return md5(json_encode($data));
     }
 
     /**

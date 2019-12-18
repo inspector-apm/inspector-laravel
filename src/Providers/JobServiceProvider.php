@@ -11,13 +11,14 @@ use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
+use Inspector\Models\Segment;
 
 class JobServiceProvider extends ServiceProvider
 {
     /**
      * Jobs to inspect.
      *
-     * @var array
+     * @var Segment[]
      */
     protected $segments = [];
 
