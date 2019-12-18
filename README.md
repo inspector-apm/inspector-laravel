@@ -67,17 +67,15 @@ protected $middlewareGroups = [
 
 ### Test everything is working
 
-Create a test route using the code below:
+Run the command below:
 
-```php
-Route::get('test', function () {
-    throw new Excetpion('First exception detected'));
-});
+```
+php artisan inspector:test
 ```
 
-Open this route in you browser to test connection between your app and Inspection API.
+Go to [https://app.inspector.dev/home](https://app.inspector.dev/home) to explore your data.
 
-## Official documentartion
+## Official documentation
 
 **[See official documentation](https://docs.inspector.dev)**
 
