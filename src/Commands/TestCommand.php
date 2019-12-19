@@ -58,6 +58,8 @@ class TestCommand extends Command
 
         $this->reportException();
 
+        inspector()->currentTransaction()->setResult('success');
+
         $this->line('Done! Explore your data on https://app.inspector.dev/home');
     }
 
