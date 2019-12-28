@@ -61,8 +61,7 @@ class JobServiceProvider extends ServiceProvider
     protected function initializeSegment(Job $job)
     {
         $segment = $this->app['inspector']
-            ->startSegment('job')
-            ->setLabel($job->resolveName())
+            ->startSegment('job', $job->resolveName())
             ->addContext('payload', $job->payload());
 
         // Jot down the job with a unique ID
