@@ -43,7 +43,7 @@ class EmailServiceProvider extends ServiceProvider
     }
 
     /**
-     * Generate a unique key for a given data.
+     * Generate a unique key for a segment.
      *
      * @param array $data
      * @return string
