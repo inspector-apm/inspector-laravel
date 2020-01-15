@@ -32,7 +32,7 @@ return [
     | You can set the url of the remote endpoint to send data to.
     |
     */
-    'url' => env('INSPECTOR_URL', 'https://app.inspector.dev/api'),
+    'url' => env('INSPECTOR_URL', 'https://ingest.inspector.dev'),
 
     /*
     |--------------------------------------------------------------------------
