@@ -21,7 +21,7 @@ class TestCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Send data to your Inspector dashboard';
+    protected $description = 'Send data to your Inspector dashboard.';
 
     /**
      * Execute the console command.
@@ -36,7 +36,7 @@ class TestCommand extends Command
 
         // Check Inspector API key
         inspector()->addSegment(function ($segment) use ($config) {
-            sleep(2);
+            sleep(1);
 
             $this->info(!empty($config->get('inspector.key'))
                 ? '✅ Inspector key installed.'
@@ -47,7 +47,7 @@ class TestCommand extends Command
 
         // Check Inspector is enabled
         inspector()->addSegment(function ($segment) use ($config) {
-            sleep(2);
+            sleep(1);
 
             $this->info($config->get('inspector.enable')
                 ? '✅ Inspector is enabled.'
@@ -56,15 +56,22 @@ class TestCommand extends Command
             $segment->addContext('another payload', ['foo' => 'bar']);
         }, 'test', 'Check if Inspector is enabled');
 
-        $this->reportException();
+        // Check CURL
+        inspector()->addSegment(function ($segment) use ($config) {
+            sleep(1);
+
+            $this->info(function_exists('curl_version')
+                ? '✅ CURL extension is enabled.'
+                : '❌ CURL is actually disabled so your app could not be able to send data to Inspector.');
+
+            $segment->addContext('another payload', ['foo' => 'bar']);
+        }, 'test', 'Check CURL extension');
+
+        // Report Exception
+        inspector()->reportException(new \Exception('First Exception detected'));
 
         inspector()->currentTransaction()->setResult('success');
 
         $this->line('Done! Explore your data on https://app.inspector.dev/home');
-    }
-
-    protected function reportException()
-    {
-        inspector()->reportException(new \Exception('First Exception detected'));
     }
 }
