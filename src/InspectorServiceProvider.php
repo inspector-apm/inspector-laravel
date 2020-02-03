@@ -58,6 +58,7 @@ class InspectorServiceProvider extends ServiceProvider
         $this->app->singleton('inspector', function () {
             $configuration = (new Configuration(config('inspector.enable') ? config('inspector.key') : null))
                 ->setUrl(config('inspector.url'))
+                ->setVersion(config('inspector.version'))
                 ->setTransport(config('inspector.transport'))
                 ->setOptions(config('inspector.options'));
 
