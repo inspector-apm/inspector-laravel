@@ -5,7 +5,6 @@ namespace Inspector\Laravel\Commands;
 
 
 use Illuminate\Console\Command;
-use Illuminate\Config\Repository;
 
 class TestCommand extends Command
 {
@@ -26,19 +25,18 @@ class TestCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param Repository $config
      * @return void
      * @throws \Throwable
      */
-    public function handle(Repository $config)
+    public function handle()
     {
         $this->line("I'm testing your Inspector integration.");
 
         // Check Inspector API key
-        inspector()->addSegment(function ($segment) use ($config) {
+        inspector()->addSegment(function ($segment) {
             sleep(1);
 
-            $this->info(!empty($config->get('inspector.key'))
+            $this->info(!empty(config('inspector.key'))
                 ? '✅ Inspector key installed.'
                 : '❌ Inspector key not specified. Make sure you specify a value in the `key` field of the `inspector` config file.');
 
@@ -46,10 +44,10 @@ class TestCommand extends Command
         }, 'test', 'Check API key');
 
         // Check Inspector is enabled
-        inspector()->addSegment(function ($segment) use ($config) {
+        inspector()->addSegment(function ($segment) {
             sleep(1);
 
-            $this->info($config->get('inspector.enable')
+            $this->info(config('inspector.enable')
                 ? '✅ Inspector is enabled.'
                 : '❌ Inspector is actually disabled, turn to true the `enable` field of the `inspector` config file.');
 
@@ -57,7 +55,7 @@ class TestCommand extends Command
         }, 'test', 'Check if Inspector is enabled');
 
         // Check CURL
-        inspector()->addSegment(function ($segment) use ($config) {
+        inspector()->addSegment(function ($segment) {
             sleep(1);
 
             $this->info(function_exists('curl_version')
