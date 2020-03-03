@@ -7,6 +7,7 @@ namespace Inspector\Laravel\Providers;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\ServiceProvider;
+use Inspector\Laravel\Facades\Inspector;
 use Inspector\Models\Segment;
 
 class EmailServiceProvider extends ServiceProvider
@@ -26,15 +27,15 @@ class EmailServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event) {
-            if ($this->app['inspector']->isRecording()) {
-                $this->segments[$this->generateKey($event->data)] = $this->app['inspector']
-                    ->startSegment('email', get_class($event->message))
-                    ->addContext('data', $event->data);
+            if (Inspector::isRecording()) {
+                $this->segments[
+                    $this->generateUniqueKey($event->data)
+                ] = Inspector::startSegment('email', get_class($event->message))->setContext($event->data);
             }
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {
-            $key = $this->generateKey($event->data);
+            $key = $this->generateUniqueKey($event->data);
 
             if (array_key_exists($key, $this->segments)) {
                 $this->segments[$key]->end();
@@ -43,12 +44,12 @@ class EmailServiceProvider extends ServiceProvider
     }
 
     /**
-     * Generate a unique key for a segment.
+     * Generate a unique key to track segment's state.
      *
      * @param array $data
      * @return string
      */
-    protected function generateKey($data): string
+    protected function generateUniqueKey($data): string
     {
         return md5(json_encode($data));
     }

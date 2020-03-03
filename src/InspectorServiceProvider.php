@@ -8,6 +8,7 @@ use Inspector\Inspector;
 use Inspector\Laravel\Commands\TestCommand;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
+use Inspector\Laravel\Providers\GateServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\NotificationServiceProvider;
 use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
@@ -79,6 +80,8 @@ class InspectorServiceProvider extends ServiceProvider
      */
     public function registerInspectorServiceProviders()
     {
+        $this->app->register(GateServiceProvider::class);
+
         if (config('inspector.unhandled_exceptions')) {
             $this->app->register(UnhandledExceptionServiceProvider::class);
         }
