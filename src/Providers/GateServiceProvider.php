@@ -42,7 +42,7 @@ class GateServiceProvider extends ServiceProvider
         if (Inspector::isRecording()) {
             $this->segments[
                 $this->generateUniqueKey($this->formatArguments($arguments))
-            ] = Inspector::startSegment('gate', $ability);
+            ] = Inspector::startSegment('gate', 'Authorization:'.$ability);
         }
     }
 
