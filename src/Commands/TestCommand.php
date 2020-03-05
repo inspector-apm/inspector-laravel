@@ -5,7 +5,7 @@ namespace Inspector\Laravel\Commands;
 
 
 use Illuminate\Console\Command;
-use Illuminate\Config\Repository;
+use Illuminate\Contracts\Config\Repository;
 
 class TestCommand extends Command
 {
