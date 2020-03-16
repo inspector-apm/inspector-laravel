@@ -72,6 +72,12 @@ class TestCommand extends Command
 
         inspector()->currentTransaction()->setResult('success');
 
-        $this->line('Done! Explore your data on https://app.inspector.dev/home');
+        // Another demo transaction
+        inspector()->startTransaction($this->signature)
+            ->start(now()->subMinutes(30)->getTimestamp())
+            ->end(now()->subMinutes(29)->getTimestamp())
+            ->setResult('success');
+
+        $this->line('Done! Explore your data on https://app.inspector.dev');
     }
 }
