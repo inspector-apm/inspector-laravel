@@ -38,9 +38,9 @@ class TestCommand extends Command
         inspector()->addSegment(function ($segment) use ($config) {
             sleep(1);
 
-            $this->info(!empty($config->get('inspector.key'))
-                ? '✅ Inspector key installed.'
-                : '❌ Inspector key not specified. Make sure you specify a value in the `key` field of the `inspector` config file.');
+            !empty($config->get('inspector.key'))
+                ? $this->info('✅ Inspector key installed.')
+                : $this->warn('❌ Inspector key not specified. Make sure you specify a value in the `key` field of the `inspector` config file.');
 
             $segment->addContext('example payload', ['foo' => 'bar']);
         }, 'test', 'Check API key');
@@ -49,9 +49,9 @@ class TestCommand extends Command
         inspector()->addSegment(function ($segment) use ($config) {
             sleep(1);
 
-            $this->info($config->get('inspector.enable')
-                ? '✅ Inspector is enabled.'
-                : '❌ Inspector is actually disabled, turn to true the `enable` field of the `inspector` config file.');
+            $config->get('inspector.enable')
+                ? $this->info('✅ Inspector is enabled.')
+                : $this->warn('❌ Inspector is actually disabled, turn to true the `enable` field of the `inspector` config file.');
 
             $segment->addContext('another payload', ['foo' => 'bar']);
         }, 'test', 'Check if Inspector is enabled');
@@ -60,9 +60,9 @@ class TestCommand extends Command
         inspector()->addSegment(function ($segment) use ($config) {
             sleep(1);
 
-            $this->info(function_exists('curl_version')
-                ? '✅ CURL extension is enabled.'
-                : '❌ CURL is actually disabled so your app could not be able to send data to Inspector.');
+            function_exists('curl_version')
+                ? $this->info('✅ CURL extension is enabled.')
+                : $this->warn('❌ CURL is actually disabled so your app could not be able to send data to Inspector.');
 
             $segment->addContext('another payload', ['foo' => 'bar']);
         }, 'test', 'Check CURL extension');
@@ -75,7 +75,7 @@ class TestCommand extends Command
         // Another demo transaction
         inspector()->startTransaction($this->signature)
             ->start(now()->subMinutes(30)->getTimestamp())
-            ->end(now()->subMinutes(29)->getTimestamp())
+            ->end(1000)
             ->setResult('success');
 
         $this->line('Done! Explore your data on https://app.inspector.dev');
