@@ -21,5 +21,7 @@ class ResponseDataTest extends BasicTestCase
             $response->getStatusCode(),
             Inspector::currentTransaction()->result
         );
+
+        $this->assertContains('Response', array_keys(Inspector::currentTransaction()->context));
     }
 }
