@@ -162,6 +162,7 @@ return [
         'horizon:supervisor',
         'horizon:terminate',
         'horizon:snapshot',
+        'nova:publish',
     ],
 
     /*
