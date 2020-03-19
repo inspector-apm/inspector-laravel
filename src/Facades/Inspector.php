@@ -11,6 +11,7 @@ use Inspector\Models\Transaction;
 /**
  * @method bool isRecording
  * @method Transaction startTransaction($name)
+ * @method Transaction currentTransaction()
  * @method Segment startSegment($type, $label)
  * @method mixed addSegment($callback, $type, $label)
  * @method Error reportException(\Throwable $exception, $handled = true)
