@@ -76,11 +76,11 @@ class WebRequestMonitoring implements TerminableInterface
         if (Inspector::isRecording()) {
             Inspector::currentTransaction()->setResult($response->getStatusCode());
             Inspector::currentTransaction()->addContext('Response', [
-                'status_code' => method_exists($response, 'getStatusCode') ? $response->getStatusCode() : null,
-                'version' => method_exists($response, 'getProtocolVersion') ? $response->getProtocolVersion() : null,
-                'content' => is_string($response->getContent()) ? substr($response->getContent(), 0, 250) : [],
-                'charset' => method_exists($response, 'getCharset') ? $response->getCharset() : null,
-                'headers' => !empty($response->headers) ? $response->headers->all() : [],
+                'status_code' => $response->getStatusCode(),
+                'version' => $response->getProtocolVersion(),
+                'content' => is_string($response->getContent()) ? substr($response->getContent(), 0, 250) : $response->getContent(),
+                'charset' => $response->getCharset(),
+                'headers' => $response->headers->all(),
             ]);
         }
     }
