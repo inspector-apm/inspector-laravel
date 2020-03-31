@@ -19,12 +19,16 @@ class RedisServiceProvider extends ServiceProvider
     {
         $this->app['events']->listen(CommandExecuted::class, function (CommandExecuted $event) {
             if (Inspector::isRecording()) {
-                Inspector::startSegment('redis', $event->command)
-                    ->setContext([
+                // milliseconds to microseconds
+                $microtimeDuration = $event->time/1000;
+
+                Inspector::startSegment('redis', "redis:{$event->command}")
+                    ->start(microtime(true) - $microtimeDuration)
+                    ->addContext('data', [
                         'connection' => $event->connectionName,
                         'parameters' => $event->parameters
                     ])
-                    ->end($event->time * 1000); // milliseconds to microseconds
+                    ->end($microtimeDuration);
             }
         });
 
