@@ -8,6 +8,7 @@ use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\NotificationServiceProvider;
+use Inspector\Laravel\Providers\RedisServiceProvider;
 use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
 
 class DisablingProvidersTest extends BasicTestCase
@@ -21,6 +22,7 @@ class DisablingProvidersTest extends BasicTestCase
         $app['config']->set('inspector.email', false);
         $app['config']->set('inspector.notifications', false);
         $app['config']->set('inspector.unhandled_exceptions', false);
+        $app['config']->set('inspector.redis', false);
     }
 
     public function testBindingDisabled()
@@ -34,5 +36,6 @@ class DisablingProvidersTest extends BasicTestCase
         $this->assertNull($this->app->getProvider(EmailServiceProvider::class));
         $this->assertNull($this->app->getProvider(NotificationServiceProvider::class));
         $this->assertNull($this->app->getProvider(UnhandledExceptionServiceProvider::class));
+        $this->assertNull($this->app->getProvider(RedisServiceProvider::class));
     }
 }
