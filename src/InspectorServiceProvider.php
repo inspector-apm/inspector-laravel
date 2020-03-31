@@ -11,6 +11,7 @@ use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\GateServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\NotificationServiceProvider;
+use Inspector\Laravel\Providers\RedisServiceProvider;
 use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Inspector\Configuration;
@@ -81,6 +82,10 @@ class InspectorServiceProvider extends ServiceProvider
     public function registerInspectorServiceProviders()
     {
         $this->app->register(GateServiceProvider::class);
+
+        if (config('inspector.redis')) {
+            $this->app->register(RedisServiceProvider::class);
+        }
 
         if (config('inspector.unhandled_exceptions')) {
             $this->app->register(UnhandledExceptionServiceProvider::class);
