@@ -78,6 +78,6 @@ class TestCommand extends Command
             ->end(1000000)
             ->setResult('success');
 
-        $this->line('Done! Explore your data on https://app.inspector.dev');
+        $this->line('Done!');
     }
 }
