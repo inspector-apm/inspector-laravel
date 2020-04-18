@@ -201,5 +201,5 @@ return [
     | This should be the latest version of the client library.
     |
     */
-    'version' => '4.4.2',
+    'version' => '4.4.3',
 ];
