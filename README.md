@@ -14,7 +14,7 @@
 
 ## Requirements
 
-- PHP >= 7.0.0
+- PHP >= 7.2.0
 - Laravel >= 5.5
 
 <a name="install"></a>
