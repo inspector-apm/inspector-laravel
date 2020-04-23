@@ -47,7 +47,7 @@ class TestCommand extends Command
 
         // Check Inspector is enabled
         inspector()->addSegment(function ($segment) use ($config) {
-            usleep(250 * 1000);
+            usleep(10 * 1000);
 
             $config->get('inspector.enable')
                 ? $this->info('✅ Inspector is enabled.')
@@ -58,7 +58,7 @@ class TestCommand extends Command
 
         // Check CURL
         inspector()->addSegment(function ($segment) use ($config) {
-            usleep(250 * 1000);
+            usleep(10 * 1000);
 
             function_exists('curl_version')
                 ? $this->info('✅ CURL extension is enabled.')
@@ -75,7 +75,7 @@ class TestCommand extends Command
         // Another demo transaction
         inspector()->startTransaction("artisan {$this->signature}")
             ->start(now()->subMinutes(30)->getTimestamp())
-            ->end(500 * 1000)
+            ->end(10 * 1000)
             ->setResult('success');
 
         $this->line('Done!');
