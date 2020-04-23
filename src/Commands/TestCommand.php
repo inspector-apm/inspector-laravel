@@ -76,7 +76,7 @@ class TestCommand extends Command
         inspector()->startTransaction("artisan {$this->signature}")
             ->start(microtime(true) - 60*5)
             ->setResult('success')
-            ->end(100);
+            ->end(200);
 
         $this->line('Done!');
     }
