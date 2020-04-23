@@ -36,7 +36,7 @@ class TestCommand extends Command
 
         // Check Inspector API key
         inspector()->addSegment(function ($segment) use ($config) {
-            sleep(1);
+            usleep(10 * 1000);
 
             !empty($config->get('inspector.key'))
                 ? $this->info('✅ Inspector key installed.')
