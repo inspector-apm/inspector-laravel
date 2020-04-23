@@ -70,13 +70,13 @@ class TestCommand extends Command
         // Report Exception
         inspector()->reportException(new \Exception('First Exception detected'));
 
-        inspector()->currentTransaction()->setResult('success');
+        inspector()->currentTransaction()->setResult('success')->end();
 
-        // Another demo transaction
+        // A demo transaction
         inspector()->startTransaction("artisan {$this->signature}")
-            ->start(now()->subMinutes(30)->getTimestamp())
-            ->end(100)
-            ->setResult('success');
+            ->start(microtime(true) - 60*5)
+            ->setResult('success')
+            ->end(100);
 
         $this->line('Done!');
     }
