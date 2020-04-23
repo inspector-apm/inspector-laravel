@@ -75,7 +75,7 @@ class TestCommand extends Command
         // Another demo transaction
         inspector()->startTransaction("artisan {$this->signature}")
             ->start(now()->subMinutes(30)->getTimestamp())
-            ->end(10 * 1000)
+            ->end(100)
             ->setResult('success');
 
         $this->line('Done!');
