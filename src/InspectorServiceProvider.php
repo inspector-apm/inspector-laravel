@@ -19,6 +19,13 @@ use Inspector\Configuration;
 class InspectorServiceProvider extends ServiceProvider
 {
     /**
+     * The latest version of the client library.
+     *
+     * @var string
+     */
+    const VERSION = '4.4.8';
+
+    /**
      * Booting of services.
      *
      * @return void
@@ -61,7 +68,7 @@ class InspectorServiceProvider extends ServiceProvider
             $configuration = (new Configuration(config('inspector.key')))
                 ->setEnabled(config('inspector.enable'))
                 ->setUrl(config('inspector.url'))
-                ->setVersion(config('inspector.version'))
+                ->setVersion(self::VERSION)
                 ->setTransport(config('inspector.transport'))
                 ->setOptions(config('inspector.options'));
 
