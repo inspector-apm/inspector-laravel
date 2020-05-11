@@ -2,9 +2,9 @@
 
 if (!function_exists('inspector')) {
     /**
-     * @return \Inspector\Inspector
+     * @return \Inspector\Laravel\Inspector
      */
-    function inspector(): \Inspector\Inspector
+    function inspector(): \Inspector\Laravel\Inspector
     {
         return app('inspector');
     }
