@@ -8,11 +8,11 @@ class Inspector extends \Inspector\Inspector
      * A wrap to monitor a function execution called by Laravel Container.
      *
      * @param mixed $callback
-     * @param null|array $parameters
+     * @param array $parameters
      * @return mixed|void
      * @throws \Throwable
      */
-    public function call($callback, $parameters = null)
+    public function call($callback, array $parameters = [])
     {
         if (is_string($callback)) {
             $label = $callback;
