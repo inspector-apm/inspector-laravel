@@ -9,7 +9,6 @@ class Inspector extends \Inspector\Inspector
      *
      * @param mixed $callback
      * @param null|array $parameters
-     * @param bool $static
      * @return mixed|void
      * @throws \Throwable
      */
