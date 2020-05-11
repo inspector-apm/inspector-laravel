@@ -4,7 +4,6 @@ namespace Inspector\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
-use Inspector\Inspector;
 use Inspector\Laravel\Commands\TestCommand;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
