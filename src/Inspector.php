@@ -23,7 +23,7 @@ class Inspector extends \Inspector\Inspector
         }
 
         return $this->addSegment(function ($segment) use ($callback, $parameters) {
-            $segment->addCotnext('Parameters', $parameters);
+            $segment->addContext('Parameters', $parameters);
 
             return app()->call($callback, $parameters);
         }, 'method', $label, true);
