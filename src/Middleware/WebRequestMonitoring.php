@@ -26,8 +26,6 @@ class WebRequestMonitoring implements TerminableInterface
     public function handle($request, Closure $next)
     {
         if (
-            config('inspector.enable')
-            &&
             Filters::isApprovedRequest(config('inspector.ignore_url'), $request)
             &&
             $this->shouldRecorded($request)
