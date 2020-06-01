@@ -11,6 +11,7 @@ use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
+use Inspector\Laravel\Filters;
 use Inspector\Models\Segment;
 
 class JobServiceProvider extends ServiceProvider
@@ -34,6 +35,16 @@ class JobServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
+            // If exists in the job to ignore, return immediately.
+            if (
+                !Filters::isApprovedJobClass(
+                    $this->app['config']->get('inspector.ignore_jobs'),
+                    get_class($event->job)
+                )
+            ) {
+                return;
+            }
+
             if($this->app['inspector']->isRecording()){
                 // Open a segment if a transaction already exists
                 $this->initializeSegment($event->job);

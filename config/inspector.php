@@ -9,6 +9,7 @@ return [
     | Setting "false" the package stop sending data to Inspector.
     |
     */
+
     'enable' => env('INSPECTOR_ENABLE', true),
 
     /*
@@ -22,6 +23,7 @@ return [
     | which should receive your application's events & exceptions.
     |
     */
+
     'key' => env('INSPECTOR_API_KEY'),
 
     /*
@@ -32,6 +34,7 @@ return [
     | You can set the url of the remote endpoint to send data to.
     |
     */
+
     'url' => env('INSPECTOR_URL', 'https://ingest.inspector.dev'),
 
     /*
@@ -43,6 +46,7 @@ return [
     | Supported options: "sync", "async"
     |
     */
+
     'transport' => env('INSPECTOR_TRANSPORT', 'sync'),
 
     /*
@@ -54,6 +58,7 @@ return [
     | communicating with Inspector.
     |
     */
+
     'options' => [
         // 'proxy' => 'https://55.88.22.11:3128',
         // 'curlPath' => '/usr/bin/curl',
@@ -67,6 +72,7 @@ return [
     | Enable this if you'd like us to automatically add all queries executed in the timeline.
     |
     */
+
     'query' => env('INSPECTOR_QUERY', true),
 
     /*
@@ -77,6 +83,7 @@ return [
     | Enable this if you'd like us to include the query bindings.
     |
     */
+
     'bindings' => env('INSPECTOR_QUERY_BINDINGS', false),
 
     /*
@@ -88,6 +95,7 @@ return [
     | Laravel's authentication system.
     |
     */
+
     'user' => env('INSPECTOR_USER', true),
 
     /*
@@ -98,6 +106,7 @@ return [
     | Enable this if you'd like us to monitor email sending.
     |
     */
+
     'email' => env('INSPECTOR_EMAIL', true),
 
     /*
@@ -108,6 +117,7 @@ return [
     | Enable this if you'd like us to monitor notifications.
     |
     */
+
     'notifications' => env('INSPECTOR_NOTIFICATIONS', true),
 
     /*
@@ -118,6 +128,7 @@ return [
     | Enable this if you'd like us to monitor background job processing.
     |
     */
+
     'job' => env('INSPECTOR_JOB', true),
 
     /*
@@ -128,6 +139,7 @@ return [
     | Enable this if you'd like us to monitor background job processing.
     |
     */
+
     'redis' => env('INSPECTOR_REDIS', true),
 
     /*
@@ -138,6 +150,7 @@ return [
     | Enable this if you'd like us to report unhandled exceptions.
     |
     */
+
     'unhandled_exceptions' => env('INSPECTOR_UNHANDLED_EXCEPTIONS', true),
 
     /*
@@ -149,6 +162,7 @@ return [
     | in your Inspector dashboard.
     |
     */
+
     'ignore_commands' => [
         'schedule:run',
         'vendor:publish',
@@ -184,11 +198,26 @@ return [
     | in your Inspector dashboard. You can also use wildcard expression (*).
     |
     */
+
     'ignore_url' => [
         'telescope*',
         'vendor/telescope*',
         'horizon*',
         'vendor/horizon*',
         'nova*'
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Job classes to ignore
+    |--------------------------------------------------------------------------
+    |
+    | Add at this list the job classes that you don't want monitoring
+    | in your Inspector dashboard.
+    |
+    */
+
+    'ignore_jobs' => [
+        //\App\Jobs\MyJob::class
     ],
 ];
