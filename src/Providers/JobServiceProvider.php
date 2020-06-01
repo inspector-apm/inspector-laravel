@@ -30,42 +30,56 @@ class JobServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Queue::looping(function () {
-            $this->app['inspector']->flush();
-        });
+        Queue::looping(
+            function () {
+                $this->app['inspector']->flush();
+            }
+        );
 
-        $this->app['events']->listen(JobProcessing::class, function (JobProcessing $event) {
-            // If exists in the job to ignore, return immediately.
-            if (
+        $this->app['events']->listen(
+            JobProcessing::class,
+            function (JobProcessing $event) {
+                // If exists in the job to ignore, return immediately.
+                if (
                 !Filters::isApprovedJobClass(
-                    $this->app['config']->get('inspector.ignore_jobs'),
-                    get_class($event->job)
+                    config('inspector.ignore_jobs'),
+                    $event->job->resolveName()
                 )
-            ) {
-                return;
+                ) {
+                    return;
+                }
+
+                if ($this->app['inspector']->isRecording()) {
+                    // Open a segment if a transaction already exists
+                    $this->initializeSegment($event->job);
+                } else {
+                    // Start a transaction if there's not one
+                    $this->app['inspector']->startTransaction($event->job->resolveName())
+                        ->addContext('Payload', $event->job->payload());
+                }
             }
+        );
 
-            if($this->app['inspector']->isRecording()){
-                // Open a segment if a transaction already exists
-                $this->initializeSegment($event->job);
-            } else {
-                // Start a transaction if there's not one
-                $this->app['inspector']->startTransaction($event->job->resolveName())
-                    ->addContext('Payload', $event->job->payload());
+        $this->app['events']->listen(
+            JobProcessed::class,
+            function (JobProcessed $event) {
+                $this->handleJobEnd($event->job);
             }
-        });
+        );
 
-        $this->app['events']->listen(JobProcessed::class, function (JobProcessed $event) {
-            $this->handleJobEnd($event->job);
-        });
+        $this->app['events']->listen(
+            JobFailed::class,
+            function (JobFailed $event) {
+                $this->handleJobEnd($event->job, true);
+            }
+        );
 
-        $this->app['events']->listen(JobFailed::class, function (JobFailed $event) {
-            $this->handleJobEnd($event->job, true);
-        });
-
-        $this->app['events']->listen(JobExceptionOccurred::class, function (JobExceptionOccurred $event) {
-            $this->handleJobEnd($event->job, true);
-        });
+        $this->app['events']->listen(
+            JobExceptionOccurred::class,
+            function (JobExceptionOccurred $event) {
+                $this->handleJobEnd($event->job, true);
+            }
+        );
     }
 
     protected function initializeSegment(Job $job)
@@ -86,13 +100,20 @@ class JobServiceProvider extends ServiceProvider
      */
     public function handleJobEnd(Job $job, $failed = false)
     {
+        if (!$this->app['inspector']->isRecording()) {
+            return;
+        }
+
+        $id = $this->getJobId($job);
+
         // If a segment doesn't exists it means that job is registered as transaction
         // we can set the result accordingly
-        if (!array_key_exists($this->getJobId($job), $this->segments) && $this->app['inspector']->isRecording()) {
-            $this->app['inspector']->currentTransaction()
-                ->setResult($failed ? 'error' : 'success');
+        if (array_key_exists($id, $this->segments)) {
+            $this->segments[$id]->end();
         } else {
-            $this->segments[$this->getJobId($job)]->end();
+            $this->app['inspector']
+                ->currentTransaction()
+                ->setResult($failed ? 'error' : 'success');
         }
     }
 
