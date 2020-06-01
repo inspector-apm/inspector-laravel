@@ -165,6 +165,8 @@ return [
 
     'ignore_commands' => [
         'schedule:run',
+        'schedule:finish',
+        'package:discover',
         'vendor:publish',
         'package:discover',
         'migrate:rollback',

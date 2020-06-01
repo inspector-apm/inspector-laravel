@@ -5,6 +5,7 @@ namespace Inspector\Laravel;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Inspector\Laravel\Commands\TestCommand;
+use Inspector\Laravel\Providers\CommandServiceProvider;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\GateServiceProvider;
@@ -22,7 +23,7 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '4.4.10';
+    const VERSION = '4.4.12';
 
     /**
      * Booting of services.
@@ -74,11 +75,6 @@ class InspectorServiceProvider extends ServiceProvider
             return new Inspector($configuration);
         });
 
-        // Start a transaction if the app is running in console
-        if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand(config('inspector.ignore_commands'))) {
-            $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
-        }
-
         $this->registerInspectorServiceProviders();
     }
 
@@ -87,6 +83,10 @@ class InspectorServiceProvider extends ServiceProvider
      */
     public function registerInspectorServiceProviders()
     {
+        if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand(config('inspector.ignore_commands'))) {
+            $this->app->register(CommandServiceProvider::class);
+        }
+
         $this->app->register(GateServiceProvider::class);
 
         if (config('inspector.redis') && strpos($this->app->version(), '7') !== false) {
