@@ -45,12 +45,12 @@ class Filters
     /**
      * Determine if the given Job class should be monitored.
      *
-     * @param string[] $notAllowed
+     * @param null|string[] $notAllowed
      * @param string $class
      * @return bool
      */
-    public static function isApprovedJobClass(array $notAllowed, string $class)
+    public static function isApprovedJobClass(string $class, array $notAllowed = null)
     {
-        return !in_array($class, $notAllowed);
+        return is_array($notAllowed) ? !in_array($class, $notAllowed) : true;
     }
 }

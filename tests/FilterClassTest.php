@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
 use Inspector\Laravel\Middleware\WebRequestMonitoring;
+use Inspector\Laravel\Tests\Jobs\JobTest;
 
 class FilterClassTest extends BasicTestCase
 {
@@ -27,5 +28,18 @@ class FilterClassTest extends BasicTestCase
         })->middleware(WebRequestMonitoring::class);
 
         $this->call('GET', 'nova');
+    }
+
+    public function testJobNotApproved()
+    {
+        $notAllowed = [JobTest::class];
+
+        $this->assertFalse(Filters::isApprovedJobClass(JobTest::class, $notAllowed));
+
+        $this->assertTrue(Filters::isApprovedJobClass(JobTest::class, config('inspector.ignore_jobs')));
+
+        config()->set('inspector.ignore_jobs', $notAllowed);
+
+        $this->assertFalse(Filters::isApprovedJobClass(JobTest::class, config('inspector.ignore_jobs')));
     }
 }

@@ -42,8 +42,8 @@ class JobServiceProvider extends ServiceProvider
                 // If exists in the job to ignore, return immediately.
                 if (
                 !Filters::isApprovedJobClass(
-                    config('inspector.ignore_jobs'),
-                    $event->job->resolveName()
+                    $event->job->resolveName(),
+                    config('inspector.ignore_jobs')
                 )
                 ) {
                     return;
