@@ -6,7 +6,7 @@
     "authors": [
         {
             "name": "Valerio Barbera",
-            "email": "support@inspector.dev"
+            "email": "valerio@inspector.dev"
         }
     ],
     "require": {
@@ -14,7 +14,7 @@
         "illuminate/console": "^5.5|^6.0|^7.0",
         "illuminate/contracts": "^5.5|^6.0|^7.0",
         "illuminate/support": "^5.5|^6.0|^7.0",
-        "inspector-apm/inspector-php": "^3.1"
+        "inspector-apm/inspector-php": "^3.2"
     },
     "autoload": {
         "psr-4": {
