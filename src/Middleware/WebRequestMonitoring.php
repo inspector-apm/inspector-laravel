@@ -77,7 +77,10 @@ class WebRequestMonitoring implements TerminableInterface
             Inspector::currentTransaction()->setResult($response->getStatusCode());
 
             Inspector::currentTransaction()
-                ->addContext('Body', json_decode($request->getContent(), true))
+                ->addContext('Body', Filters::hideParameters(
+                    json_decode($request->getContent(), true),
+                    config('inspector.hidden_parameters')
+                ))
                 ->addContext('Response', [
                     'status_code' => $response->getStatusCode(),
                     'version' => $response->getProtocolVersion(),

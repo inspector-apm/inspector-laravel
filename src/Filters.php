@@ -5,6 +5,7 @@ namespace Inspector\Laravel;
 
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Symfony\Component\Console\Input\ArgvInput;
 
 class Filters
@@ -52,5 +53,23 @@ class Filters
     public static function isApprovedJobClass(string $class, array $notAllowed = null)
     {
         return is_array($notAllowed) ? !in_array($class, $notAllowed) : true;
+    }
+
+    /**
+     * Hide the given request parameters.
+     *
+     * @param array $data
+     * @param array $hidden
+     * @return array
+     */
+    public static function hideParameters($data, $hidden)
+    {
+        foreach ($hidden as $parameter) {
+            if (Arr::get($data, $parameter)) {
+                Arr::set($data, $parameter, '********');
+            }
+        }
+
+        return $data;
     }
 }

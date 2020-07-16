@@ -155,6 +155,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Hide sensible data from http requests
+    |--------------------------------------------------------------------------
+    |
+    | List request fields that you want mask from the http payload.
+    | You can specify nested fields using the dot notation: "user.password"
+    */
+
+    'hidden_parameters' => [
+        'password',
+        'password_confirmation'
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Artisan command to ignore
     |--------------------------------------------------------------------------
     |
