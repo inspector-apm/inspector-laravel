@@ -4,11 +4,21 @@
 namespace Inspector\Laravel\Tests;
 
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Middleware\WebRequestMonitoring;
+use Inspector\Models\Transaction;
 
 class ResponseDataTest extends BasicTestCase
 {
+    protected function resolveApplicationConfiguration($app)
+    {
+        parent::resolveApplicationConfiguration($app);
+
+        $app['config']->set('inspector.key', 'test');
+    }
+
     public function testResult()
     {
         // test the middleware
@@ -27,6 +37,6 @@ class ResponseDataTest extends BasicTestCase
         );
 
         //Test response
-        $this->assertContains('Response', array_keys(Inspector::currentTransaction()->context));
+        $this->assertArrayHasKey('Response', Inspector::currentTransaction()->context);
     }
 }
