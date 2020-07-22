@@ -23,7 +23,7 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '4.4.15';
+    const VERSION = '4.4.16';
 
     /**
      * Booting of services.
@@ -70,7 +70,8 @@ class InspectorServiceProvider extends ServiceProvider
                 ->setUrl(config('inspector.url'))
                 ->setVersion(self::VERSION)
                 ->setTransport(config('inspector.transport'))
-                ->setOptions(config('inspector.options'));
+                ->setOptions(config('inspector.options'))
+                ->setMaxItems(config('inspector.max_items'));
 
             return new Inspector($configuration);
         });

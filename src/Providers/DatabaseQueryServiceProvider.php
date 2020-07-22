@@ -17,7 +17,9 @@ class DatabaseQueryServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) {
-            $this->handleQueryReport($query->sql, $query->bindings, $query->time, $query->connectionName);
+            if ($this->app['inspector']->isRecording()) {
+                $this->handleQueryReport($query->sql, $query->bindings, $query->time, $query->connectionName);
+            }
         });
     }
 
@@ -31,10 +33,6 @@ class DatabaseQueryServiceProvider extends ServiceProvider
      */
     protected function handleQueryReport($sql, array $bindings, $time, $connection)
     {
-        if (!$this->app['inspector']->isRecording()) {
-            return;
-        }
-
         $segment = $this->app['inspector']->startSegment($connection, substr($sql, 0, 50))
             ->start(microtime(true) - $time/1000);
 
