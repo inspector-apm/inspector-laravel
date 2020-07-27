@@ -4,11 +4,8 @@
 namespace Inspector\Laravel\Tests;
 
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Middleware\WebRequestMonitoring;
-use Inspector\Models\Transaction;
 
 class ResponseDataTest extends BasicTestCase
 {
