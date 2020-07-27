@@ -51,11 +51,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Transport method
+    | Max number of items.
     |--------------------------------------------------------------------------
     |
-    | This is where you can set the data transport method.
-    | Supported options: "sync", "async"
+    | Max number of items to record in a single execution cycle.
     |
     */
 
