@@ -47,7 +47,7 @@ return [
     |
     */
 
-    'transport' => env('INSPECTOR_TRANSPORT', 'curl'),
+    'transport' => env('INSPECTOR_TRANSPORT', 'sync'),
 
     /*
     |--------------------------------------------------------------------------
