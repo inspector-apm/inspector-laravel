@@ -12,8 +12,6 @@ class ResponseDataTest extends BasicTestCase
     protected function resolveApplicationConfiguration($app)
     {
         parent::resolveApplicationConfiguration($app);
-
-        $app['config']->set('inspector.key', 'test');
     }
 
     public function testResult()
