@@ -24,7 +24,7 @@ return [
     |
     */
 
-    'key' => env('INSPECTOR_API_KEY'),
+    'key' => env('INSPECTOR_API_KEY', env('INSPECTOR_INGESTION_KEY')),
 
     /*
     |--------------------------------------------------------------------------

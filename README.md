@@ -31,13 +31,13 @@ composer require inspector-apm/inspector-laravel
 
 ### Configure the API Key
 
-First put the Inspector API KEY in your environment file:
+First put the Inspector Ingestion Key in your environment file:
 
 ```
-INSPECTOR_API_KEY=[api key]
+INSPECTOR_INGESTION_KEY=[ingestion key]
 ```
 
-You can obtain `INSPECTOR_API_KEY` creating a new project in your [Inspector](https://www.inspector.dev) dashboard.
+You can obtain an `INSPECTOR_INGESTION_KEY` creating a new project in your [Inspector](https://www.inspector.dev) dashboard.
 
 <a name="middleware"></a>
 
