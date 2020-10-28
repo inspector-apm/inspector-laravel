@@ -40,9 +40,9 @@ class TestCommand extends Command
 
             !empty($config->get('inspector.key'))
                 ? $this->info('✅ Inspector key installed.')
-                : $this->warn('❌ Inspector key not specified. Make sure you specify a value in the `key` field of the `inspector` config file.');
+                : $this->warn('❌ Inspector key not specified. Make sure you specify the INSPECTOR_INGESTION_KEY in your .env file.');
 
-            $segment->addContext('example payload', ['foo' => 'bar']);
+            $segment->addContext('example payload', ['key' => $config->get('inspector.key')]);
         }, 'test', 'Check API key');
 
         // Check Inspector is enabled
@@ -53,7 +53,7 @@ class TestCommand extends Command
                 ? $this->info('✅ Inspector is enabled.')
                 : $this->warn('❌ Inspector is actually disabled, turn to true the `enable` field of the `inspector` config file.');
 
-            $segment->addContext('another payload', ['foo' => 'bar']);
+            $segment->addContext('another payload', ['enable' => $config->get('inspector.enable')]);
         }, 'test', 'Check if Inspector is enabled');
 
         // Check CURL
