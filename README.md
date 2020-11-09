@@ -27,9 +27,9 @@ Install the latest version of our package by:
 composer require inspector-apm/inspector-laravel
 ```
 
-<a name="api-keyt"></a>
+<a name="api-key"></a>
 
-### Configure the API Key
+### Configure the Ingestion Key
 
 First put the Inspector Ingestion Key in your environment file:
 
