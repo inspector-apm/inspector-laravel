@@ -81,4 +81,4 @@ Go to [https://app.inspector.dev/home](https://app.inspector.dev/home) to explor
 
 ## LICENSE
 
-This package are licensed under the [MIT](LICENSE) license.
+This package is licensed under the [MIT](LICENSE) license.
