@@ -1,7 +1,9 @@
-# Real-Time monitoring package for Laravel
+# Inspector | Code Execution Monitoring Tool
 
 [![Build Status](https://travis-ci.org/inspector-apm/inspector-laravel.svg?branch=master)](https://travis-ci.org/inspector-apm/inspector-laravel)
 [![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-laravel/v/stable)](https://packagist.org/packages/inspector-apm/inspector-laravel)
+
+Simple code execution monitoring, built for Laravel developers.
 
 - [Requirements](#requirements)
 - [Install](#install)
