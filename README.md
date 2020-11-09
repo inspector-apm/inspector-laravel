@@ -77,7 +77,7 @@ Go to [https://app.inspector.dev/home](https://app.inspector.dev/home) to explor
 
 ## Official documentation
 
-**[See official documentation](https://docs.inspector.dev)**
+**[See official documentation](https://docs.inspector.dev/platforms/laravel)**
 
 ## LICENSE
 
