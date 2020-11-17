@@ -29,6 +29,14 @@ Install the latest version of our package by:
 composer require inspector-apm/inspector-laravel
 ```
 
+## For Lumen
+If your application is based on Lumen you need to manually register the InspectorServiceProvider:
+
+```php
+$app->register(\Inspector\Laravel\InspectorServiceProvider::class);
+```
+
+
 <a name="api-key"></a>
 
 ### Configure the Ingestion Key
