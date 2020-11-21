@@ -5,7 +5,6 @@ namespace Inspector\Laravel\Providers;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
@@ -42,7 +41,7 @@ class GateServiceProvider extends ServiceProvider
         if (Inspector::isRecording()) {
             $this->segments[
                 $this->generateUniqueKey($this->formatArguments($arguments))
-            ] = Inspector::startSegment('gate', 'Authorization:'.$ability);
+            ] = Inspector::startSegment('gate', 'Authorization::'.$ability);
         }
     }
 
