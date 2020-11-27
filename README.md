@@ -7,8 +7,8 @@ Simple code execution monitoring, built for Laravel developers.
 
 - [Requirements](#requirements)
 - [Install](#install)
-- [Configure the API key](#api-key)
-- [Midleware](#middleware)
+- [Configure the Ingestion Key](#key)
+- [Middleware](#middleware)
 - [Test everything is working](#test)
 - [See official Documentation](https://docs.inspector.dev)
 
@@ -37,7 +37,7 @@ $app->register(\Inspector\Laravel\InspectorServiceProvider::class);
 ```
 
 
-<a name="api-key"></a>
+<a name="key"></a>
 
 ### Configure the Ingestion Key
 
