@@ -30,33 +30,23 @@ class JobServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Queue::looping(
+        /*Queue::looping(
             function () {
                 $this->app['inspector']->flush();
             }
-        );
+        );*/
 
         $this->app['events']->listen(
             JobProcessing::class,
             function (JobProcessing $event) {
                 // If exists in the job to ignore, return immediately.
                 if (
-                !Filters::isApprovedJobClass(
-                    $event->job->resolveName(),
-                    config('inspector.ignore_jobs')
-                )
+                    ! Filters::isApprovedJobClass($event->job->resolveName(), config('inspector.ignore_jobs'))
                 ) {
                     return;
                 }
 
-                if ($this->app['inspector']->isRecording()) {
-                    // Open a segment if a transaction already exists
-                    $this->initializeSegment($event->job);
-                } else {
-                    // Start a transaction if there's not one
-                    $this->app['inspector']->startTransaction($event->job->resolveName())
-                        ->addContext('Payload', $event->job->payload());
-                }
+                $this->handleJobStart($event->job);
             }
         );
 
@@ -80,6 +70,19 @@ class JobServiceProvider extends ServiceProvider
                 $this->handleJobEnd($event->job, true);
             }
         );
+    }
+
+    protected function handleJobStart(Job $job)
+    {
+        if ($this->app['inspector']->isRecording()) {
+            // Open a segment if a transaction already exists
+            $this->initializeSegment($job);
+        } else {
+            // Start a transaction if there's not one
+            $this->app['inspector']
+                ->startTransaction($job->resolveName())
+                ->addContext('Payload', $job->payload());
+        }
     }
 
     protected function initializeSegment(Job $job)
@@ -114,6 +117,10 @@ class JobServiceProvider extends ServiceProvider
             $this->app['inspector']
                 ->currentTransaction()
                 ->setResult($failed ? 'error' : 'success');
+        }
+
+        if ($this->app->runningInConsole()) {
+            $this->app['inspector']->flush();
         }
     }
 
