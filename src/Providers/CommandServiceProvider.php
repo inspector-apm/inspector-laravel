@@ -26,7 +26,7 @@ class CommandServiceProvider extends ServiceProvider
                     'exit_code' => $event->exitCode,
                     'arguments' => $event->input->getArguments(),
                     'options' => $event->input->getOptions(),
-                ]);
+                ])->setResult($event->exitCode === 0 ? 'success' : 'error');
         });
     }
 
