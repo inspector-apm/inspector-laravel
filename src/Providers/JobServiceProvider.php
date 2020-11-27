@@ -30,6 +30,7 @@ class JobServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Consider that this event is never called in Laravel Vapor
         /*Queue::looping(
             function () {
                 $this->app['inspector']->flush();
