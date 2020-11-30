@@ -5,9 +5,7 @@ namespace Inspector\Laravel\Tests;
 
 
 use Illuminate\Http\Request;
-use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
-use Inspector\Laravel\Middleware\WebRequestMonitoring;
 use Inspector\Laravel\Tests\Jobs\JobTest;
 
 class FilterClassTest extends BasicTestCase
@@ -15,31 +13,32 @@ class FilterClassTest extends BasicTestCase
     public function testRequestApproved()
     {
         $this->app->router->get('test', function (Request $request) {
-            $this->assertTrue(Filters::isApprovedRequest(config('inspector.ignore_url'), $request));
-        })->middleware(WebRequestMonitoring::class);
+            return Filters::isApprovedRequest([], $request);
+        });
 
-        $this->call('GET', 'test');
+        $response = $this->get('test');
+
+        $this->assertTrue($response->getContent() === '1');
     }
 
     public function testRequestNotApproved()
     {
-        $this->app->router->get('nova', function (Request $request) {
-            $this->assertFalse(Filters::isApprovedRequest(config('inspector.ignore_url'), $request));
-        })->middleware(WebRequestMonitoring::class);
+        $this->app->router->get('test/dashboard', function (Request $request) {
+            return Filters::isApprovedRequest(['test*'], $request);
+        });
 
-        $this->call('GET', 'nova');
+        $response = $this->get('test/dashboard');
+
+        $this->assertEmpty($response->getContent());
+    }
+
+    public function testJobApproved()
+    {
+        $this->assertTrue(Filters::isApprovedJobClass(JobTest::class, []));
     }
 
     public function testJobNotApproved()
     {
-        $notAllowed = [JobTest::class];
-
-        $this->assertFalse(Filters::isApprovedJobClass(JobTest::class, $notAllowed));
-
-        $this->assertTrue(Filters::isApprovedJobClass(JobTest::class, config('inspector.ignore_jobs')));
-
-        config()->set('inspector.ignore_jobs', $notAllowed);
-
-        $this->assertFalse(Filters::isApprovedJobClass(JobTest::class, config('inspector.ignore_jobs')));
+        $this->assertFalse(Filters::isApprovedJobClass(JobTest::class, [JobTest::class]));
     }
 }
