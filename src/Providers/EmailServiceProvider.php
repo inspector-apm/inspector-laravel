@@ -29,17 +29,19 @@ class EmailServiceProvider extends ServiceProvider
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event) {
             if (Inspector::isRecording()) {
                 $this->segments[
-                    $this->generateUniqueKey($event->data)
+                    $event->message->getId()
                 ] = Inspector::startSegment('email', get_class($event->message))->setContext($event->data);
             }
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {
-            $key = $this->generateUniqueKey($event->data);
+            $this->segments[$event->message->getId()]->end();
+
+            /*$key = $this->generateUniqueKey($event->data);
 
             if (array_key_exists($key, $this->segments)) {
                 $this->segments[$key]->end();
-            }
+            }*/
         });
     }
 
@@ -49,10 +51,10 @@ class EmailServiceProvider extends ServiceProvider
      * @param array $data
      * @return string
      */
-    protected function generateUniqueKey($data): string
+    /*protected function generateUniqueKey($data): string
     {
         return md5(json_encode($data));
-    }
+    }*/
 
     /**
      * Register the service provider.
