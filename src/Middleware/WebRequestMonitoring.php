@@ -85,7 +85,6 @@ class WebRequestMonitoring implements TerminableInterface
                 ->addContext('Response', [
                     'status_code' => $response->getStatusCode(),
                     'version' => $response->getProtocolVersion(),
-                    'content' => is_string($response->getContent()) ? substr($response->getContent(), 0, 250) : $response->getContent(),
                     'charset' => $response->getCharset(),
                     'headers' => $response->headers->all(),
                 ]);

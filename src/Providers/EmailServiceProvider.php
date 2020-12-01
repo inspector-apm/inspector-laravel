@@ -35,26 +35,11 @@ class EmailServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {
-            $this->segments[$event->message->getId()]->end();
-
-            /*$key = $this->generateUniqueKey($event->data);
-
-            if (array_key_exists($key, $this->segments)) {
-                $this->segments[$key]->end();
-            }*/
+            if (array_key_exists($event->message->getId(), $this->segments)) {
+                $this->segments[$event->message->getId()]->end();
+            }
         });
     }
-
-    /**
-     * Generate a unique key to track segment's state.
-     *
-     * @param array $data
-     * @return string
-     */
-    /*protected function generateUniqueKey($data): string
-    {
-        return md5(json_encode($data));
-    }*/
 
     /**
      * Register the service provider.
