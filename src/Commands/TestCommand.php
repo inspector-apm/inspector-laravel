@@ -43,7 +43,7 @@ class TestCommand extends Command
                 : $this->warn('❌ Inspector key not specified. Make sure you specify the INSPECTOR_INGESTION_KEY in your .env file.');
 
             $segment->addContext('example payload', ['key' => $config->get('inspector.key')]);
-        }, 'test', 'Check API key');
+        }, 'test', 'Check Ingestion key');
 
         // Check Inspector is enabled
         inspector()->addSegment(function ($segment) use ($config) {
