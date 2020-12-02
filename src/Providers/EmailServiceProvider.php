@@ -29,14 +29,17 @@ class EmailServiceProvider extends ServiceProvider
         $this->app['events']->listen(MessageSending::class, function (MessageSending $event) {
             if (Inspector::isRecording()) {
                 $this->segments[
-                    $event->message->getId()
-                ] = Inspector::startSegment('email', get_class($event->message))->setContext($event->data);
+                    $this->getSegmentKey($event->message)
+                ] = Inspector::startSegment('email', get_class($event->message))
+                    ->setContext($event->data);
             }
         });
 
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {
-            if (array_key_exists($event->message->getId(), $this->segments)) {
-                $this->segments[$event->message->getId()]->end();
+            $key = $this->getSegmentKey($event->message);
+
+            if (array_key_exists($key, $this->segments)) {
+                $this->segments[$key]->end();
             }
         });
     }
@@ -49,5 +52,16 @@ class EmailServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Generate a unique key for each message.
+     *
+     * @param \Swift_Message $message
+     * @return string
+     */
+    protected function getSegmentKey(\Swift_Message $message)
+    {
+        return trim($message->getHeaders()->get('Content-Type')->toString());
     }
 }
