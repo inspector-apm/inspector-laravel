@@ -22,9 +22,7 @@ trait FetchesStackTrace
                 return false;
             }
 
-            return ! Str::contains($frame['file'],
-                base_path('vendor')
-            );
+            return ! Str::contains($frame['file'], base_path('vendor'));
         });
     }
 }
