@@ -23,14 +23,14 @@ Simple code execution monitoring, built for Laravel developers.
 
 ## Install
 
-Install the latest version of our package by:
+Install the latest version by:
 
 ```
 composer require inspector-apm/inspector-laravel
 ```
 
 ## For Lumen
-If your application is based on Lumen you need to manually register the InspectorServiceProvider:
+If your application is based on Lumen you need to manually register the `InspectorServiceProvider`:
 
 ```php
 $app->register(\Inspector\Laravel\InspectorServiceProvider::class);
@@ -41,13 +41,13 @@ $app->register(\Inspector\Laravel\InspectorServiceProvider::class);
 
 ### Configure the Ingestion Key
 
-First put the Inspector Ingestion Key in your environment file:
+First put the Ingestion Key in your environment file:
 
 ```
 INSPECTOR_INGESTION_KEY=[ingestion key]
 ```
 
-You can obtain an `INSPECTOR_INGESTION_KEY` creating a new project in your [Inspector](https://www.inspector.dev) dashboard.
+You can obtain an `INSPECTOR_INGESTION_KEY` creating a new project in your [Inspector](https://www.inspector.dev) account.
 
 <a name="middleware"></a>
 
