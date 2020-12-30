@@ -5,9 +5,6 @@ namespace Inspector\Laravel\Middleware;
 
 
 use Closure;
-use Symfony\Component\HttpFoundation\Request as TerminableRequest;
-use Symfony\Component\HttpFoundation\Response as TerminableResponse;
-use Illuminate\Http\Request;
 use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Support\Facades\Auth;
 use Inspector\Laravel\Filters;
@@ -69,10 +66,10 @@ class WebRequestMonitoring implements TerminableInterface
     /**
      * Terminates a request/response cycle.
      *
-     * @param TerminableRequest $request
-     * @param TerminableResponse $response
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Response $response
      */
-    public function terminate(TerminableRequest $request, TerminableResponse $response)
+    public function terminate($request, $response)
     {
         if (Inspector::isRecording()) {
             Inspector::currentTransaction()->setResult($response->getStatusCode());
@@ -97,7 +94,7 @@ class WebRequestMonitoring implements TerminableInterface
      * @param \Illuminate\Http\Request $request
      * @return string
      */
-    protected function buildTransactionName(Request $request)
+    protected function buildTransactionName($request)
     {
         $route = $request->route();
 
