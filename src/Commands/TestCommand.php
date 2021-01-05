@@ -86,6 +86,10 @@ class TestCommand extends Command
                 ->setResult('success')
                 ->end(rand(100, 200));
 
+            inspector()->addSegment(function () {
+                usleep(rand(10, 50) * 1000);
+            }, 'segment', 'Task performance');
+
             // Logs will be reported in the transaction context.
             \Log::debug("Here you'll find log entries generated during the transaction.");
         }
