@@ -9,7 +9,7 @@ use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\NotificationServiceProvider;
 use Inspector\Laravel\Providers\RedisServiceProvider;
-use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
+use Inspector\Laravel\Providers\ExceptionsServiceProvider;
 
 class DisablingProvidersTest extends BasicTestCase
 {
@@ -35,7 +35,7 @@ class DisablingProvidersTest extends BasicTestCase
         $this->assertNull($this->app->getProvider(DatabaseQueryServiceProvider::class));
         $this->assertNull($this->app->getProvider(EmailServiceProvider::class));
         $this->assertNull($this->app->getProvider(NotificationServiceProvider::class));
-        $this->assertNull($this->app->getProvider(UnhandledExceptionServiceProvider::class));
+        $this->assertNull($this->app->getProvider(ExceptionsServiceProvider::class));
         $this->assertNull($this->app->getProvider(RedisServiceProvider::class));
     }
 }

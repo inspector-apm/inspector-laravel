@@ -9,12 +9,12 @@ use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
 
 /**
- * @method bool isRecording
- * @method Transaction startTransaction($name)
- * @method Transaction currentTransaction()
- * @method Segment startSegment($type, $label)
- * @method mixed addSegment($callback, $type, $label)
- * @method Error reportException(\Throwable $exception, $handled = true)
+ * @method static bool isRecording
+ * @method static Transaction startTransaction($name)
+ * @method static Transaction currentTransaction()
+ * @method static Segment startSegment($type, $label)
+ * @method static mixed addSegment($callback, $type, $label)
+ * @method static Error reportException(\Throwable $exception, $handled = true)
  */
 class Inspector extends Facade
 {

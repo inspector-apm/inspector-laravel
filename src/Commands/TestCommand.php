@@ -32,6 +32,11 @@ class TestCommand extends Command
      */
     public function handle(Repository $config)
     {
+        if (!inspector()->isRecording()) {
+            $this->warn('Inspector is not enabled');
+            return;
+        }
+
         $this->line("I'm testing your Inspector integration.");
 
         // Check Inspector API key
@@ -69,14 +74,21 @@ class TestCommand extends Command
 
         // Report Exception
         inspector()->reportException(new \Exception('First Exception detected'));
+        // End the transaction
+        inspector()->currentTransaction()
+            ->setResult('error')
+            ->end();
 
-        inspector()->currentTransaction()->setResult('success')->end();
+        // Demo data
+        foreach ([1, 2, 3, 4, 5, 6] as $minutes) {
+            inspector()->startTransaction("artisan {$this->signature}")
+                ->start(microtime(true) - 60*$minutes)
+                ->setResult('success')
+                ->end(rand(100, 200));
 
-        // A demo transaction
-        inspector()->startTransaction("artisan {$this->signature}")
-            ->start(microtime(true) - 60*5)
-            ->setResult('success')
-            ->end(200);
+            // Logs will be reported in the transaction context.
+            \Log::debug("Here you'll find log entries generated during the transaction.");
+        }
 
         $this->line('Done!');
     }

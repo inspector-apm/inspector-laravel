@@ -12,7 +12,7 @@ use Inspector\Laravel\Providers\GateServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\NotificationServiceProvider;
 use Inspector\Laravel\Providers\RedisServiceProvider;
-use Inspector\Laravel\Providers\UnhandledExceptionServiceProvider;
+use Inspector\Laravel\Providers\ExceptionsServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Inspector\Configuration;
 
@@ -96,7 +96,7 @@ class InspectorServiceProvider extends ServiceProvider
         }
 
         if (config('inspector.unhandled_exceptions')) {
-            $this->app->register(UnhandledExceptionServiceProvider::class);
+            $this->app->register(ExceptionsServiceProvider::class);
         }
 
         if(config('inspector.query')){
