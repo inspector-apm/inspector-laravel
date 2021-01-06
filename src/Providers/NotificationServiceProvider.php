@@ -7,6 +7,7 @@ namespace Inspector\Laravel\Providers;
 use Illuminate\Notifications\Events\NotificationSending;
 use Illuminate\Notifications\Events\NotificationSent;
 use Illuminate\Support\ServiceProvider;
+use Inspector\Laravel\Facades\Inspector;
 use Inspector\Models\Segment;
 
 class NotificationServiceProvider extends ServiceProvider
@@ -27,12 +28,13 @@ class NotificationServiceProvider extends ServiceProvider
     {
         $this->app['events']->listen(NotificationSending::class, function (NotificationSending $event) {
             if ($this->app['inspector']->isRecording()) {
-                $this->segments[$event->notification->id] =  $this->app['inspector']
-                    ->startSegment('notifications', get_class($event->notification))
-                    ->addContext('Data', [
-                        'Channel' => $event->channel,
-                        'Notifiable' => get_class($event->notifiable),
-                    ]);
+                $this->segments[
+                    $event->notification->id
+                ] = Inspector::startSegment('notifications', get_class($event->notification))
+                        ->addContext('data', [
+                            'Channel' => $event->channel,
+                            'Notifiable' => get_class($event->notifiable),
+                        ]);
             }
         });
 

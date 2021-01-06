@@ -31,7 +31,7 @@ class EmailServiceProvider extends ServiceProvider
                 $this->segments[
                     $this->getSegmentKey($event->message)
                 ] = Inspector::startSegment('email', get_class($event->message))
-                    ->setContext($event->data);
+                    ->addContext('data', $event->data);
             }
         });
 
@@ -62,6 +62,6 @@ class EmailServiceProvider extends ServiceProvider
      */
     protected function getSegmentKey(\Swift_Message $message)
     {
-        return trim($message->getHeaders()->get('Content-Type')->toString());
+        return sha1(trim($message->getHeaders()->get('Content-Type')->toString()));
     }
 }
