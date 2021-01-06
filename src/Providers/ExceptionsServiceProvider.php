@@ -55,7 +55,9 @@ class ExceptionsServiceProvider extends ServiceProvider
             Inspector::currentTransaction()
                 ->addContext('logs', array_merge(
                     Inspector::currentTransaction()->getContext()['logs']??[],
-                    compact('level', 'message')
+                    [
+                        compact('level', 'message')
+                    ]
                 ));
         }
     }
