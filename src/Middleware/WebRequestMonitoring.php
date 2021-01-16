@@ -101,7 +101,8 @@ class WebRequestMonitoring implements TerminableInterface
         if($route instanceof \Illuminate\Routing\Route) {
             $uri = $request->route()->uri();
         } else {
-            $uri = $_SERVER['REQUEST_URI'];
+            $array = explode('?', $_SERVER["REQUEST_URI"]);
+            $uri = array_shift($array);
         }
 
         return $request->method() . ' ' . $this->normalizeUri($uri);
