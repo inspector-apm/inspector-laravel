@@ -41,7 +41,7 @@ final class ViewEngineDecorator implements Engine
         $label = 'view:'.$this->viewFactory->shared(self::SHARED_KEY, basename($path));
 
         return Inspector::addSegment(function (Segment $segment) use ($path, $data) {
-            $segment->addContext('info', compact('path', 'data'));
+            $segment->addContext('details', compact('path', 'data'));
 
             return $this->engine->get($path, $data);
         }, 'view.render', $label);
