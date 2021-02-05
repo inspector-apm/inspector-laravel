@@ -2,8 +2,12 @@
 
 namespace Inspector\Laravel;
 
+use Illuminate\Contracts\View\Engine;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
+use Illuminate\View\Engines\EngineResolver;
+use Illuminate\View\Factory as ViewFactory;
 use Inspector\Laravel\Commands\TestCommand;
 use Inspector\Laravel\Providers\CommandServiceProvider;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
@@ -13,6 +17,7 @@ use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\NotificationServiceProvider;
 use Inspector\Laravel\Providers\RedisServiceProvider;
 use Inspector\Laravel\Providers\ExceptionsServiceProvider;
+use Inspector\Laravel\Views\ViewEngineDecorator;
 use Laravel\Lumen\Application as LumenApplication;
 use Inspector\Configuration;
 
@@ -57,6 +62,7 @@ class InspectorServiceProvider extends ServiceProvider
      * Register the service provider.
      *
      * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function register()
     {
@@ -77,6 +83,44 @@ class InspectorServiceProvider extends ServiceProvider
         });
 
         $this->registerInspectorServiceProviders();
+
+        $this->bindViewEngine();
+    }
+
+    /**
+     * Decorate View engine to monitor view rendering performance.
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    protected function bindViewEngine(): void
+    {
+        $viewEngineResolver = function (EngineResolver $engineResolver): void {
+            foreach (['file', 'php', 'blade'] as $engineName) {
+                $realEngine = $engineResolver->resolve($engineName);
+
+                $engineResolver->register($engineName, function () use ($realEngine) {
+                    return $this->wrapViewEngine($realEngine);
+                });
+            }
+        };
+
+        if ($this->app->resolved('view.engine.resolver')) {
+            $viewEngineResolver($this->app->make('view.engine.resolver'));
+        } else {
+            $this->app->afterResolving('view.engine.resolver', $viewEngineResolver);
+        }
+    }
+
+    private function wrapViewEngine(Engine $realEngine): Engine
+    {
+        /** @var ViewFactory $viewFactory */
+        $viewFactory = $this->app->make('view');
+
+        $viewFactory->composer('*', static function (View $view) use ($viewFactory): void {
+            $viewFactory->share(ViewEngineDecorator::SHARED_KEY, $view->name());
+        });
+
+        return new ViewEngineDecorator($realEngine, $viewFactory);
     }
 
     /**
