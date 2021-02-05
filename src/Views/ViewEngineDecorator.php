@@ -7,6 +7,7 @@ namespace Inspector\Laravel\Views;
 use Illuminate\Contracts\View\Engine;
 use Illuminate\View\Factory;
 use Inspector\Laravel\Facades\Inspector;
+use Inspector\Models\Segment;
 
 final class ViewEngineDecorator implements Engine
 {
@@ -39,7 +40,9 @@ final class ViewEngineDecorator implements Engine
 
         $label = 'view:'.$this->viewFactory->shared(self::SHARED_KEY, basename($path));
 
-        return Inspector::addSegment(function () use ($path, $data) {
+        return Inspector::addSegment(function (Segment $segment) use ($path, $data) {
+            $segment->addContext('data', compact('path', 'data'));
+
             return $this->engine->get($path, $data);
         }, 'view.render', $label);
     }
