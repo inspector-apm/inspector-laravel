@@ -84,7 +84,9 @@ class InspectorServiceProvider extends ServiceProvider
 
         $this->registerInspectorServiceProviders();
 
-        $this->bindViewEngine();
+        if (config('inspector.views')) {
+            $this->bindViewEngine();
+        }
     }
 
     /**
