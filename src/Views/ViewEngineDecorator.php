@@ -37,11 +37,11 @@ final class ViewEngineDecorator implements Engine
             return $this->engine->get($path, $data);
         }
 
-        $label = $this->viewFactory->shared(self::SHARED_KEY, basename($path));
+        $label = 'view:'.$this->viewFactory->shared(self::SHARED_KEY, basename($path));
 
         return Inspector::addSegment(function () use ($path, $data) {
             return $this->engine->get($path, $data);
-        }, 'view', $label);
+        }, 'view.render', $label);
     }
 
     public function __call($name, $arguments)
