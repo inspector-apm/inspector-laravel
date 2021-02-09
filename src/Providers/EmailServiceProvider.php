@@ -31,7 +31,8 @@ class EmailServiceProvider extends ServiceProvider
                 $this->segments[
                     $this->getSegmentKey($event->message)
                 ] = Inspector::startSegment('email', get_class($event->message))
-                    ->addContext('data', $event->data);
+                    // Compatibility with Laravel 5.5
+                    ->addContext('data', property_exists($event, 'data') ? $event->data : null);
             }
         });
 

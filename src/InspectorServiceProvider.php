@@ -28,7 +28,7 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '4.6.14';
+    const VERSION = '4.6.15';
 
     /**
      * Booting of services.
@@ -83,6 +83,43 @@ class InspectorServiceProvider extends ServiceProvider
         });
 
         $this->registerInspectorServiceProviders();
+    }
+
+    /**
+     * Bind Inspector service providers based on package configuration.
+     */
+    public function registerInspectorServiceProviders()
+    {
+        if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand(config('inspector.ignore_commands'))) {
+            $this->app->register(CommandServiceProvider::class);
+        }
+
+        $this->app->register(GateServiceProvider::class);
+
+        // For Laravel >=6
+        if (config('inspector.redis') && strpos($this->app->version(), '5') === false) {
+            $this->app->register(RedisServiceProvider::class);
+        }
+
+        if (config('inspector.unhandled_exceptions')) {
+            $this->app->register(ExceptionsServiceProvider::class);
+        }
+
+        if(config('inspector.query')){
+            $this->app->register(DatabaseQueryServiceProvider::class);
+        }
+
+        if (config('inspector.job')) {
+            $this->app->register(JobServiceProvider::class);
+        }
+
+        if (config('inspector.email')) {
+            $this->app->register(EmailServiceProvider::class);
+        }
+
+        if (config('inspector.notifications')) {
+            $this->app->register(NotificationServiceProvider::class);
+        }
 
         if (config('inspector.views')) {
             $this->bindViewEngine();
@@ -123,42 +160,5 @@ class InspectorServiceProvider extends ServiceProvider
         });
 
         return new ViewEngineDecorator($realEngine, $viewFactory);
-    }
-
-    /**
-     * Bind Inspector service providers based on package configuration.
-     */
-    public function registerInspectorServiceProviders()
-    {
-        if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand(config('inspector.ignore_commands'))) {
-            $this->app->register(CommandServiceProvider::class);
-        }
-
-        $this->app->register(GateServiceProvider::class);
-
-        // For Laravel >=6
-        if (config('inspector.redis') && strpos($this->app->version(), '5') === false) {
-            $this->app->register(RedisServiceProvider::class);
-        }
-
-        if (config('inspector.unhandled_exceptions')) {
-            $this->app->register(ExceptionsServiceProvider::class);
-        }
-
-        if(config('inspector.query')){
-            $this->app->register(DatabaseQueryServiceProvider::class);
-        }
-
-        if (config('inspector.job')) {
-            $this->app->register(JobServiceProvider::class);
-        }
-
-        if (config('inspector.email')) {
-            $this->app->register(EmailServiceProvider::class);
-        }
-
-        if (config('inspector.notifications')) {
-            $this->app->register(NotificationServiceProvider::class);
-        }
     }
 }

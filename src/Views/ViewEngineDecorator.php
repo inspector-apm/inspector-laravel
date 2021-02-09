@@ -11,7 +11,7 @@ use Inspector\Models\Segment;
 
 final class ViewEngineDecorator implements Engine
 {
-    public const SHARED_KEY = '__inspector_tracing_view_name';
+    public const SHARED_KEY = '__inspector_view_name';
 
     /**
      * @var Engine
@@ -32,7 +32,7 @@ final class ViewEngineDecorator implements Engine
     /**
      * {@inheritdoc}
      */
-    public function get($path, array $data = []): string
+    public function get($path, array $data = [])
     {
         if (!Inspector::isRecording()) {
             return $this->engine->get($path, $data);
@@ -45,7 +45,7 @@ final class ViewEngineDecorator implements Engine
                 ->addContext('data', $data);
 
             return $this->engine->get($path, $data);
-        }, 'view.render', $label);
+        }, 'view', $label);
     }
 
     public function __call($name, $arguments)
