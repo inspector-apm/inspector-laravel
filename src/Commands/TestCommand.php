@@ -39,6 +39,14 @@ class TestCommand extends Command
 
         $this->line("I'm testing your Inspector integration.");
 
+        // Test proc_open function availability
+        try {
+            proc_open("", [], $pipes);
+        } catch (\Throwable $exception) {
+            $this->warn("❌ proc_open function disabled.");
+            return;
+        }
+
         // Check Inspector API key
         inspector()->addSegment(function ($segment) use ($config) {
             usleep(10 * 1000);
@@ -76,7 +84,7 @@ class TestCommand extends Command
         inspector()->reportException(new \Exception('First Exception detected'));
         // End the transaction
         inspector()->currentTransaction()
-            ->setResult('error')
+            ->setResult('success')
             ->end();
 
         // Demo data
