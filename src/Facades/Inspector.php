@@ -13,7 +13,7 @@ use Inspector\Models\Transaction;
  * @method static Transaction startTransaction($name)
  * @method static Transaction currentTransaction()
  * @method static Segment startSegment($type, $label)
- * @method static mixed addSegment($callback, $type, $label)
+ * @method static mixed addSegment($callback, $type, $label, $throw = false)
  * @method static Error reportException(\Throwable $exception, $handled = true)
  */
 class Inspector extends Facade

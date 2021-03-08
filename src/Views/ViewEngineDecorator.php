@@ -45,7 +45,7 @@ final class ViewEngineDecorator implements Engine
                 ->addContext('data', $data);
 
             return $this->engine->get($path, $data);
-        }, 'view', $label);
+        }, 'view', $label, true);
     }
 
     public function __call($name, $arguments)
