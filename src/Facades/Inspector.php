@@ -15,6 +15,7 @@ use Inspector\Models\Transaction;
  * @method static Segment startSegment($type, $label)
  * @method static mixed addSegment($callback, $type, $label, $throw = false)
  * @method static Error reportException(\Throwable $exception, $handled = true)
+ * @method static void flush()
  */
 class Inspector extends Facade
 {
