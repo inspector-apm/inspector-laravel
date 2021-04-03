@@ -206,6 +206,7 @@ return [
         'schedule:finish',
         'package:discover',
         'vendor:publish',
+        'list',
         'package:discover',
         'migrate',
         'migrate:rollback',
