@@ -200,11 +200,14 @@ return [
     */
 
     'ignore_commands' => [
+        'storage:link',
+        'optimize',
         'schedule:run',
         'schedule:finish',
         'package:discover',
         'vendor:publish',
         'package:discover',
+        'migrate',
         'migrate:rollback',
         'migrate:refresh',
         'migrate:fresh',
