@@ -207,6 +207,7 @@ return [
         'package:discover',
         'vendor:publish',
         'list',
+        'test',
         'package:discover',
         'migrate',
         'migrate:rollback',
