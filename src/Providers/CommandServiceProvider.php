@@ -6,6 +6,7 @@ namespace Inspector\Laravel\Providers;
 
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\ServiceProvider;
+use Inspector\Laravel\Facades\Inspector;
 
 class CommandServiceProvider extends ServiceProvider
 {
@@ -16,13 +17,13 @@ class CommandServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (!$this->app['inspector']->isRecording()) {
-            $this->app['inspector']->startTransaction(implode(' ', $_SERVER['argv']));
+        if (!Inspector::isRecording()) {
+            Inspector::startTransaction(implode(' ', $_SERVER['argv']));
         }
 
         $this->app['events']->listen(CommandFinished::class, function (CommandFinished $event) {
-            if($this->app['inspector']->isRecording()) {
-                $this->app['inspector']->currentTransaction()
+            if(Inspector::isRecording()) {
+                Inspector::currentTransaction()
                     ->addContext('Command', [
                         'exit_code' => $event->exitCode,
                         'arguments' => $event->input->getArguments(),

@@ -62,7 +62,6 @@ class InspectorServiceProvider extends ServiceProvider
      * Register the service provider.
      *
      * @return void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function register()
     {
@@ -70,7 +69,7 @@ class InspectorServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/inspector.php', 'inspector');
 
         // Bind Inspector service class
-        $this->app->singleton('inspector', function () {
+        $this->app->singleton('inspector', function ($app) {
             $configuration = (new Configuration(config('inspector.key')))
                 ->setEnabled(config('inspector.enable'))
                 ->setUrl(config('inspector.url'))

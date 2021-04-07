@@ -11,6 +11,7 @@ use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
+use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
 use Inspector\Models\Segment;
 
@@ -75,21 +76,19 @@ class JobServiceProvider extends ServiceProvider
 
     protected function handleJobStart(Job $job)
     {
-        if ($this->app['inspector']->isRecording()) {
+        if (Inspector::isRecording()) {
             // Open a segment if a transaction already exists
             $this->initializeSegment($job);
         } else {
             // Start a transaction if there's not one
-            $this->app['inspector']
-                ->startTransaction($job->resolveName())
+            Inspector::startTransaction($job->resolveName())
                 ->addContext('Payload', $job->payload());
         }
     }
 
     protected function initializeSegment(Job $job)
     {
-        $segment = $this->app['inspector']
-            ->startSegment('job', $job->resolveName())
+        $segment = Inspector::startSegment('job', $job->resolveName())
             ->addContext('payload', $job->payload());
 
         // Jot down the job with a unique ID
@@ -104,7 +103,7 @@ class JobServiceProvider extends ServiceProvider
      */
     public function handleJobEnd(Job $job, $failed = false)
     {
-        if (!$this->app['inspector']->isRecording()) {
+        if (!Inspector::isRecording()) {
             return;
         }
 
@@ -115,13 +114,12 @@ class JobServiceProvider extends ServiceProvider
         if (array_key_exists($id, $this->segments)) {
             $this->segments[$id]->end();
         } else {
-            $this->app['inspector']
-                ->currentTransaction()
+            Inspector::currentTransaction()
                 ->setResult($failed ? 'error' : 'success');
         }
 
         if ($this->app->runningInConsole()) {
-            $this->app['inspector']->flush();
+            Inspector::flush();
         }
     }
 

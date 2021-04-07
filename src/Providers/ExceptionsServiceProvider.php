@@ -54,7 +54,7 @@ class ExceptionsServiceProvider extends ServiceProvider
         if ($this->app['inspector']->isRecording()) {
             Inspector::currentTransaction()
                 ->addContext('logs', array_merge(
-                    Inspector::currentTransaction()->getContext()['logs']??[],
+                    Inspector::currentTransaction()->getContext()['logs'] ?? [],
                     [
                         compact('level', 'message')
                     ]
