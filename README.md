@@ -1,5 +1,9 @@
 # Inspector | Code Execution Monitoring Tool
 
+[![Total Downloads](https://poser.pugx.org/inspector-apm/inspector-laravel/downloads)](//packagist.org/packages/inspector-apm/inspector-laravel)
+[![Latest Stable Version](https://poser.pugx.org/inspector-apm/inspector-laravel/v/stable)](https://packagist.org/packages/inspector-apm/inspector-laravel)
+[![License](https://poser.pugx.org/inspector-apm/inspector-laravel/license)](//packagist.org/packages/inspector-apm/inspector-laravel)
+
 Simple code execution monitoring, built for Laravel developers.
 
 - [Requirements](#requirements)
