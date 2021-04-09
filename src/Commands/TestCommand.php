@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Inspector\Laravel\Commands;
 
 
@@ -87,18 +86,20 @@ class TestCommand extends Command
             ->setResult('success')
             ->end();
 
-        // Demo data
+        // Logs will be reported in the transaction context.
+        \Log::debug("Here you'll find log entries generated during the transaction.");
+
+        /*
+         * Loading demo data
+         */
+        $this->line('Loading demo data...');
+
         foreach ([1, 2, 3, 4, 5, 6] as $minutes) {
-            inspector()->startTransaction("artisan {$this->signature}")
+            inspector()->startTransaction("Other transactions")
                 ->start(microtime(true) - 60*$minutes)
                 ->setResult('success')
                 ->end(rand(100, 200));
 
-            inspector()->addSegment(function () {
-                usleep(rand(10, 50) * 1000);
-            }, 'segment', 'Task performance');
-
-            // Logs will be reported in the transaction context.
             \Log::debug("Here you'll find log entries generated during the transaction.");
         }
 
