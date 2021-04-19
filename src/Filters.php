@@ -38,9 +38,7 @@ class Filters
     {
         $input = new ArgvInput();
 
-        return is_null($notAllowed)
-            ? true
-            : !in_array($input->getFirstArgument(), $notAllowed);
+        return is_null($notAllowed) || !in_array($input->getFirstArgument(), $notAllowed);
     }
 
     /**
@@ -52,7 +50,7 @@ class Filters
      */
     public static function isApprovedJobClass(string $class, array $notAllowed = null)
     {
-        return is_array($notAllowed) ? !in_array($class, $notAllowed) : true;
+        return !is_array($notAllowed) || !in_array($class, $notAllowed);
     }
 
     /**
