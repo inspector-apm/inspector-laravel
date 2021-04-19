@@ -215,6 +215,7 @@ return [
         'migrate:fresh',
         'migrate:reset',
         'migrate:install',
+        'cache:clear',
         'config:cache',
         'config:clear',
         'route:cache',
