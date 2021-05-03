@@ -23,11 +23,11 @@ class WebRequestMonitoring implements TerminableInterface
     public function handle($request, Closure $next)
     {
         if (
+            Inspector::needTransaction()
+            &&
             Filters::isApprovedRequest(config('inspector.ignore_url'), $request)
             &&
             $this->shouldRecorded($request)
-            &&
-            !Inspector::isRecording()
         ) {
             $this->startTransaction($request);
         }
@@ -71,7 +71,7 @@ class WebRequestMonitoring implements TerminableInterface
      */
     public function terminate($request, $response)
     {
-        if (Inspector::isRecording()) {
+        if (Inspector::isRecording() && Inspector::hasTransaction()) {
             Inspector::currentTransaction()
                 ->addContext('Request Body', Filters::hideParameters(
                     $request->request->all(),

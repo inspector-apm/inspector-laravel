@@ -12,14 +12,16 @@ class MiddlewareTest extends BasicTestCase
 {
     public function testIsRecording()
     {
-        $this->app->router->get('test', function () {
-            return Inspector::isRecording();
-        })->middleware(WebRequestMonitoring::class);
+        $this->assertTrue(Inspector::isRecording());
+        $this->assertTrue(Inspector::needTransaction());
 
-        $response = $this->get('test');
+        $this->app->router->get('test', function () {})
+            ->middleware(WebRequestMonitoring::class);
 
+        $this->get('test');
+
+        $this->assertFalse(Inspector::needTransaction());
         $this->assertInstanceOf(Transaction::class, Inspector::currentTransaction());
-        $this->assertTrue($response->getContent() === '1');
     }
 
     public function testResult()

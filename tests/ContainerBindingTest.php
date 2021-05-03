@@ -4,6 +4,7 @@
 namespace Inspector\Laravel\Tests;
 
 
+use Inspector\Laravel\Providers\CommandServiceProvider;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\GateServiceProvider;
@@ -20,6 +21,7 @@ class ContainerBindingTest extends BasicTestCase
         $this->assertInstanceOf(\Inspector\Inspector::class, $this->app['inspector']);
 
         // Register service providers
+        $this->assertInstanceOf(CommandServiceProvider::class, $this->app->getProvider(CommandServiceProvider::class));
         $this->assertInstanceOf(GateServiceProvider::class, $this->app->getProvider(GateServiceProvider::class));
         $this->assertInstanceOf(RedisServiceProvider::class, $this->app->getProvider(RedisServiceProvider::class));
         $this->assertInstanceOf(EmailServiceProvider::class, $this->app->getProvider(EmailServiceProvider::class));

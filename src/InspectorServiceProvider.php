@@ -28,7 +28,7 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '4.6.20';
+    const VERSION = '4.6.21';
 
     /**
      * Booting of services.
@@ -89,9 +89,7 @@ class InspectorServiceProvider extends ServiceProvider
      */
     public function registerInspectorServiceProviders()
     {
-        if ($this->app->runningInConsole() && Filters::isApprovedArtisanCommand(config('inspector.ignore_commands'))) {
-            $this->app->register(CommandServiceProvider::class);
-        }
+        $this->app->register(CommandServiceProvider::class);
 
         $this->app->register(GateServiceProvider::class);
 

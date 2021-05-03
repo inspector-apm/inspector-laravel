@@ -27,7 +27,7 @@ class NotificationServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(NotificationSending::class, function (NotificationSending $event) {
-            if (Inspector::isRecording()) {
+            if (Inspector::canAddSegments()) {
                 $this->segments[
                     $event->notification->id
                 ] = Inspector::startSegment('notifications', get_class($event->notification))

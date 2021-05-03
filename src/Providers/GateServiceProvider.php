@@ -35,10 +35,11 @@ class GateServiceProvider extends ServiceProvider
      *
      * @param Authenticatable $user
      * @param string $ability
+     * @param $arguments
      */
     public function beforeGateCheck(Authenticatable $user, $ability, $arguments)
     {
-        if (Inspector::isRecording()) {
+        if (Inspector::canAddSegments()) {
             $this->segments[
                 $this->generateUniqueKey($this->formatArguments($arguments))
             ] = Inspector::startSegment('gate', 'Authorization::'.$ability)

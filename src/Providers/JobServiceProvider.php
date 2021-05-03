@@ -31,7 +31,7 @@ class JobServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Consider that this event is never called in Laravel Vapor
+        // This event is never called in Laravel Vapor.
         /*Queue::looping(
             function () {
                 $this->app['inspector']->flush();
@@ -41,13 +41,6 @@ class JobServiceProvider extends ServiceProvider
         $this->app['events']->listen(
             JobProcessing::class,
             function (JobProcessing $event) {
-                // If exists in the job to ignore, return immediately.
-                if (
-                    ! Filters::isApprovedJobClass($event->job->resolveName(), config('inspector.ignore_jobs'))
-                ) {
-                    return;
-                }
-
                 $this->handleJobStart($event->job);
             }
         );
@@ -74,43 +67,54 @@ class JobServiceProvider extends ServiceProvider
         );
     }
 
+    /**
+     * Determine the way to monitor the job.
+     *
+     * @param Job $job
+     */
     protected function handleJobStart(Job $job)
     {
-        if (Inspector::isRecording()) {
-            // Open a segment if a transaction already exists
-            $this->initializeSegment($job);
-        } else {
-            // Start a transaction if there's not one
+        // Ignore job.
+        if (!$this->shouldBeMonitored($job->resolveName())) {
+            return;
+        }
+
+        if (Inspector::needTransaction()) {
             Inspector::startTransaction($job->resolveName())
                 ->addContext('Payload', $job->payload());
+        } elseif (Inspector::canAddSegments()) {
+            $this->initializeSegment($job);
         }
     }
 
+    /**
+     * Representing a job as a segment.
+     *
+     * @param Job $job
+     */
     protected function initializeSegment(Job $job)
     {
         $segment = Inspector::startSegment('job', $job->resolveName())
-            ->addContext('payload', $job->payload());
+            ->addContext('Payload', $job->payload());
 
-        // Jot down the job with a unique ID
+        // Save the job under a unique ID
         $this->segments[$this->getJobId($job)] = $segment;
     }
 
     /**
-     * Report job execution to Inspector.
+     * Finalize the monitoring of the job.
      *
      * @param Job $job
      * @param bool $failed
      */
     public function handleJobEnd(Job $job, $failed = false)
     {
-        if (!Inspector::isRecording()) {
+        if (!$this->shouldBeMonitored($job->resolveName())) {
             return;
         }
 
         $id = $this->getJobId($job);
 
-        // If a segment doesn't exists it means that job is registered as transaction
-        // we can set the result accordingly
         if (array_key_exists($id, $this->segments)) {
             $this->segments[$id]->end();
         } else {
@@ -124,7 +128,7 @@ class JobServiceProvider extends ServiceProvider
     }
 
     /**
-     * Get Job ID.
+     * Get the job ID.
      *
      * @param Job $job
      * @return string|int
@@ -146,5 +150,16 @@ class JobServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Determine if the given job needs to be monitored.
+     *
+     * @param string $job
+     * @return bool
+     */
+    protected function shouldBeMonitored(string $job): bool
+    {
+        return Filters::isApprovedJobClass($job, config('inspector.ignore_jobs')) && Inspector::isRecording();
     }
 }

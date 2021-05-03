@@ -5,11 +5,18 @@ namespace Inspector\Laravel\Providers;
 
 
 use Illuminate\Console\Events\CommandFinished;
+use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
+use Inspector\Laravel\Filters;
 
 class CommandServiceProvider extends ServiceProvider
 {
+    /**
+     * @var array
+     */
+    protected $segments = [];
+
     /**
      * Booting of services.
      *
@@ -17,18 +24,37 @@ class CommandServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (!Inspector::isRecording()) {
-            Inspector::startTransaction(implode(' ', $_SERVER['argv']));
-        }
+        $this->app['events']->listen(CommandStarting::class, function (CommandStarting $event) {
+            // Ignore commands
+            if (!$this->shouldBeMonitored()) {
+                return;
+            }
 
-        $this->app['events']->listen(CommandFinished::class, function (CommandFinished $event) {
-            if(Inspector::isRecording()) {
-                Inspector::currentTransaction()
+            if (Inspector::needTransaction()) {
+                Inspector::startTransaction($event->command)
                     ->addContext('Command', [
-                        'exit_code' => $event->exitCode,
                         'arguments' => $event->input->getArguments(),
                         'options' => $event->input->getOptions(),
-                    ])->setResult($event->exitCode === 0 ? 'success' : 'error');
+                    ]);
+            } elseif (Inspector::canAddSegments()) {
+                $this->segments[$event->command] = Inspector::startSegment('artisan', $event->command);
+            }
+        });
+
+        $this->app['events']->listen(CommandFinished::class, function (CommandFinished $event) {
+            // Ignore commands
+            if (!$this->shouldBeMonitored()) {
+                return;
+            }
+
+            if(Inspector::currentTransaction()->name === $event->command) {
+                Inspector::currentTransaction()->setResult($event->exitCode === 0 ? 'success' : 'error');
+            } elseif(array_key_exists($event->command, $this->segments)) {
+                $this->segments[$event->command]->end()->addContext('Command', [
+                    'exit_code' => $event->exitCode,
+                    'arguments' => $event->input->getArguments(),
+                    'options' => $event->input->getOptions(),
+                ]);
             }
         });
     }
@@ -41,5 +67,15 @@ class CommandServiceProvider extends ServiceProvider
     public function register()
     {
         //
+    }
+
+    /**
+     * Determine if the current command should be monitored.
+     *
+     * @return bool
+     */
+    protected function shouldBeMonitored(): bool
+    {
+        return Filters::isApprovedArtisanCommand(config('inspector.ignore_commands')) && Inspector::isRecording();
     }
 }

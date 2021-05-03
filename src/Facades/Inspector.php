@@ -9,9 +9,14 @@ use Inspector\Models\Segment;
 use Inspector\Models\Transaction;
 
 /**
- * @method static bool isRecording
  * @method static Transaction startTransaction($name)
  * @method static Transaction currentTransaction()
+ * @method static bool needTransaction()
+ * @method static bool hasTransaction()
+ * @method static bool canAddSegments()
+ * @method static bool isRecording()
+ * @method static \Inspector\Inspector startRecording()
+ * @method static \Inspector\Inspector stopRecording()
  * @method static Segment startSegment($type, $label)
  * @method static mixed addSegment($callback, $type, $label, $throw = false)
  * @method static Error reportException(\Throwable $exception, $handled = true)

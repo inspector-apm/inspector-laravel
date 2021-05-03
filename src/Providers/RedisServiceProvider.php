@@ -18,7 +18,7 @@ class RedisServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(CommandExecuted::class, function (CommandExecuted $event) {
-            if (Inspector::isRecording()) {
+            if (Inspector::canAddSegments()) {
                 Inspector::startSegment('redis', "redis:{$event->command}")
                     ->start(microtime(true) - ($event->time/1000))
                     ->addContext('data', [

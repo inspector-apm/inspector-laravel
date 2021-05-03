@@ -51,7 +51,8 @@ class ExceptionsServiceProvider extends ServiceProvider
             return $this->reportException($message);
         }
 
-        if ($this->app['inspector']->isRecording()) {
+        // Collect general log messages
+        if (Inspector::isRecording() && Inspector::hasTransaction()) {
             Inspector::currentTransaction()
                 ->addContext('logs', array_merge(
                     Inspector::currentTransaction()->getContext()['logs'] ?? [],
@@ -64,7 +65,11 @@ class ExceptionsServiceProvider extends ServiceProvider
 
     protected function reportException(\Throwable $exception)
     {
-        if (!Inspector::isRecording()) {
+        if(!Inspector::isRecording()) {
+            return;
+        }
+
+        if (Inspector::needTransaction()) {
             Inspector::startTransaction(get_class($exception));
         }
 
