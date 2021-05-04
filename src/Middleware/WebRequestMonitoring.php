@@ -53,13 +53,15 @@ class WebRequestMonitoring implements TerminableInterface
      */
     protected function startTransaction($request)
     {
-        Inspector::startTransaction(
+        $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
         );
 
         if (Auth::check() && config('inspector.user')) {
-            Inspector::currentTransaction()
-                ->withUser(Auth::user()->getAuthIdentifier());
+            $transaction->withUser(
+                Auth::user()->getAuthIdentifier(),
+                Auth::user()->getAuthIdentifierName()
+            );
         }
     }
 
