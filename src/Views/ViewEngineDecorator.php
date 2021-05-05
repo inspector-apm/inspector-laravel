@@ -34,7 +34,7 @@ final class ViewEngineDecorator implements Engine
      */
     public function get($path, array $data = [])
     {
-        if (!Inspector::isRecording()) {
+        if (!Inspector::canAddSegments()) {
             return $this->engine->get($path, $data);
         }
 
