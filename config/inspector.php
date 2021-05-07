@@ -177,6 +177,16 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | With Server Status
+    |--------------------------------------------------------------------------
+    |
+    | Enable this if you'd like us to report server status information (cpu, ram, hdd).
+    |
+    */
+    'with_server_status' => env('INSPECTOR_WITH_SERVER_STATUS', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Hide sensible data from http requests
     |--------------------------------------------------------------------------
     |
