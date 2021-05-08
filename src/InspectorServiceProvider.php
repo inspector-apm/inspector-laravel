@@ -77,7 +77,7 @@ class InspectorServiceProvider extends ServiceProvider
                 ->setTransport(config('inspector.transport'))
                 ->setOptions(config('inspector.options'))
                 ->setMaxItems(config('inspector.max_items'))
-                ->withServerStatus(config('inspector.with_server_status'));
+                ->serverSamplingRatio(config('inspector.server_sampling_ratio'));
 
             return new Inspector($configuration);
         });

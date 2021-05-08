@@ -180,10 +180,12 @@ return [
     | With Server Status
     |--------------------------------------------------------------------------
     |
-    | Enable this if you'd like us to report server status information (cpu, ram, hdd).
+    | Set a value between 0 and 1 to if you'd like us to collect server status information
+    | (cpu, ram, hdd). The more transactions your application runs, the lower
+    | you can keep this value.
     |
     */
-    'with_server_status' => env('INSPECTOR_WITH_SERVER_STATUS', false),
+    'server_sampling_ratio' => env('INSPECTOR_SERVER_SAMPLING_RATIO', 0),
 
     /*
     |--------------------------------------------------------------------------
