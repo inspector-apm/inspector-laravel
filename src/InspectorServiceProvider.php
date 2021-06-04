@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory as ViewFactory;
+use Inspector\Laravel\Commands\ServerPulse;
 use Inspector\Laravel\Commands\TestCommand;
 use Inspector\Laravel\Providers\CommandServiceProvider;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
@@ -41,6 +42,7 @@ class InspectorServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                ServerPulse::class,
                 TestCommand::class,
             ]);
         }
