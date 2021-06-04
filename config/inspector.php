@@ -95,7 +95,7 @@ return [
     |
     */
 
-    'bindings' => env('INSPECTOR_QUERY_BINDINGS', false),
+    'bindings' => env('INSPECTOR_QUERY_BINDINGS', true),
 
     /*
     |--------------------------------------------------------------------------
