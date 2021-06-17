@@ -13,7 +13,7 @@ use Inspector\Models\Segment;
 class EmailServiceProvider extends ServiceProvider
 {
     /**
-     * Segments to monitor.
+     * Segments collection.
      *
      * @var Segment[]
      */

@@ -14,6 +14,7 @@ use Inspector\Laravel\Providers\CommandServiceProvider;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\GateServiceProvider;
+use Inspector\Laravel\Providers\HttpClientServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
 use Inspector\Laravel\Providers\NotificationServiceProvider;
 use Inspector\Laravel\Providers\RedisServiceProvider;
@@ -119,6 +120,15 @@ class InspectorServiceProvider extends ServiceProvider
 
         if (config('inspector.notifications')) {
             $this->app->register(NotificationServiceProvider::class);
+        }
+
+        // Compatibility with Laravel < 8.4
+        if (
+            config('inspector.http_client') &&
+            class_exists('\Illuminate\Http\Client\Events\RequestSending') &&
+            class_exists('\Illuminate\Http\Client\Events\ResponseReceived')
+        ) {
+            $this->app->register(HttpClientServiceProvider::class);
         }
 
         if (config('inspector.views')) {
