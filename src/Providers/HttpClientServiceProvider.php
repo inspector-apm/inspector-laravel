@@ -51,7 +51,7 @@ class HttpClientServiceProvider extends ServiceProvider
                         'body' => $event->response->body(),
                         'headers' => $event->response->headers(),
                     ])
-                    ->name = $event->response->status() . ' ' . $event->request->method() . ' ' . $event->request->url();
+                    ->label = $event->response->status() . ' ' . $event->request->method() . ' ' . $event->request->url();
             }
         });
     }
