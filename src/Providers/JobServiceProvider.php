@@ -122,6 +122,8 @@ class JobServiceProvider extends ServiceProvider
                 ->setResult($failed ? 'error' : 'success');
         }
 
+        // Flush normally happens at shutdown... which only happens in the worker if it is run in a standalone execution.
+        // Flush immediately if the job is running in a background worker.
         if ($this->app->runningInConsole()) {
             Inspector::flush();
         }
