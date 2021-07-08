@@ -30,7 +30,7 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '4.7.6';
+    const VERSION = '4.7.7';
 
     /**
      * Booting of services.
