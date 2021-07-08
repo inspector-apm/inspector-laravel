@@ -76,6 +76,6 @@ class CommandServiceProvider extends ServiceProvider
      */
     protected function shouldBeMonitored(): bool
     {
-        return Filters::isApprovedArtisanCommand(config('inspector.ignore_commands')) && Inspector::isRecording();
+        return Filters::isApprovedArtisanCommand(config('inspector.ignore_commands'));
     }
 }
