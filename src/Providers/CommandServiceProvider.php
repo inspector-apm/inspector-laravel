@@ -25,7 +25,6 @@ class CommandServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(CommandStarting::class, function (CommandStarting $event) {
-            // Ignore commands
             if (!$this->shouldBeMonitored()) {
                 return;
             }
