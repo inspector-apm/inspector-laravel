@@ -3,7 +3,6 @@
 
 namespace Inspector\Laravel\Providers;
 
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +14,7 @@ class GateServiceProvider extends ServiceProvider
     use FetchesStackTrace;
 
     /**
-     * @var Segment []
+     * @var Segment[]
      */
     protected $segments = [];
 
@@ -33,16 +32,16 @@ class GateServiceProvider extends ServiceProvider
     /**
      * Intercepting before gate check.
      *
-     * @param Authenticatable $user
+     * @param \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable $user
      * @param string $ability
      * @param $arguments
      */
-    public function beforeGateCheck(Authenticatable $user, $ability, $arguments)
+    public function beforeGateCheck($user, $ability, $arguments)
     {
         if (Inspector::canAddSegments()) {
             $this->segments[
                 $this->generateUniqueKey($this->formatArguments($arguments))
-            ] = Inspector::startSegment('gate', 'Authorization::'.$ability)
+            ] = Inspector::startSegment('gate', 'Gate: '.$ability)
                     ->addContext('user', $user);
         }
     }
@@ -50,13 +49,13 @@ class GateServiceProvider extends ServiceProvider
     /**
      * Intercepting after gate check.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  string  $ability
      * @param  bool  $result
      * @param  array  $arguments
      * @return bool
      */
-    public function afterGateCheck(Authenticatable $user, $ability, $result, $arguments)
+    public function afterGateCheck($user, $ability, $result, $arguments)
     {
         $arguments = $this->formatArguments($arguments);
         $key = $this->generateUniqueKey($arguments);
