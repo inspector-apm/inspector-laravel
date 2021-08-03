@@ -248,6 +248,7 @@ return [
         'queue:listen',
         'queue:work',
         'queue:restart',
+        'vapor:work',
         'horizon',
         'horizon:work',
         'horizon:supervisor',
