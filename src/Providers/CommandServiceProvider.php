@@ -43,7 +43,7 @@ class CommandServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(CommandFinished::class, function (CommandFinished $event) {
             // Ignore commands
-            if (!$this->shouldBeMonitored()) {
+            if (!$this->shouldBeMonitored($event->command)) {
                 return;
             }
 
