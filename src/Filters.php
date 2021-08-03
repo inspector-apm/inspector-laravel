@@ -31,14 +31,13 @@ class Filters
     /**
      * Determine if current command should be monitored.
      *
+     * @param string $command
      * @param string[] $notAllowed
      * @return bool
      */
-    public static function isApprovedArtisanCommand(array $notAllowed = null): bool
+    public static function isApprovedArtisanCommand(string $command, array $notAllowed = null): bool
     {
-        $input = new ArgvInput();
-
-        return is_null($notAllowed) || !in_array($input->getFirstArgument(), $notAllowed);
+        return is_null($notAllowed) || !in_array($command, $notAllowed);
     }
 
     /**

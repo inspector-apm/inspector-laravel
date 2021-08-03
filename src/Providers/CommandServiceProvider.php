@@ -9,6 +9,7 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
+use Symfony\Component\Console\Input\ArgvInput;
 
 class CommandServiceProvider extends ServiceProvider
 {
@@ -75,6 +76,7 @@ class CommandServiceProvider extends ServiceProvider
      */
     protected function shouldBeMonitored(): bool
     {
-        return Filters::isApprovedArtisanCommand(config('inspector.ignore_commands'));
+        $signature = (new ArgvInput())->getFirstArgument();
+        return Filters::isApprovedArtisanCommand($signature, config('inspector.ignore_commands'));
     }
 }
