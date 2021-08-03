@@ -26,9 +26,7 @@ class CommandServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(CommandStarting::class, function (CommandStarting $event) {
-            \Log::debug($event->command);
-
-            if (!$this->shouldBeMonitored()) {
+            if (!$this->shouldBeMonitored($event->command)) {
                 return;
             }
 
@@ -74,11 +72,11 @@ class CommandServiceProvider extends ServiceProvider
     /**
      * Determine if the current command should be monitored.
      *
+     * @param string $command
      * @return bool
      */
-    protected function shouldBeMonitored(): bool
+    protected function shouldBeMonitored(string $command): bool
     {
-        $signature = (new ArgvInput())->getFirstArgument();
-        return Filters::isApprovedArtisanCommand($signature, config('inspector.ignore_commands'));
+        return Filters::isApprovedArtisanCommand($command, config('inspector.ignore_commands'));
     }
 }
