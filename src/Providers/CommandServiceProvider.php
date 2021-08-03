@@ -26,6 +26,8 @@ class CommandServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(CommandStarting::class, function (CommandStarting $event) {
+            \Log::debug($event->command);
+
             if (!$this->shouldBeMonitored()) {
                 return;
             }
