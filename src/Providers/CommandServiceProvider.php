@@ -42,7 +42,6 @@ class CommandServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(CommandFinished::class, function (CommandFinished $event) {
-            // Ignore commands
             if (!$this->shouldBeMonitored($event->command)) {
                 return;
             }
@@ -72,11 +71,15 @@ class CommandServiceProvider extends ServiceProvider
     /**
      * Determine if the current command should be monitored.
      *
-     * @param string $command
+     * @param null|string $command
      * @return bool
      */
-    protected function shouldBeMonitored(string $command): bool
+    protected function shouldBeMonitored(?string $command): bool
     {
-        return Filters::isApprovedArtisanCommand($command, config('inspector.ignore_commands'));
+        if (is_string($command)) {
+            return Filters::isApprovedArtisanCommand($command, config('inspector.ignore_commands'));
+        }
+
+        return false;
     }
 }
