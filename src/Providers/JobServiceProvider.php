@@ -41,28 +41,36 @@ class JobServiceProvider extends ServiceProvider
         $this->app['events']->listen(
             JobProcessing::class,
             function (JobProcessing $event) {
-                $this->handleJobStart($event->job);
+                if ($this->shouldBeMonitored($event->job->resolveName())) {
+                    $this->handleJobStart($event->job);
+                }
             }
         );
 
         $this->app['events']->listen(
             JobProcessed::class,
             function (JobProcessed $event) {
-                $this->handleJobEnd($event->job);
+                if ($this->shouldBeMonitored($event->job->resolveName())) {
+                    $this->handleJobEnd($event->job);
+                }
             }
         );
 
         $this->app['events']->listen(
             JobFailed::class,
             function (JobFailed $event) {
-                $this->handleJobEnd($event->job, true);
+                if ($this->shouldBeMonitored($event->job->resolveName())) {
+                    $this->handleJobEnd($event->job, true);
+                }
             }
         );
 
         $this->app['events']->listen(
             JobExceptionOccurred::class,
             function (JobExceptionOccurred $event) {
-                $this->handleJobEnd($event->job, true);
+                if ($this->shouldBeMonitored($event->job->resolveName())) {
+                    $this->handleJobEnd($event->job, true);
+                }
             }
         );
     }
@@ -74,11 +82,6 @@ class JobServiceProvider extends ServiceProvider
      */
     protected function handleJobStart(Job $job)
     {
-        // Ignore job.
-        if (!$this->shouldBeMonitored($job->resolveName())) {
-            return;
-        }
-
         if (Inspector::needTransaction()) {
             Inspector::startTransaction($job->resolveName())
                 ->addContext('Payload', $job->payload());
@@ -109,10 +112,6 @@ class JobServiceProvider extends ServiceProvider
      */
     public function handleJobEnd(Job $job, $failed = false)
     {
-        if (!$this->shouldBeMonitored($job->resolveName())) {
-            return;
-        }
-
         $id = $this->getJobId($job);
 
         if (array_key_exists($id, $this->segments)) {
@@ -123,7 +122,7 @@ class JobServiceProvider extends ServiceProvider
         }
 
         // Flush normally happens at shutdown... which only happens in the worker if it is running in a standalone execution.
-        // Flush immediately if the job is running in a long running process.
+        // Flush immediately if the job is running in a long-running process.
         if ($this->app->runningInConsole()) {
             Inspector::flush();
         }
