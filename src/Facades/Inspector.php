@@ -18,7 +18,7 @@ use Inspector\Models\Transaction;
  * @method static \Inspector\Inspector startRecording()
  * @method static \Inspector\Inspector stopRecording()
  * @method static Segment startSegment($type, $label)
- * @method static mixed addSegment($callback, $type, $label, $throw = false)
+ * @method static mixed addSegment($callback, $type, $label = null, $throw = false)
  * @method static Error reportException(\Throwable $exception, $handled = true)
  * @method static void flush()
  */
