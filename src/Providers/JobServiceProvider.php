@@ -64,15 +64,6 @@ class JobServiceProvider extends ServiceProvider
                 }
             }
         );
-
-        $this->app['events']->listen(
-            JobExceptionOccurred::class,
-            function (JobExceptionOccurred $event) {
-                if ($this->shouldBeMonitored($event->job->resolveName())) {
-                    $this->handleJobEnd($event->job, true);
-                }
-            }
-        );
     }
 
     /**
