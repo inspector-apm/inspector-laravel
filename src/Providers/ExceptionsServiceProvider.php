@@ -42,12 +42,12 @@ class ExceptionsServiceProvider extends ServiceProvider
     {
         if (
             isset($context['exception']) &&
-            ($context['exception'] instanceof \Exception || $context['exception'] instanceof \Throwable)
+            $context['exception'] instanceof \Throwable
         ) {
             return $this->reportException($context['exception']);
         }
 
-        if ($message instanceof \Exception || $message instanceof \Throwable) {
+        if ($message instanceof \Throwable) {
             return $this->reportException($message);
         }
 
@@ -67,10 +67,6 @@ class ExceptionsServiceProvider extends ServiceProvider
     {
         if(!Inspector::isRecording()) {
             return;
-        }
-
-        if (Inspector::needTransaction()) {
-            Inspector::startTransaction(get_class($exception));
         }
 
         Inspector::reportException($exception, false);
