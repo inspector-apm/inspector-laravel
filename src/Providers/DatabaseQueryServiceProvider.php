@@ -39,7 +39,7 @@ class DatabaseQueryServiceProvider extends ServiceProvider
 
         $context = [
             'connection' => $connection,
-            'sql' => $sql,
+            'query' => $sql,
         ];
 
         if (config('inspector.bindings')) {
