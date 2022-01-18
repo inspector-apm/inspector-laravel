@@ -113,7 +113,14 @@ class JobServiceProvider extends ServiceProvider
         }
 
         // Flush immediately if the job is processed in a long-running process.
-        if ($this->app->runningInConsole()) {
+        /*
+         * We do not have to flush if the application is using the sync driver.
+         * In that case the package consider the job as a segment.
+         * This can cause the "Undefined property: Inspector\Laravel\Inspector::$transaction" error.
+         *
+         * https://github.com/inspector-apm/inspector-laravel/issues/21
+         */
+        if ($this->app->runningInConsole() && config('queue.default') !== 'sync') {
             Inspector::flush();
         }
     }
