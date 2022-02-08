@@ -58,7 +58,7 @@ return [
     |
     */
 
-    'max_items' => env('INSPECTOR_MAX_ITEMS', 150),
+    'max_items' => env('INSPECTOR_MAX_ITEMS', 100),
 
     /*
     |--------------------------------------------------------------------------
