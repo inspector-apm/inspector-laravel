@@ -58,11 +58,12 @@ class EmailServiceProvider extends ServiceProvider
     /**
      * Generate a unique key for each message.
      *
-     * @param \Swift_Message $message
+     * @param \Swift_Message|\Symfony\Component\Mime\Email $message
      * @return string
      */
-    protected function getSegmentKey(\Swift_Message $message)
+    protected function getSegmentKey($message)
     {
-        return sha1(trim($message->getHeaders()->get('Content-Type')->toString()));
+        // The methods used to generate the hash are consistent across Laravel versions up to v9.
+        return sha1(json_encode($message->getTo()).$message->getSubject().$message->getDate());
     }
 }
