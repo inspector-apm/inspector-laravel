@@ -63,7 +63,6 @@ class EmailServiceProvider extends ServiceProvider
      */
     protected function getSegmentKey($message)
     {
-        // The methods used to generate the hash are consistent across Laravel versions up to v9.
-        return sha1(json_encode($message->getTo()).$message->getSubject().$message->getDate());
+        return sha1(json_encode($message->getTo()).$message->getSubject());
     }
 }
