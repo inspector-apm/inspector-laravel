@@ -109,7 +109,7 @@ class JobServiceProvider extends ServiceProvider
             $this->segments[$id]->end();
         } else {
             Inspector::currentTransaction()
-                ->setResult($failed ? 'error' : 'success');
+                ->setResult($failed ? 'failed' : 'success');
         }
 
         // Flush immediately if the job is processed in a long-running process.
