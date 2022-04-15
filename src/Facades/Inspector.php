@@ -21,7 +21,7 @@ use Inspector\Models\Transaction;
  * @method static mixed addSegment($callback, $type, $label = null, $throw = false)
  * @method static Error reportException(\Throwable $exception, $handled = true)
  * @method static void flush()
- * @method static void beforeFlush()
+ * @method static void beforeFlush(callable $callback)
  */
 class Inspector extends Facade
 {
