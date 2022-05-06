@@ -4,12 +4,10 @@
 namespace Inspector\Laravel\Providers;
 
 
-use Illuminate\Queue\Events\JobExceptionOccurred;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Contracts\Queue\Job;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
