@@ -80,7 +80,7 @@ class InspectorServiceProvider extends ServiceProvider
                 ->setTransport(config('inspector.transport', 'async'))
                 ->setOptions(config('inspector.options', []))
                 ->setMaxItems(config('inspector.max_items', 100));
-            
+
             return new Inspector($configuration);
         });
 
@@ -97,33 +97,33 @@ class InspectorServiceProvider extends ServiceProvider
         $this->app->register(GateServiceProvider::class);
 
         // For Laravel >=6
-        if (config('inspector.redis') && strpos($this->app->version(), '5') === false) {
+        if (config('inspector.redis', true) && strpos($this->app->version(), '5') === false) {
             $this->app->register(RedisServiceProvider::class);
         }
 
-        if (config('inspector.unhandled_exceptions')) {
+        if (config('inspector.unhandled_exceptions', true)) {
             $this->app->register(ExceptionsServiceProvider::class);
         }
 
-        if(config('inspector.query')){
+        if(config('inspector.query', true)){
             $this->app->register(DatabaseQueryServiceProvider::class);
         }
 
-        if (config('inspector.job')) {
+        if (config('inspector.job', true)) {
             $this->app->register(JobServiceProvider::class);
         }
 
-        if (config('inspector.email')) {
+        if (config('inspector.email', true)) {
             $this->app->register(EmailServiceProvider::class);
         }
 
-        if (config('inspector.notifications')) {
+        if (config('inspector.notifications', true)) {
             $this->app->register(NotificationServiceProvider::class);
         }
 
         // Compatibility with Laravel < 8.4
         if (
-            config('inspector.http_client') &&
+            config('inspector.http_client', true) &&
             class_exists('\Illuminate\Http\Client\Events\RequestSending') &&
             class_exists('\Illuminate\Http\Client\Events\ResponseReceived')
         ) {
