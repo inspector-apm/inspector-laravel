@@ -75,11 +75,11 @@ class InspectorServiceProvider extends ServiceProvider
         $this->app->singleton('inspector', function ($app) {
             $configuration = (new Configuration(config('inspector.key')))
                 ->setEnabled(config('inspector.enable', true))
-                ->setUrl(config('inspector.url'))
+                ->setUrl(config('inspector.url', 'https://ingest.inspector.dev'))
                 ->setVersion(self::VERSION)
-                ->setTransport(config('inspector.transport'))
-                ->setOptions(config('inspector.options'))
-                ->setMaxItems(config('inspector.max_items'))
+                ->setTransport(config('inspector.transport', 'async'))
+                ->setOptions(config('inspector.options', []))
+                ->setMaxItems(config('inspector.max_items', 100))
                 ->serverSamplingRatio(config('inspector.server_sampling_ratio'));
 
             return new Inspector($configuration);
