@@ -12,7 +12,8 @@ Simple code execution monitoring, built for Laravel developers.
 - [Configure the Ingestion Key](#key)
 - [Middleware](#middleware)
 - [Test everything is working](#test)
-- [See official Documentation](https://docs.inspector.dev)
+- [Official Documentation](https://docs.inspector.dev)
+- [Contribution Guidelines](#contribution)
 
 <a name="requirements"></a>
 
@@ -91,9 +92,11 @@ Go to [https://app.inspector.dev/home](https://app.inspector.dev/home) to explor
 
 **[See official documentation](https://docs.inspector.dev/platforms/laravel)**
 
+<a name="contribution"></a>
+
 ## Contributing
 
-We encourage you to contribute to Inspector! Please check out the [Contribution](CONTRIBUTING.md) guidelines about how to proceed. Join us!
+We encourage you to contribute to Inspector! Please check out the [Contribution Guidelines](CONTRIBUTING.md) about how to proceed. Join us!
 
 ## LICENSE
 
