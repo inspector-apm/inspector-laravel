@@ -91,6 +91,10 @@ Go to [https://app.inspector.dev/home](https://app.inspector.dev/home) to explor
 
 **[See official documentation](https://docs.inspector.dev/platforms/laravel)**
 
+## Contributing
+
+We encourage you to contribute to Inspector! Please check out the [Contribution](CONTRIBUTING.md) guidelines about how to proceed. Join us!
+
 ## LICENSE
 
 This package is licensed under the [MIT](LICENSE) license.
