@@ -90,7 +90,7 @@ Go to [https://app.inspector.dev/home](https://app.inspector.dev/home) to explor
 
 ## Official documentation
 
-**[See official documentation](https://docs.inspector.dev/platforms/laravel)**
+**[Go to the official documentation](https://docs.inspector.dev/platforms/laravel)**
 
 <a name="contribution"></a>
 
