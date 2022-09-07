@@ -43,12 +43,13 @@ class HttpClientServiceProvider extends ServiceProvider
                     ])
                     ->addContext('Request', [
                         'type' => $event->request->isForm() ? 'form' : ($event->request->isJson() ? 'json' : 'unknown'),
-                        'data' => $event->request->data(),
                         'headers' => $event->request->headers(),
+                        'data' => $event->request->data(),
                     ])
                     ->addContext('Response', [
                         'status' => $event->response->status(),
                         'headers' => $event->response->headers(),
+                        'body' => $event->response->body(),
                     ])
                     ->label = $event->response->status() . ' ' . $event->request->method() . ' ' . $event->request->url();
             }
