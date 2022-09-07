@@ -35,7 +35,7 @@ class HttpClientServiceProvider extends ServiceProvider
         $this->app['events']->listen(ResponseReceived::class, function (ResponseReceived $event) {
             $key = $this->getSegmentKey($event->request);
 
-            if (array_key_exists($key, $this->segments)) {
+            if (\array_key_exists($key, $this->segments)) {
                 $this->segments[$key]->end()
                     ->addContext('Url', [
                         'method' => $event->request->method(),
@@ -46,11 +46,13 @@ class HttpClientServiceProvider extends ServiceProvider
                         'headers' => $event->request->headers(),
                         'data' => $event->request->data(),
                     ])
-                    ->addContext('Response', [
-                        'status' => $event->response->status(),
-                        'headers' => $event->response->headers(),
-                        'body' => $event->response->body(),
-                    ])
+                    ->addContext('Response', \array_merge(
+                        [
+                            'status' => $event->response->status(),
+                            'headers' => $event->response->headers(),
+                        ],
+                        config('inspector.http_client_body') ? ['body' => $event->response->body()] : []
+                    ))
                     ->label = $event->response->status() . ' ' . $event->request->method() . ' ' . $event->request->url();
             }
         });
