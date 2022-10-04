@@ -189,18 +189,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | With Server Status
-    |--------------------------------------------------------------------------
-    |
-    | Set a value between 0 and 1 to if you'd like us to collect server status information
-    | (cpu, ram, hdd). The more transactions your application runs, the lower
-    | you can keep this value.
-    |
-    */
-    'server_sampling_ratio' => env('INSPECTOR_SERVER_SAMPLING_RATIO', 0),
-
-    /*
-    |--------------------------------------------------------------------------
     | Hide sensible data from http requests
     |--------------------------------------------------------------------------
     |
