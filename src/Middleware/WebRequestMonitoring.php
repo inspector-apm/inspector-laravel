@@ -5,6 +5,7 @@ namespace Inspector\Laravel\Middleware;
 
 
 use Closure;
+use Illuminate\Support\Facades\App;
 use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Support\Facades\Auth;
 use Inspector\Laravel\Filters;
@@ -23,6 +24,8 @@ class WebRequestMonitoring implements TerminableInterface
     public function handle($request, Closure $next)
     {
         if (
+            !App::runningUnitTests()
+            &&
             Inspector::needTransaction()
             &&
             Filters::isApprovedRequest(config('inspector.ignore_url'), $request)
