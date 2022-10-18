@@ -4,6 +4,7 @@ namespace Inspector\Laravel;
 
 use Illuminate\Contracts\View\Engine;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\View\Engines\EngineResolver;
@@ -95,7 +96,7 @@ class InspectorServiceProvider extends ServiceProvider
         $this->app->register(GateServiceProvider::class);
 
         // For Laravel >=6
-        if (config('inspector.redis', true) && strpos($this->app->version(), '5') === false) {
+        if (config('inspector.redis', true) && substr(Application::VERSION, 0, 1) > 5) {
             $this->app->register(RedisServiceProvider::class);
         }
 
