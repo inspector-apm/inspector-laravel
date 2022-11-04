@@ -4,7 +4,6 @@ namespace Inspector\Laravel;
 
 use Illuminate\Contracts\View\Engine;
 use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Illuminate\View\Engines\EngineResolver;
