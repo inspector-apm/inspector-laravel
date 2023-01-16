@@ -12,7 +12,7 @@ Simple code execution monitoring for Laravel applications.
 - [Configure the Ingestion Key](#key)
 - [Middleware](#middleware)
 - [Test everything is working](#test)
-- [Official Documentation](https://docs.inspector.dev/laravel)
+- [Official Documentation](https://docs.inspector.dev/guides/laravel)
 - [Contribution Guidelines](#contribution)
 
 <a name="requirements"></a>
@@ -90,7 +90,7 @@ Go to [https://app.inspector.dev/home](https://app.inspector.dev/home) to explor
 
 ## Official documentation
 
-**[Check out the official documentation](https://docs.inspector.dev/laravel)**
+**[Check out the official documentation](https://docs.inspector.dev/guides/laravel)**
 
 <a name="contribution"></a>
 
