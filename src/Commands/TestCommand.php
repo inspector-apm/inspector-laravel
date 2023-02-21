@@ -5,6 +5,7 @@ namespace Inspector\Laravel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Support\Facades\Log;
 
 class TestCommand extends Command
 {
@@ -87,7 +88,7 @@ class TestCommand extends Command
             ->end();
 
         // Logs will be reported in the transaction context.
-        \Log::debug("Here you'll find log entries generated during the transaction.");
+        Log::debug("Here you'll find log entries generated during the transaction.");
 
         /*
          * Loading demo data
@@ -100,7 +101,7 @@ class TestCommand extends Command
                 ->setResult('success')
                 ->end(rand(100, 200));
 
-            \Log::debug("Here you'll find log entries generated during the transaction.");
+            Log::debug("Here you'll find log entries generated during the transaction.");
         }
 
         $this->line('Done!');
