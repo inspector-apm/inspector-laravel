@@ -6,7 +6,7 @@ namespace Inspector\Laravel\Tests;
 
 use Illuminate\Http\Request;
 use Inspector\Laravel\Filters;
-use Inspector\Laravel\Tests\Jobs\JobTest;
+use Inspector\Laravel\Tests\Jobs\TestJob;
 
 class FilterClassTest extends BasicTestCase
 {
@@ -34,11 +34,11 @@ class FilterClassTest extends BasicTestCase
 
     public function testJobApproved()
     {
-        $this->assertTrue(Filters::isApprovedJobClass(JobTest::class, []));
+        $this->assertTrue(Filters::isApprovedJobClass(TestJob::class, []));
     }
 
     public function testJobNotApproved()
     {
-        $this->assertFalse(Filters::isApprovedJobClass(JobTest::class, [JobTest::class]));
+        $this->assertFalse(Filters::isApprovedJobClass(TestJob::class, [TestJob::class]));
     }
 }

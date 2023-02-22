@@ -4,7 +4,7 @@
 namespace Inspector\Laravel\Tests\Jobs;
 
 
-class JobTest
+class TestJob
 {
     public function handle()
     {

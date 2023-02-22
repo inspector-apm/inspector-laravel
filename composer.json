@@ -42,7 +42,12 @@
             "Inspector\\Laravel\\Tests\\": "tests/"
         }
     },
-    "scripts": [],
+    "scripts": {
+        "test:unit": "phpunit --colors=always",
+        "test": [
+            "@test:unit"
+        ]
+    },
     "extra": {
         "laravel": {
             "providers": [
