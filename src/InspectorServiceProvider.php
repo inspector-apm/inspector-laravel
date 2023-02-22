@@ -95,7 +95,7 @@ class InspectorServiceProvider extends ServiceProvider
         $this->app->register(GateServiceProvider::class);
 
         // For Laravel >=6
-        if (config('inspector.redis', true) && substr(app()->version(), 0, 1) > 5) {
+        if (config('inspector.redis', true) && version_compare(app()->version(), '6.0.0', '>=')) {
             $this->app->register(RedisServiceProvider::class);
         }
 
