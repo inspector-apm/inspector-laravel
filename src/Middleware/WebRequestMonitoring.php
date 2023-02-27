@@ -96,7 +96,7 @@ class WebRequestMonitoring implements TerminableInterface
     {
         $route = $request->route();
 
-        if($route instanceof \Illuminate\Routing\Route) {
+        if ($route instanceof \Illuminate\Routing\Route) {
             $uri = $request->route()->uri();
         } else {
             $array = explode('?', $_SERVER["REQUEST_URI"]);

@@ -53,7 +53,8 @@ class TestCommand extends Command
 
             !empty($config->get('inspector.key'))
                 ? $this->info('✅ Inspector key installed.')
-                : $this->warn('❌ Inspector key not specified. Make sure you specify the INSPECTOR_INGESTION_KEY in your .env file.');
+                : $this->warn('❌ Inspector key not specified. Make sure you specify ' .
+                              'the INSPECTOR_INGESTION_KEY in your .env file.');
 
             $segment->addContext('example payload', ['key' => $config->get('inspector.key')]);
         }, 'test', 'Check Ingestion key');
@@ -64,13 +65,14 @@ class TestCommand extends Command
 
             $config->get('inspector.enable')
                 ? $this->info('✅ Inspector is enabled.')
-                : $this->warn('❌ Inspector is actually disabled, turn to true the `enable` field of the `inspector` config file.');
+                : $this->warn('❌ Inspector is actually disabled, turn to true the `enable` ' .
+                              'field of the `inspector` config file.');
 
             $segment->addContext('another payload', ['enable' => $config->get('inspector.enable')]);
         }, 'test', 'Check if Inspector is enabled');
 
         // Check CURL
-        inspector()->addSegment(function ($segment) use ($config) {
+        inspector()->addSegment(function ($segment) {
             usleep(10 * 1000);
 
             function_exists('curl_version')
@@ -83,7 +85,7 @@ class TestCommand extends Command
         // Report Exception
         inspector()->reportException(new \Exception('First Exception detected'));
         // End the transaction
-        inspector()->currentTransaction()
+        inspector()->transaction()
             ->setResult('success')
             ->end();
 

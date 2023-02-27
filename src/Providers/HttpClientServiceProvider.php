@@ -28,12 +28,21 @@ class HttpClientServiceProvider extends ServiceProvider
     {
         $this->app['events']->listen(RequestSending::class, function (RequestSending $event) {
             if (Inspector::canAddSegments()) {
-                $this->segments[$this->getSegmentKey($event->request)] = Inspector::startSegment('http', $event->request->url());
+                $this->segments[
+                    $this->getSegmentKey($event->request)
+                ] = Inspector::startSegment('http', $event->request->url());
             }
         });
 
         $this->app['events']->listen(ResponseReceived::class, function (ResponseReceived $event) {
             $key = $this->getSegmentKey($event->request);
+
+            $type = 'unknown';
+            if ($event->request->isForm()) {
+                $type = 'form';
+            } elseif ($event->request->isJson()) {
+                $type = 'json';
+            }
 
             if (\array_key_exists($key, $this->segments)) {
                 $this->segments[$key]->end()
@@ -42,7 +51,7 @@ class HttpClientServiceProvider extends ServiceProvider
                         'url' => $event->request->url(),
                     ])
                     ->addContext('Request', [
-                        'type' => $event->request->isForm() ? 'form' : ($event->request->isJson() ? 'json' : 'unknown'),
+                        'type' => $type,
                         'headers' => $event->request->headers(),
                         'data' => $event->request->data(),
                     ])
@@ -53,7 +62,9 @@ class HttpClientServiceProvider extends ServiceProvider
                         ],
                         config('inspector.http_client_body') ? ['body' => $event->response->body()] : []
                     ))
-                    ->label = $event->response->status() . ' ' . $event->request->method() . ' ' . $event->request->url();
+                    ->label = $event->response->status() . ' ' .
+                        $event->request->method() . ' ' .
+                        $event->request->url();
             }
         });
     }

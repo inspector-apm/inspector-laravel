@@ -26,8 +26,17 @@ class ContainerBindingTest extends BasicTestCase
         $this->assertInstanceOf(RedisServiceProvider::class, $this->app->getProvider(RedisServiceProvider::class));
         $this->assertInstanceOf(EmailServiceProvider::class, $this->app->getProvider(EmailServiceProvider::class));
         $this->assertInstanceOf(JobServiceProvider::class, $this->app->getProvider(JobServiceProvider::class));
-        $this->assertInstanceOf(NotificationServiceProvider::class, $this->app->getProvider(NotificationServiceProvider::class));
-        $this->assertInstanceOf(ExceptionsServiceProvider::class, $this->app->getProvider(ExceptionsServiceProvider::class));
-        $this->assertInstanceOf(DatabaseQueryServiceProvider::class, $this->app->getProvider(DatabaseQueryServiceProvider::class));
+        $this->assertInstanceOf(
+            NotificationServiceProvider::class,
+            $this->app->getProvider(NotificationServiceProvider::class)
+        );
+        $this->assertInstanceOf(
+            ExceptionsServiceProvider::class,
+            $this->app->getProvider(ExceptionsServiceProvider::class)
+        );
+        $this->assertInstanceOf(
+            DatabaseQueryServiceProvider::class,
+            $this->app->getProvider(DatabaseQueryServiceProvider::class)
+        );
     }
 }

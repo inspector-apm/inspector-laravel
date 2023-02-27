@@ -70,7 +70,7 @@ class InspectorServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/inspector.php', 'inspector');
 
         // Bind Inspector service class
-        $this->app->singleton('inspector', function ($app) {
+        $this->app->singleton('inspector', function () {
             $configuration = (new Configuration(config('inspector.key')))
                 ->setEnabled(config('inspector.enable', true))
                 ->setUrl(config('inspector.url', 'https://ingest.inspector.dev'))
@@ -103,7 +103,7 @@ class InspectorServiceProvider extends ServiceProvider
             $this->app->register(ExceptionsServiceProvider::class);
         }
 
-        if(config('inspector.query', true)){
+        if (config('inspector.query', true)){
             $this->app->register(DatabaseQueryServiceProvider::class);
         }
 

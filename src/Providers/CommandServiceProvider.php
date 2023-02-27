@@ -46,9 +46,9 @@ class CommandServiceProvider extends ServiceProvider
                 return;
             }
 
-            if(Inspector::hasTransaction() && Inspector::currentTransaction()->name === $event->command) {
+            if (Inspector::hasTransaction() && Inspector::currentTransaction()->name === $event->command) {
                 Inspector::currentTransaction()->setResult($event->exitCode === 0 ? 'success' : 'error');
-            } elseif(array_key_exists($event->command, $this->segments)) {
+            } elseif (array_key_exists($event->command, $this->segments)) {
                 $this->segments[$event->command]->end()->addContext('Command', [
                     'exit_code' => $event->exitCode,
                     'arguments' => $event->input->getArguments(),

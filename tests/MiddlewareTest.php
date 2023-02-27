@@ -15,8 +15,9 @@ class MiddlewareTest extends BasicTestCase
         $this->assertTrue(Inspector::isRecording());
         $this->assertTrue(Inspector::needTransaction());
 
-        $this->app->router->get('test', function () {})
-            ->middleware(WebRequestMonitoring::class);
+        $this->app->router->get('test', function () {
+            // do nothing
+        })->middleware(WebRequestMonitoring::class);
 
         $this->get('test');
 
@@ -30,7 +31,7 @@ class MiddlewareTest extends BasicTestCase
         $this->app->router->get('test', function () {})
             ->middleware(WebRequestMonitoring::class);
 
-        $response = $this->get( 'test');
+        $response = $this->get('test');
 
         $this->assertEquals(
             $response->getStatusCode(),
@@ -43,10 +44,11 @@ class MiddlewareTest extends BasicTestCase
     public function testContext()
     {
         // test the middleware
-        $this->app->router->get('test', function () {})
-            ->middleware(WebRequestMonitoring::class);
+        $this->app->router->get('test', function () {
+            // do nothing
+        })->middleware(WebRequestMonitoring::class);
 
-        $this->get( 'test');
+        $this->get('test');
 
         $this->assertArrayHasKey('Request Body', Inspector::transaction()->context);
         $this->assertArrayHasKey('Response', Inspector::transaction()->context);
