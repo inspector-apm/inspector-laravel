@@ -10,7 +10,7 @@ use Inspector\Models\Transaction;
 
 /**
  * @method static Transaction startTransaction($name)
- * @method static Transaction currentTransaction()
+ * @method static Transaction transaction()
  * @method static bool needTransaction()
  * @method static bool hasTransaction()
  * @method static bool canAddSegments()

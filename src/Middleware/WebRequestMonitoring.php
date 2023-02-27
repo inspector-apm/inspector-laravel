@@ -71,7 +71,7 @@ class WebRequestMonitoring implements TerminableInterface
     public function terminate($request, $response)
     {
         if (Inspector::isRecording() && Inspector::hasTransaction()) {
-            Inspector::currentTransaction()
+            Inspector::transaction()
                 ->addContext('Request Body', Filters::hideParameters(
                     $request->request->all(),
                     config('inspector.hidden_parameters')
