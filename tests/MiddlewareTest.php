@@ -28,8 +28,9 @@ class MiddlewareTest extends BasicTestCase
     public function testResult()
     {
         // test the middleware
-        $this->app->router->get('test', function () {})
-            ->middleware(WebRequestMonitoring::class);
+        $this->app->router->get('test', function () {
+            // do nothing
+        })->middleware(WebRequestMonitoring::class);
 
         $response = $this->get('test');
 

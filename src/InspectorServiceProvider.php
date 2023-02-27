@@ -103,7 +103,7 @@ class InspectorServiceProvider extends ServiceProvider
             $this->app->register(ExceptionsServiceProvider::class);
         }
 
-        if (config('inspector.query', true)){
+        if (config('inspector.query', true)) {
             $this->app->register(DatabaseQueryServiceProvider::class);
         }
 
