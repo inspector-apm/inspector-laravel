@@ -48,7 +48,9 @@ class JobServiceProvider extends ServiceProvider
         $this->app['events']->listen(
             JobProcessed::class,
             function (JobProcessed $event) {
-                if ($this->shouldBeMonitored($event->job->resolveName())) {
+                // If the job fails at the last try it will invoke "JobProcessed" too.
+                // This caused "Undefined property $transaction" error.
+                if ($this->shouldBeMonitored($event->job->resolveName()) && !$event->job->hasFailed()) {
                     $this->handleJobEnd($event->job);
                 }
             }
@@ -106,7 +108,7 @@ class JobServiceProvider extends ServiceProvider
         if (array_key_exists($id, $this->segments)) {
             $this->segments[$id]->end();
         } else {
-            Inspector::currentTransaction()
+            Inspector::transaction()
                 ->setResult($failed ? 'failed' : 'success');
         }
 
