@@ -9,13 +9,14 @@ use Illuminate\Http\Client\Events\ResponseReceived;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
+use Inspector\Models\Segment;
 
 class HttpClientServiceProvider extends ServiceProvider
 {
     /**
      * Segments collection.
      *
-     * @var array
+     * @var Segment[]
      */
     protected $segments = [];
 
