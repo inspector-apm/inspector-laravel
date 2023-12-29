@@ -92,20 +92,6 @@ class TestCommand extends Command
         // Logs will be reported in the transaction context.
         Log::debug("Here you'll find log entries generated during the transaction.");
 
-        /*
-         * Loading demo data
-         */
-        $this->line('Loading demo data...');
-
-        foreach ([1, 2, 3, 4, 5, 6] as $minutes) {
-            inspector()->startTransaction("Other transactions")
-                ->start(microtime(true) - 60*$minutes)
-                ->setResult('success')
-                ->end(rand(100, 200));
-
-            Log::debug("Here you'll find log entries generated during the transaction.");
-        }
-
         $this->line('Done!');
     }
 }
