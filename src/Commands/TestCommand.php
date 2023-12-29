@@ -68,7 +68,7 @@ class TestCommand extends Command
                 : $this->warn('❌ Inspector is actually disabled, turn to true the `enable` ' .
                               'field of the `inspector` config file.');
 
-            $segment->addContext('another payload', ['enable' => $config->get('inspector.enable')]);
+            $segment->addContext('example payload', ['enable' => $config->get('inspector.enable')]);
         }, 'test', 'Check if Inspector is enabled');
 
         // Check CURL
@@ -78,8 +78,6 @@ class TestCommand extends Command
             function_exists('curl_version')
                 ? $this->info('✅ CURL extension is enabled.')
                 : $this->warn('❌ CURL is actually disabled so your app could not be able to send data to Inspector.');
-
-            $segment->addContext('another payload', ['foo' => 'bar']);
         }, 'test', 'Check CURL extension');
 
         // Report Exception
