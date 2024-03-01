@@ -8,6 +8,7 @@ use Closure;
 use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Support\Facades\Auth;
 use Inspector\Laravel\Filters;
+use Inspector\Models\Transaction;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
 class WebRequestMonitoring implements TerminableInterface
@@ -56,6 +57,9 @@ class WebRequestMonitoring implements TerminableInterface
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
         );
+
+        // todo: add an argument to the Transaction __constructor
+        $transaction->type = Transaction::TYPE_REQUEST;
 
         if (Auth::check() && config('inspector.user')) {
             $transaction->withUser(Auth::user()->getAuthIdentifier());
