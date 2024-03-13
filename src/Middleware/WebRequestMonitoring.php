@@ -9,6 +9,8 @@ use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Support\Facades\Auth;
 use Inspector\Laravel\Filters;
 use Inspector\Models\Transaction;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
 class WebRequestMonitoring implements TerminableInterface
@@ -72,7 +74,7 @@ class WebRequestMonitoring implements TerminableInterface
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response $response
      */
-    public function terminate($request, $response)
+    public function terminate(Request $request, Response $response): void
     {
         if (Inspector::isRecording() && Inspector::hasTransaction()) {
             Inspector::transaction()
