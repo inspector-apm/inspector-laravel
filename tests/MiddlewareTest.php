@@ -34,12 +34,9 @@ class MiddlewareTest extends BasicTestCase
 
         $response = $this->get('test');
 
-        $this->assertEquals(
-            $response->getStatusCode(),
-            Inspector::transaction()->result
-        );
+        $this->assertEquals($response->getStatusCode(), Inspector::transaction()->result);
 
-        $this->assertArrayHasKey('Response', Inspector::transaction()->context);
+        $this->assertArrayHasKey('Response', Inspector::transaction()->getContext());
     }
 
     public function testContext()
@@ -51,7 +48,7 @@ class MiddlewareTest extends BasicTestCase
 
         $this->get('test');
 
-        $this->assertArrayHasKey('Request Body', Inspector::transaction()->context);
-        $this->assertArrayHasKey('Response', Inspector::transaction()->context);
+        $this->assertArrayHasKey('Request Body', Inspector::transaction()->getContext());
+        $this->assertArrayHasKey('Response', Inspector::transaction()->getContext());
     }
 }
