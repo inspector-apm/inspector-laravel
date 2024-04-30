@@ -29,7 +29,7 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '4.8.1';
+    const VERSION = '4.8.2';
 
     /**
      * Booting of services.
@@ -40,11 +40,9 @@ class InspectorServiceProvider extends ServiceProvider
     {
         $this->setupConfigFile();
 
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                TestCommand::class,
-            ]);
-        }
+        $this->commands([
+            TestCommand::class,
+        ]);
     }
 
     /**
@@ -52,7 +50,7 @@ class InspectorServiceProvider extends ServiceProvider
      */
     protected function setupConfigFile()
     {
-        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole()) {
+        if ($this->app instanceof LaravelApplication) {
             $this->publishes([__DIR__ . '/../config/inspector.php' => config_path('inspector.php')]);
         } elseif ($this->app instanceof LumenApplication) {
             $this->app->configure('inspector');
