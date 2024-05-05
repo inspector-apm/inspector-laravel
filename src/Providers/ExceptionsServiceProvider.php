@@ -40,6 +40,10 @@ class ExceptionsServiceProvider extends ServiceProvider
      */
     protected function handleLog($level, $message, $context)
     {
+        if (!Inspector::canAddSegments()) {
+            return;
+        }
+
         if (
             isset($context['exception']) &&
             $context['exception'] instanceof \Throwable
@@ -51,24 +55,18 @@ class ExceptionsServiceProvider extends ServiceProvider
             return $this->reportException($message);
         }
 
-        // Collect general log messages
-        if (Inspector::isRecording() && Inspector::hasTransaction()) {
-            Inspector::transaction()
-                ->addContext('logs', array_merge(
-                    Inspector::transaction()->getContext()['logs'] ?? [],
-                    [
-                        compact('level', 'message')
-                    ]
-                ));
-        }
+        // Report general log messages
+        Inspector::transaction()
+            ->addContext('logs', array_merge(
+                Inspector::transaction()->getContext()['logs'] ?? [],
+                [
+                    compact('level', 'message')
+                ]
+            ));
     }
 
     protected function reportException(\Throwable $exception)
     {
-        if (!Inspector::isRecording()) {
-            return;
-        }
-
         Inspector::reportException($exception, false);
         Inspector::transaction()->setResult('error');
     }
