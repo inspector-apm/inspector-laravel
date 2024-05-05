@@ -8,6 +8,7 @@ use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Contracts\Queue\Job;
+use Illuminate\Queue\Events\JobReleasedAfterException;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
@@ -64,6 +65,18 @@ class JobServiceProvider extends ServiceProvider
                 }
             }
         );
+
+        // For Laravel >=9
+        if (version_compare(app()->version(), '9.0.0', '>=')) {
+            $this->app['events']->listen(
+                JobReleasedAfterException::class,
+                function (JobReleasedAfterException $event) {
+                    if ($this->shouldBeMonitored($event->job->resolveName())) {
+                        $this->handleJobEnd($event->job, true);
+                    }
+                }
+            );
+        }
     }
 
     /**
