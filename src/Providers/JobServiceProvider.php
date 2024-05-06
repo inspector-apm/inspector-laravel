@@ -54,7 +54,8 @@ class JobServiceProvider extends ServiceProvider
         $this->app['events']->listen(
             JobExceptionOccurred::class,
             function (JobExceptionOccurred $event) {
-                if (Inspector::canAddSegments()) {
+                // An unhandled exception will be reported by the ExceptionServiceProvider in case of a sync execution.
+                if (Inspector::canAddSegments() && $event->job->getConnectionName() !== 'sync') {
                     Inspector::reportException($event->exception, false);
                 }
             }
@@ -63,36 +64,26 @@ class JobServiceProvider extends ServiceProvider
         $this->app['events']->listen(
             JobProcessed::class,
             function ($event) {
-                if ($this->shouldBeMonitored($event->job->resolveName())) {
+                if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
                     $this->handleJobEnd($event->job);
                 }
             }
         );
 
-        $handleFailedJob = function ($event) {
-            if ($this->shouldBeMonitored($event->job->resolveName())) {
-                $this->handleJobEnd($event->job, true);
-
-                // Laravel throws the current exception after raising the failed events.
-                // So after flushing, we turn off the monitoring to avoid ExceptionServiceProvider will report
-                // the exception again causing a new transaction to start.
-                // We'll restart recording in the JobProcessing event at the start of the job lifecycle
-                Inspector::stopRecording();
-            }
-        };
-
         if (version_compare(app()->version(), '9.0.0', '>=')) {
             $this->app['events']->listen(
                 JobReleasedAfterException::class,
                 function (JobReleasedAfterException $event) {
-                    if ($this->shouldBeMonitored($event->job->resolveName())) {
+                    if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
                         $this->handleJobEnd($event->job, true);
 
                         // Laravel throws the current exception after raising the failed events.
                         // So after flushing, we turn off the monitoring to avoid ExceptionServiceProvider will report
                         // the exception again causing a new transaction to start.
                         // We'll restart recording in the JobProcessing event at the start of the job lifecycle
-                        Inspector::stopRecording();
+                        if ($event->job->getConnectionName() !== 'sync') {
+                            Inspector::stopRecording();
+                        }
                     }
                 }
             );
@@ -101,8 +92,8 @@ class JobServiceProvider extends ServiceProvider
         $this->app['events']->listen(
             JobFailed::class,
             function (JobFailed $event) {
-                if ($this->shouldBeMonitored($event->job->resolveName())) {
-                    // JobExceptionOccurred event is called after JobFailed
+                if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
+                    // JobExceptionOccurred event is called after JobFailed, so we have to report the exception here.
                     Inspector::reportException($event->exception, false);
 
                     $this->handleJobEnd($event->job, true);
@@ -111,7 +102,9 @@ class JobServiceProvider extends ServiceProvider
                     // So after flushing, we turn off the monitoring to avoid ExceptionServiceProvider will report
                     // the exception again causing a new transaction to start.
                     // We'll restart recording in the JobProcessing event at the start of the job lifecycle
-                    Inspector::stopRecording();
+                    if ($event->job->getConnectionName() !== 'sync') {
+                        Inspector::stopRecording();
+                    }
                 }
             }
         );
@@ -169,7 +162,7 @@ class JobServiceProvider extends ServiceProvider
          * We do not have to flush if the application is using the sync driver.
          * In that case, the package considers the job as a segment.
          */
-        if ($this->app->runningInConsole() && config('queue.default') !== 'sync') {
+        if ($job->getConnectionName() !== 'sync') {
             Inspector::flush();
         }
     }
