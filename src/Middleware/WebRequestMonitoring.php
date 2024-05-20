@@ -63,6 +63,14 @@ class WebRequestMonitoring implements TerminableInterface
         // todo: add an argument to the Transaction __constructor
         $transaction->type = Transaction::TYPE_REQUEST;
 
+        $transaction->addContext(
+            'Request Body',
+            Filters::hideParameters(
+                $request->request->all(),
+                config('inspector.hidden_parameters')
+            )
+        );
+
         if (Auth::check() && config('inspector.user')) {
             $transaction->withUser(Auth::user()->getAuthIdentifier());
         }
@@ -78,10 +86,6 @@ class WebRequestMonitoring implements TerminableInterface
     {
         if (Inspector::isRecording() && Inspector::hasTransaction()) {
             Inspector::transaction()
-                ->addContext('Request Body', Filters::hideParameters(
-                    $request->request->all(),
-                    config('inspector.hidden_parameters')
-                ))
                 ->addContext('Response', [
                     'status_code' => $response->getStatusCode(),
                     'version' => $response->getProtocolVersion(),
