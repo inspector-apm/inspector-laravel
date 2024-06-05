@@ -89,7 +89,7 @@ class GateServiceProvider extends ServiceProvider
      */
     public function generateUniqueKey(array $data)
     {
-        return md5(json_encode($data));
+        return md5(serialize($data));
     }
 
     /**
