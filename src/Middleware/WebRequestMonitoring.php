@@ -58,9 +58,9 @@ class WebRequestMonitoring implements TerminableInterface
     {
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
-        );
+        )->markAsRequest();
 
-        $transaction->markAsRequest()->addContext(
+        $transaction->addContext(
             'Request Body',
             Filters::hideParameters(
                 $request->request->all(),
