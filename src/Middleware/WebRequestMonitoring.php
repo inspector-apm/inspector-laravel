@@ -60,10 +60,7 @@ class WebRequestMonitoring implements TerminableInterface
             $this->buildTransactionName($request)
         );
 
-        // todo: add an argument to the Transaction __constructor
-        $transaction->type = Transaction::TYPE_REQUEST;
-
-        $transaction->addContext(
+        $transaction->markAsRequest()->addContext(
             'Request Body',
             Filters::hideParameters(
                 $request->request->all(),

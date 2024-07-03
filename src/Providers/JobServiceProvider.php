@@ -119,6 +119,7 @@ class JobServiceProvider extends ServiceProvider
     {
         if (Inspector::needTransaction()) {
             Inspector::startTransaction($job->resolveName())
+                ->setType('job')
                 ->addContext('Payload', $job->payload());
         } elseif (Inspector::canAddSegments()) {
             $this->initializeSegment($job);
