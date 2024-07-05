@@ -32,7 +32,7 @@ class CommandServiceProvider extends ServiceProvider
 
             if (Inspector::needTransaction()) {
                 Inspector::startTransaction($event->command)
-                    ->setType('artisan')
+                    ->setType('command')
                     ->addContext('Command', [
                         'arguments' => $event->input->getArguments(),
                         'options' => $event->input->getOptions(),
