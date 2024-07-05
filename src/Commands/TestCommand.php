@@ -21,7 +21,7 @@ class TestCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Send data to your Inspector dashboard.';
+    protected $description = 'Test Inspector configuration.';
 
     /**
      * Execute the console command.
@@ -32,18 +32,18 @@ class TestCommand extends Command
      */
     public function handle(Repository $config)
     {
-        if (!inspector()->isRecording()) {
-            $this->warn('Inspector is not enabled');
-            return;
-        }
-
-        $this->line("I'm testing your Inspector integration.");
+        $this->line($this->description);
 
         // Test proc_open function availability
         try {
             proc_open("", [], $pipes);
         } catch (\Throwable $exception) {
             $this->warn("❌ proc_open function disabled.");
+            return;
+        }
+
+        if (!inspector()->isRecording()) {
+            $this->warn('Inspector is not enabled');
             return;
         }
 
