@@ -36,14 +36,10 @@ class ExceptionsServiceProvider extends ServiceProvider
      * @param string $level
      * @param mixed $message
      * @param mixed $context
-     * @return mixed
+     * @return void
      */
     protected function handleLog($level, $message, $context)
     {
-        if (!Inspector::canAddSegments()) {
-            return;
-        }
-
         if (
             isset($context['exception']) &&
             $context['exception'] instanceof \Throwable
