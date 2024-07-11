@@ -76,6 +76,28 @@ protected $middlewareGroups = [
     ]
 ```
 
+For the new directory structure what was introduced since Laravel 11, the `Kernel.php` files are no longer in the Laravel project, and these are handled through the framework `bootstrap/app.php` file.
+
+```php
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        //
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web(\Inspector\Laravel\Middleware\WebRequestMonitoring::class);
+        $middleware->api(\Inspector\Laravel\Middleware\WebRequestMonitoring::class);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        //
+    })->create();
+```
+
 <a name="test"></a>
 
 ### Test everything is working
