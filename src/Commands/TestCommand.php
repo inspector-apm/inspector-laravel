@@ -6,6 +6,7 @@ namespace Inspector\Laravel\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\Facades\Log;
+use Inspector\Models\Segment;
 
 class TestCommand extends Command
 {
@@ -48,7 +49,7 @@ class TestCommand extends Command
         }
 
         // Check Inspector API key
-        inspector()->addSegment(function ($segment) use ($config) {
+        inspector()->addSegment(function (Segment $segment) use ($config) {
             usleep(10 * 1000);
 
             !empty($config->get('inspector.key'))
@@ -60,7 +61,7 @@ class TestCommand extends Command
         }, 'test', 'Check Ingestion key');
 
         // Check Inspector is enabled
-        inspector()->addSegment(function ($segment) use ($config) {
+        inspector()->addSegment(function (Segment $segment) use ($config) {
             usleep(10 * 1000);
 
             $config->get('inspector.enable')
@@ -72,7 +73,7 @@ class TestCommand extends Command
         }, 'test', 'Check if Inspector is enabled');
 
         // Check CURL
-        inspector()->addSegment(function ($segment) {
+        inspector()->addSegment(function (Segment $segment) {
             usleep(10 * 1000);
 
             function_exists('curl_version')
@@ -80,15 +81,17 @@ class TestCommand extends Command
                 : $this->warn('❌ CURL is actually disabled so your app could not be able to send data to Inspector.');
         }, 'test', 'Check CURL extension');
 
+        inspector()->addSegment(function (Segment $segment) {
+            sleep(1);
+        }, 'mysql', "SELECT name, (SELECT COUNT(*) FROM orders WHERE user_id = users.id) AS order_count FROM users");
+
         // Report Exception
         inspector()->reportException(new \Exception('First Exception detected'));
+
         // End the transaction
         inspector()->transaction()
             ->setResult('success')
             ->end();
-
-        // Logs will be reported in the transaction context.
-        Log::debug("Here you'll find log entries generated during the transaction.");
 
         $this->line('Done!');
     }
