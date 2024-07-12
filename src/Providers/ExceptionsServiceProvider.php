@@ -52,13 +52,15 @@ class ExceptionsServiceProvider extends ServiceProvider
         }
 
         // Report general log messages
-        Inspector::transaction()
-            ->addContext('logs', array_merge(
-                Inspector::transaction()->getContext()['logs'] ?? [],
-                [
-                    compact('level', 'message')
-                ]
-            ));
+        if (Inspector::hasTransaction()) {
+            Inspector::transaction()
+                ->addContext('logs', array_merge(
+                    Inspector::transaction()->getContext()['logs'] ?? [],
+                    [
+                        compact('level', 'message')
+                    ]
+                ));
+        }
     }
 
     protected function reportException(\Throwable $exception)
