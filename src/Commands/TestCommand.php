@@ -81,7 +81,8 @@ class TestCommand extends Command
                 : $this->warn('❌ CURL is actually disabled so your app could not be able to send data to Inspector.');
         }, 'test', 'Check CURL extension');
 
-        inspector()->addSegment(function (Segment $segment) {
+        // Report a bad query
+        inspector()->addSegment(function () {
             sleep(1);
         }, 'mysql', "SELECT name, (SELECT COUNT(*) FROM orders WHERE user_id = users.id) AS order_count FROM users");
 
