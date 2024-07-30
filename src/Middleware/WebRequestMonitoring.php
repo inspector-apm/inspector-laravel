@@ -8,7 +8,6 @@ use Closure;
 use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Support\Facades\Auth;
 use Inspector\Laravel\Filters;
-use Inspector\Models\Transaction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -89,6 +88,7 @@ class WebRequestMonitoring implements TerminableInterface
                     'charset' => $response->getCharset(),
                     'headers' => $response->headers->all(),
                 ])
+                ->addContext('Response Body', $response->getContent())
                 ->setResult($response->getStatusCode());
         }
     }
