@@ -88,7 +88,7 @@ class WebRequestMonitoring implements TerminableInterface
                     'charset' => $response->getCharset(),
                     'headers' => $response->headers->all(),
                 ])
-                ->addContext('Response Body', json_encode($response->getContent()))
+                ->addContext('Response Body', json_decode($response->getContent(), true))
                 ->setResult($response->getStatusCode());
         }
     }
