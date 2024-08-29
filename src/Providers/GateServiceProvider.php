@@ -39,9 +39,11 @@ class GateServiceProvider extends ServiceProvider
     public function beforeGateCheck($user, $ability, $arguments)
     {
         if (Inspector::canAddSegments()) {
+            $label = 'Gate::'.$ability.'('.(is_array($arguments)&&!empty($arguments) ? $arguments[0] : '').')';
+
             $this->segments[
                 $this->generateUniqueKey($this->formatArguments($arguments))
-            ] = Inspector::startSegment('gate', 'Gate::'.$ability)
+            ] = Inspector::startSegment('gate', $label)
                     ->addContext('user', $user);
         }
     }
