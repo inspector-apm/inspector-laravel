@@ -61,10 +61,7 @@ class WebRequestMonitoring implements TerminableInterface
 
         $transaction->addContext(
             'Request Body',
-            Filters::hideParameters(
-                $request->request->all(),
-                config('inspector.hidden_parameters')
-            )
+            Filters::hideParameters($request->all(), config('inspector.hidden_parameters'))
         );
 
         if (Auth::check() && config('inspector.user')) {
