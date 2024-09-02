@@ -39,7 +39,7 @@ class GateServiceProvider extends ServiceProvider
     public function beforeGateCheck($user, $ability, $arguments)
     {
         if (Inspector::canAddSegments()) {
-            $label = 'Gate::'.$ability.'('.(is_array($arguments)&&!empty($arguments) ? $arguments[0] : '').')';
+            $label = 'Gate::'.$ability.'('.(is_array($arguments)&&!empty($arguments) ? (is_string($arguments[0]) ? $arguments[0] : '') : '').')';
 
             $this->segments[
                 $this->generateUniqueKey($this->formatArguments($arguments))
