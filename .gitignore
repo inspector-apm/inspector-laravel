@@ -11,3 +11,4 @@ docs/*.pyc
 .phpunit.cache
 .DS_STORE
 .phpunit.result.cache
+*.bak
