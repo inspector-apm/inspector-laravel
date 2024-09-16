@@ -72,7 +72,7 @@ return [
 
     'options' => [
         // 'proxy' => 'https://55.88.22.11:3128',
-        // 'curlPath' => '/usr/bin/curl',
+        // 'curlPath' => '/opt/bin/curl',
     ],
 
     /*
