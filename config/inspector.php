@@ -62,7 +62,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Proxy
+    | Custom transport options
     |--------------------------------------------------------------------------
     |
     | This is where you can set the transport option settings you'd like us to use when
