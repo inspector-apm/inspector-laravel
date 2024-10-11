@@ -83,7 +83,7 @@ class WebRequestMonitoring implements TerminableInterface
                     'status_code' => $response->getStatusCode(),
                     'version' => $response->getProtocolVersion(),
                     'charset' => $response->getCharset(),
-                    'headers' => $response->headers->all(),
+                    'headers' => Filters::hideParameters($response->headers->all(), config('inspector.hidden_parameters')),
                 ])
                 ->addContext('Response Body', json_decode($response->getContent(), true))
                 ->setResult($response->getStatusCode());
