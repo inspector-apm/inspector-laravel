@@ -88,6 +88,9 @@ class WebRequestMonitoring implements TerminableInterface
                 ->addContext('Response Body', json_decode($response->getContent(), true))
                 ->setResult($response->getStatusCode());
         }
+        if (isset($_SERVER['LARAVEL_OCTANE'])) {
+            Inspector::flush();
+        }
     }
 
     /**

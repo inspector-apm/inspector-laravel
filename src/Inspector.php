@@ -1,6 +1,7 @@
 <?php
 
 namespace Inspector\Laravel;
+use Inspector\Laravel\Models\Transaction;
 
 class Inspector extends \Inspector\Inspector
 {
@@ -27,5 +28,21 @@ class Inspector extends \Inspector\Inspector
 
             return app()->call($callback, $parameters);
         }, 'method', $label, true);
+    }
+
+    /**
+     * Create and start new Transaction.
+     *
+     * @param string $name
+     * @return Transaction
+     * @throws \Exception
+     */
+    public function startTransaction($name)
+    {
+        $this->transaction = new Transaction($name);
+        $this->transaction->start();
+
+        $this->addEntries($this->transaction);
+        return $this->transaction;
     }
 }
