@@ -11,7 +11,7 @@ class Socket extends \Inspector\Models\Partials\Socket
      */
     public function __construct()
     {
-        $request = request();
+        $request = \request();
         $this->remote_address = $request->getClientIp() ?? '';
         $this->encrypted = $request->isSecure();
     }

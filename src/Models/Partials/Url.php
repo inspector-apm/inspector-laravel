@@ -11,7 +11,7 @@ class Url extends \Inspector\Models\Partials\Url
      */
     public function __construct()
     {
-        $request = request();
+        $request = \request();
         $this->protocol = $request->getScheme();
         $this->port = $request->getPort() ?? '';
         $this->path = $request->getScriptName() ?? '';

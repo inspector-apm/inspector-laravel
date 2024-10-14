@@ -11,7 +11,7 @@ class Request extends \Inspector\Models\Partials\Request
      */
     public function __construct()
     {
-        $request = request();
+        $request = \request();
         $this->method = $request->getMethod();
 
         $this->version = $request->getProtocolVersion()
