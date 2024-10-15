@@ -34,8 +34,19 @@ class InspectorOctaneMiddleware extends WebRequestMonitoring
     {
         parent::terminate($request, $response);
 
+        // Using Octane headers and cookies are not available with native apache functions.
+        // We need to retrieve them using the Laravel Request class.
+        try {
+            inspector()->transaction()->http->request = \array_merge(
+                inspector()->transaction()->http->request,
+                $request->header()
+            );
+        } catch (\Throwable $exception) {
+            // nothing to do
+        }
+
         /*
-         * Manually flush due to the long-running process.
+         * Manually flush because of the long-running process.
          */
         inspector()->flush();
     }
