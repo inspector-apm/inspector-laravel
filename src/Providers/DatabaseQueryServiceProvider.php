@@ -18,7 +18,7 @@ class DatabaseQueryServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) {
-            if (Inspector::canAddSegments()) {
+            if (Inspector::canAddSegments() && $query->sql) {
                 $this->handleQueryReport($query->sql, $query->bindings, $query->time, $query->connectionName);
             }
         });
