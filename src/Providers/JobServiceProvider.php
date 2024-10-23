@@ -150,7 +150,7 @@ class JobServiceProvider extends ServiceProvider
     {
         $id = $this->getJobId($job);
 
-        if (array_key_exists($id, $this->segments)) {
+        if (\array_key_exists($id, $this->segments)) {
             $this->segments[$id]->end();
         } else {
             Inspector::transaction()
@@ -180,7 +180,7 @@ class JobServiceProvider extends ServiceProvider
             return $jobId;
         }
 
-        return sha1($job->getRawBody());
+        return \sha1($job->getRawBody());
     }
 
     /**

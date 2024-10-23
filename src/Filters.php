@@ -29,7 +29,7 @@ class Filters
     }
 
     /**
-     * Determine if current command should be monitored.
+     * Determine if the current command should be monitored.
      *
      * @param string $command
      * @param string[] $notAllowed
@@ -37,7 +37,7 @@ class Filters
      */
     public static function isApprovedArtisanCommand(string $command, array $notAllowed = null): bool
     {
-        return is_null($notAllowed) || !in_array($command, $notAllowed);
+        return \is_null($notAllowed) || !\in_array($command, $notAllowed);
     }
 
     /**
@@ -49,7 +49,7 @@ class Filters
      */
     public static function isApprovedJobClass(string $class, array $notAllowed = null)
     {
-        return !is_array($notAllowed) || !in_array($class, $notAllowed);
+        return !\is_array($notAllowed) || !\in_array($class, $notAllowed);
     }
 
     /**

@@ -54,10 +54,10 @@ class ExceptionsServiceProvider extends ServiceProvider
         // Report general log messages
         if (Inspector::hasTransaction()) {
             Inspector::transaction()
-                ->addContext('logs', array_merge(
+                ->addContext('logs', \array_merge(
                     Inspector::transaction()->getContext()['logs'] ?? [],
                     [
-                        compact('level', 'message')
+                        \compact('level', 'message')
                     ]
                 ));
         }

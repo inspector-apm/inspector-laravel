@@ -34,8 +34,8 @@ class EmailServiceProvider extends ServiceProvider
                         // Compatibility with Laravel 5.5
                         ->addContext(
                             'data',
-                            property_exists($event, 'data')
-                                    ? array_intersect_key($event->data, array_flip( ['mailer'] ) )
+                            \property_exists($event, 'data')
+                                    ? \array_intersect_key($event->data, \array_flip( ['mailer'] ) )
                                     : []
                         );
             }
@@ -44,7 +44,7 @@ class EmailServiceProvider extends ServiceProvider
         $this->app['events']->listen(MessageSent::class, function (MessageSent $event) {
             $key = $this->getSegmentKey($event->message);
 
-            if (array_key_exists($key, $this->segments)) {
+            if (\array_key_exists($key, $this->segments)) {
                 $this->segments[$key]->end();
             }
         });
@@ -68,6 +68,6 @@ class EmailServiceProvider extends ServiceProvider
      */
     protected function getSegmentKey($message)
     {
-        return sha1(json_encode($message->getTo()).$message->getSubject());
+        return \sha1(\json_encode($message->getTo()).$message->getSubject());
     }
 }

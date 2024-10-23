@@ -78,7 +78,7 @@ class HttpClientServiceProvider extends ServiceProvider
      */
     protected function getSegmentKey(Request $request)
     {
-        return sha1($request->body());
+        return \sha1($request->body());
     }
 
     /**

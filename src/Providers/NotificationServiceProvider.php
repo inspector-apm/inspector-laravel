@@ -39,7 +39,7 @@ class NotificationServiceProvider extends ServiceProvider
         });
 
         $this->app['events']->listen(NotificationSent::class, function (NotificationSent $event) {
-            if (array_key_exists($event->notification->id, $this->segments)) {
+            if (\array_key_exists($event->notification->id, $this->segments)) {
                 $this->segments[$event->notification->id]
                     ->addContext('Response', $event->response)
                     ->end();

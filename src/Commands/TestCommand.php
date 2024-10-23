@@ -37,7 +37,7 @@ class TestCommand extends Command
 
         // Test proc_open function availability
         try {
-            proc_open("", [], $pipes);
+            \proc_open("", [], $pipes);
         } catch (\Throwable $exception) {
             $this->warn("❌ proc_open function disabled.");
             return;
@@ -50,7 +50,7 @@ class TestCommand extends Command
 
         // Check Inspector API key
         inspector()->addSegment(function (Segment $segment) use ($config) {
-            usleep(10 * 1000);
+            \usleep(10 * 1000);
 
             !empty($config->get('inspector.key'))
                 ? $this->info('✅ Inspector key installed.')
@@ -62,7 +62,7 @@ class TestCommand extends Command
 
         // Check Inspector is enabled
         inspector()->addSegment(function (Segment $segment) use ($config) {
-            usleep(10 * 1000);
+            \usleep(10 * 1000);
 
             $config->get('inspector.enable')
                 ? $this->info('✅ Inspector is enabled.')
@@ -74,7 +74,7 @@ class TestCommand extends Command
 
         // Check CURL
         inspector()->addSegment(function (Segment $segment) {
-            usleep(10 * 1000);
+            \usleep(10 * 1000);
 
             function_exists('curl_version')
                 ? $this->info('✅ CURL extension is enabled.')
@@ -83,7 +83,7 @@ class TestCommand extends Command
 
         // Report a bad query
         inspector()->addSegment(function () {
-            sleep(1);
+            \sleep(1);
         }, 'mysql', "SELECT name, (SELECT COUNT(*) FROM orders WHERE user_id = users.id) AS order_count FROM users");
 
         // Report Exception

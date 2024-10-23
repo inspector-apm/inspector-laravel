@@ -49,7 +49,7 @@ class CommandServiceProvider extends ServiceProvider
 
             if (Inspector::hasTransaction() && Inspector::transaction()->name === $event->command) {
                 Inspector::transaction()->setResult($event->exitCode === 0 ? 'success' : 'error');
-            } elseif (array_key_exists($event->command, $this->segments)) {
+            } elseif (\array_key_exists($event->command, $this->segments)) {
                 $this->segments[$event->command]->end()->addContext('Command', [
                     'exit_code' => $event->exitCode,
                     'arguments' => $event->input->getArguments(),
@@ -77,7 +77,7 @@ class CommandServiceProvider extends ServiceProvider
      */
     protected function shouldBeMonitored(?string $command): bool
     {
-        if (is_string($command)) {
+        if (\is_string($command)) {
             return Filters::isApprovedArtisanCommand($command, config('inspector.ignore_commands'));
         }
 

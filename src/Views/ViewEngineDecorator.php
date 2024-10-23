@@ -38,10 +38,10 @@ final class ViewEngineDecorator implements Engine
             return $this->engine->get($path, $data);
         }
 
-        $label = 'view::'.$this->viewFactory->shared(self::SHARED_KEY, basename($path));
+        $label = 'view::'.$this->viewFactory->shared(self::SHARED_KEY, \basename($path));
 
         return Inspector::addSegment(function (Segment $segment) use ($path, $data) {
-            $segment->addContext('info', compact('path'))
+            $segment->addContext('info', \compact('path'))
                 ->addContext('data', $data);
 
             return $this->engine->get($path, $data);
@@ -50,6 +50,6 @@ final class ViewEngineDecorator implements Engine
 
     public function __call($name, $arguments)
     {
-        return call_user_func_array([$this->engine, $name], $arguments);
+        return \call_user_func_array([$this->engine, $name], $arguments);
     }
 }

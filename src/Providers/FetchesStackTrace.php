@@ -15,7 +15,7 @@ trait FetchesStackTrace
      */
     protected function getCallerFromStackTrace()
     {
-        $trace = collect(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))->forget(0);
+        $trace = collect(\debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))->forget(0);
 
         return $trace->first(function ($frame) {
             if (! isset($frame['file'])) {

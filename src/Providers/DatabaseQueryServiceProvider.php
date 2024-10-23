@@ -35,7 +35,7 @@ class DatabaseQueryServiceProvider extends ServiceProvider
     protected function handleQueryReport($sql, array $bindings, $time, $connection)
     {
         $segment = Inspector::startSegment($connection, $sql)
-            ->start(microtime(true) - $time/1000);
+            ->start(\microtime(true) - $time/1000);
 
         $context = [
             'connection' => $connection,

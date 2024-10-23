@@ -39,7 +39,11 @@ class GateServiceProvider extends ServiceProvider
     public function beforeGateCheck($user, $ability, $arguments)
     {
         if (Inspector::canAddSegments()) {
-            $label = 'Gate::'.$ability.'('.(is_array($arguments)&&!empty($arguments) ? (is_string($arguments[0]) ? $arguments[0] : '') : '').')';
+            $class = (\is_array($arguments)&&!empty($arguments))
+                ? (\is_string($arguments[0]) ? $arguments[0] : '')
+                : '';
+
+            $label = "Gate::{$ability}({$class})";
 
             $this->segments[
                 $this->generateUniqueKey($this->formatArguments($arguments))
@@ -91,7 +95,7 @@ class GateServiceProvider extends ServiceProvider
      */
     public function generateUniqueKey(array $data)
     {
-        return md5(serialize($data));
+        return \md5(\serialize($data));
     }
 
     /**
@@ -102,7 +106,7 @@ class GateServiceProvider extends ServiceProvider
      */
     public function formatArguments(array $arguments)
     {
-        return array_map(function ($item) {
+        return \array_map(function ($item) {
             return $item instanceof Model ? $this->formatModel($item) : $item;
         }, $arguments);
     }
@@ -115,7 +119,7 @@ class GateServiceProvider extends ServiceProvider
      */
     public function formatModel($model)
     {
-        return get_class($model).':'.$model->getKey();
+        return \get_class($model).':'.$model->getKey();
     }
 
     /**

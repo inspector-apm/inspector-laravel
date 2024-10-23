@@ -34,18 +34,18 @@ class OutOfMemoryBootstrapper
      */
     public function bootstrap()
     {
-        $this->reservedMemory = str_repeat(' ', 1024 * 256);
+        $this->reservedMemory = \str_repeat(' ', 1024 * 256);
 
-        register_shutdown_function(function () {
+        \register_shutdown_function(function () {
             $this->reservedMemory = null;
 
-            $lastError = error_get_last();
+            $lastError = \error_get_last();
 
             if (!$lastError) {
                 return;
             }
 
-            $isOom = preg_match($this->oomRegex, $lastError['message'], $matches) === 1;
+            $isOom = \preg_match($this->oomRegex, $lastError['message'], $matches) === 1;
 
             if (!$isOom) {
                 return;
@@ -57,7 +57,7 @@ class OutOfMemoryBootstrapper
             if (inspector() && inspector()->isRecording()) {
                 $currentMemoryLimit = (int) $matches[1];
 
-                ini_set('memory_limit', $currentMemoryLimit + (5*1024*1024)); // 5MB
+                \ini_set('memory_limit', $currentMemoryLimit + (5*1024*1024)); // 5MB
             }
         });
     }
