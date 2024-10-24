@@ -8,6 +8,7 @@ use Closure;
 use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Support\Facades\Auth;
 use Inspector\Laravel\Filters;
+use Inspector\Models\Transaction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -64,7 +65,14 @@ class WebRequestMonitoring implements TerminableInterface
             Filters::hideParameters($request->all(), config('inspector.hidden_parameters'))
         );
 
-        if (Auth::check() && config('inspector.user')) {
+        if (config('inspector.user')) {
+            $this->collectUser($transaction);
+        }
+    }
+
+    public function collectUser(Transaction $transaction)
+    {
+        if (Auth::check()) {
             $transaction->withUser(Auth::user()->getAuthIdentifier());
         }
     }
