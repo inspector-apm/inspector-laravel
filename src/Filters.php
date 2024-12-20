@@ -35,7 +35,7 @@ class Filters
      * @param string[] $notAllowed
      * @return bool
      */
-    public static function isApprovedArtisanCommand(string $command, array $notAllowed = null): bool
+    public static function isApprovedArtisanCommand(string $command, ?array $notAllowed): bool
     {
         return \is_null($notAllowed) || !\in_array($command, $notAllowed);
     }
@@ -47,7 +47,7 @@ class Filters
      * @param string $class
      * @return bool
      */
-    public static function isApprovedJobClass(string $class, array $notAllowed = null)
+    public static function isApprovedJobClass(string $class, ?array $notAllowed)
     {
         return !\is_array($notAllowed) || !\in_array($class, $notAllowed);
     }
