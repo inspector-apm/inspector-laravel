@@ -24,7 +24,7 @@ class FilterClassTest extends BasicTestCase
     public function testRequestNotApproved()
     {
         $this->app->router->get('test/dashboard', function (Request $request) {
-            return Filters::isApprovedRequest(['test*'], $request);
+            return Filters::isApprovedRequest(['test*'], $request->decodedPath());
         });
 
         $response = $this->get('test/dashboard');
