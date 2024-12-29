@@ -28,7 +28,7 @@ class WebRequestMonitoring implements TerminableInterface
         if (
             Inspector::needTransaction()
             &&
-            Filters::isApprovedRequest(config('inspector.ignore_url'), $request)
+            Filters::isApprovedRequest(config('inspector.ignore_url'), $request->decodedPath())
             &&
             $this->shouldRecorded($request)
         ) {

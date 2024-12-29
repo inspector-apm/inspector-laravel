@@ -17,10 +17,10 @@ class Filters
      * @param Request $request
      * @return bool
      */
-    public static function isApprovedRequest(array $notAllowed, Request $request): bool
+    public static function isApprovedRequest(array $notAllowed, string $path): bool
     {
         foreach ($notAllowed as $pattern) {
-            if ($request->is($pattern)) {
+            if (self::matchWithWildcard($path, $pattern)) {
                 return false;
             }
         }
@@ -37,7 +37,29 @@ class Filters
      */
     public static function isApprovedArtisanCommand(string $command, ?array $notAllowed): bool
     {
-        return \is_null($notAllowed) || !\in_array($command, $notAllowed);
+        if(\is_null($notAllowed)) {
+            return true;
+        }
+
+        foreach ($notAllowed as $pattern) {
+            if (self::matchWithWildcard($command, $pattern)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static function matchWithWildcard(string $value, string $pattern): bool
+    {
+        // Escape special regex characters in the pattern, except for '*'.
+        $escapedPattern = preg_quote($pattern, '/');
+
+        // Replace '*' in the pattern with '.*' for regex matching.
+        $regex = '/^' . str_replace('\*', '.*', $escapedPattern) . '$/';
+
+        // Perform regex match.
+        return (bool)preg_match($regex, $value);
     }
 
     /**
