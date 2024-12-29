@@ -43,7 +43,7 @@ class TestCommand extends Command
             return;
         }
 
-        if (!inspector()->isRecording()) {
+        if (!inspector()->canAddSegments()) {
             $this->warn('Inspector is not enabled');
             return;
         }
