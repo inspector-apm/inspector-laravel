@@ -113,14 +113,20 @@ class GateServiceProvider extends ServiceProvider
     public function formatArguments(array $arguments)
     {
         return \array_map(function ($item) {
-            return $item instanceof Model
-                ? $this->formatModel($item)
-                : \is_callable($item) ? 'callback' : $item;
+            if ($item instanceof Model) {
+                return $this->formatModel($item);
+            }
+
+            if (\is_callable($item)) {
+                return 'callback';
+            }
+
+            return $item;
         }, $arguments);
     }
 
     /**
-     * Human readable model.
+     * Human-readable model.
      *
      * @param $model
      * @return string
