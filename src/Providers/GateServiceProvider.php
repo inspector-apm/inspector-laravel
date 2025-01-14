@@ -38,18 +38,20 @@ class GateServiceProvider extends ServiceProvider
      */
     public function beforeGateCheck($user, $ability, $arguments)
     {
-        if (Inspector::canAddSegments()) {
-            $class = (\is_array($arguments)&&!empty($arguments))
-                ? (\is_string($arguments[0]) ? $arguments[0] : '')
-                : '';
-
-            $label = "Gate::{$ability}({$class})";
-
-            $this->segments[
-                $this->generateUniqueKey($this->formatArguments($arguments))
-            ] = Inspector::startSegment('gate', $label)
-                    ->addContext('user', $user);
+        if (!Inspector::canAddSegments()) {
+            return;
         }
+
+        $class = (\is_array($arguments)&&!empty($arguments))
+            ? (\is_string($arguments[0]) ? $arguments[0] : '')
+            : '';
+
+        $label = "Gate::{$ability}({$class})";
+
+        $this->segments[
+            $this->generateUniqueKey($this->formatArguments($arguments))
+        ] = Inspector::startSegment('gate', $label)
+                ->addContext('user', $user);
     }
 
     /**
@@ -63,6 +65,10 @@ class GateServiceProvider extends ServiceProvider
      */
     public function afterGateCheck($user, $ability, $result, $arguments)
     {
+        if (!Inspector::canAddSegments()) {
+            return $result;
+        }
+
         $arguments = $this->formatArguments($arguments);
         $key = $this->generateUniqueKey($arguments);
 
