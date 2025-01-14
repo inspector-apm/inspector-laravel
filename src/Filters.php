@@ -4,17 +4,15 @@
 namespace Inspector\Laravel;
 
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Symfony\Component\Console\Input\ArgvInput;
 
 class Filters
 {
     /**
-     * Determine if the given request should be monitored.
+     * Determine if the given request path info should be monitored.
      *
      * @param string[] $notAllowed
-     * @param Request $request
+     * @param string $path
      * @return bool
      */
     public static function isApprovedRequest(array $notAllowed, string $path): bool
@@ -32,7 +30,7 @@ class Filters
      * Determine if the current command should be monitored.
      *
      * @param string $command
-     * @param string[] $notAllowed
+     * @param null|string[] $notAllowed
      * @return bool
      */
     public static function isApprovedArtisanCommand(string $command, ?array $notAllowed): bool
@@ -65,8 +63,8 @@ class Filters
     /**
      * Determine if the given Job class should be monitored.
      *
-     * @param null|string[] $notAllowed
      * @param string $class
+     * @param null|string[] $notAllowed
      * @return bool
      */
     public static function isApprovedJobClass(string $class, ?array $notAllowed)
