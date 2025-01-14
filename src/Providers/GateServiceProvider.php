@@ -70,7 +70,7 @@ class GateServiceProvider extends ServiceProvider
         }
 
         $arguments = $this->formatArguments($arguments);
-        $key = $this->generateUniqueKey($arguments);
+        $key = $this->generateUniqueKey($this->formatArguments($arguments));
 
         if (array_key_exists($key, $this->segments)) {
             $this->segments[$key]
@@ -113,7 +113,9 @@ class GateServiceProvider extends ServiceProvider
     public function formatArguments(array $arguments)
     {
         return \array_map(function ($item) {
-            return $item instanceof Model ? $this->formatModel($item) : $item;
+            return $item instanceof Model
+                ? $this->formatModel($item)
+                : \is_callable($item) ? 'callback' : $item;
         }, $arguments);
     }
 
