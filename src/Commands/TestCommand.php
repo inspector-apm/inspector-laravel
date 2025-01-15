@@ -94,6 +94,8 @@ class TestCommand extends Command
             ->setResult('success')
             ->end();
 
+        $this->warn("Go to the dashboard to check the data: https://app.inspector.dev");
+
         $this->line('Done!');
     }
 }
