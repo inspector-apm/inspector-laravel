@@ -84,17 +84,12 @@ protected $middlewareGroups = [
 use \Inspector\Laravel\Middleware\WebRequestMonitoring;
 
 return Application::configure(basePath: dirname(__DIR__))
-    ->withRouting(
-        // routes
-    )
     ->withMiddleware(function (Middleware $middleware) {
         // Append the middleware
         $middleware->appendToGroup('web', WebRequestMonitoring::class)
             ->appendToGroup('api', WebRequestMonitoring::class);
     })
-    ->withExceptions(function (Exceptions $exceptions) {
-        //
-    })->create();
+    ->create();
 ```
 
 <a name="test"></a>
