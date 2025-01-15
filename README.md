@@ -52,14 +52,15 @@ First put the Ingestion Key in your environment file:
 INSPECTOR_INGESTION_KEY=[ingestion key]
 ```
 
-You can obtain an `INSPECTOR_INGESTION_KEY` creating a new project in your [Inspector](https://www.inspector.dev) account.
+You can obtain an `INSPECTOR_INGESTION_KEY` creating a new project in your [Inspector](https://inspector.dev) account.
 
 <a name="middleware"></a>
 
 ### Attach the Middleware
 
-To monitor web requests you can attach the `WebMonitoringMiddleware` in your http kernel or use in one or more route groups based on your personal needs.
+To monitor HTTP requests you should attach the `WebMonitoringMiddleware` in your http application route groups.
 
+**Laravel <= 10**
 ```php
 /**
  * The application's route middleware groups.
@@ -78,6 +79,24 @@ protected $middlewareGroups = [
     ]
 ```
 
+**Laravel >= 11**
+```php
+use \Inspector\Laravel\Middleware\WebRequestMonitoring;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        // routes
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        // Append the middleware
+        $middleware->appendToGroup('web', WebRequestMonitoring::class)
+            ->appendToGroup('api', WebRequestMonitoring::class);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        //
+    })->create();
+```
+
 <a name="test"></a>
 
 ### Test everything is working
@@ -88,11 +107,11 @@ Run the command below:
 php artisan inspector:test
 ```
 
-Go to [https://app.inspector.dev/home](https://app.inspector.dev/home) to explore your data.
+Go to [https://app.inspector.dev](https://app.inspector.dev) to explore your data.
 
 ## Official documentation
 
-**[Check out the official documentation](https://docs.inspector.dev/guides/laravel)**
+**[Check out the official documentation](https://docs.inspector.dev/guides/laravel/installation)**
 
 <a name="contribution"></a>
 
