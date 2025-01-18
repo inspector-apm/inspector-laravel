@@ -77,6 +77,7 @@ protected $middlewareGroups = [
         ...,
         \Inspector\Laravel\Middleware\WebRequestMonitoring::class,
     ]
+];
 ```
 
 **Laravel >= 11**
