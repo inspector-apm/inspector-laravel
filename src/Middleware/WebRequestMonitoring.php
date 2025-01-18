@@ -60,6 +60,12 @@ class WebRequestMonitoring implements TerminableInterface
             $this->buildTransactionName($request)
         )->markAsRequest();
 
+        try {
+            $transaction->http
+                ->request
+                ->headers = Filters::hideParameters($request->headers->all(), config('inspector.hidden_parameters'));
+        } catch (\Throwable $e) {}
+
         $transaction->addContext(
             'Request Body',
             Filters::hideParameters($request->all(), config('inspector.hidden_parameters'))
