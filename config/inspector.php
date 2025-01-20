@@ -219,7 +219,7 @@ return [
         'migrate*',
         'cache*',
         'optimize*',
-        'publish*',
+        'vendor*',
         'storage*',
         'schedule*',
         'package*',
