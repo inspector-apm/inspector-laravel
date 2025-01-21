@@ -212,6 +212,7 @@ return [
     */
 
     'ignore_commands' => [
+        'serve',
         'horizon*',
         'queue*',
         'make*',
