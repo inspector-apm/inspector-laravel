@@ -147,11 +147,13 @@ return [
     | Job
     |--------------------------------------------------------------------------
     |
-    | Enable this if you'd like us to monitor background job processing.
+    | Enable this if you'd like us to monitor background job processing with data field into the payload.
     |
     */
 
     'job' => env('INSPECTOR_JOB', true),
+
+    'job_data' => env('INSPECTOR_JOB_DATA', true),
 
     /*
     |--------------------------------------------------------------------------

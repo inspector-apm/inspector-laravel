@@ -133,8 +133,14 @@ class JobServiceProvider extends ServiceProvider
      */
     protected function initializeSegment(Job $job)
     {
+        $payload = $job->payload();
+
+        if (!config('inspector.job_data') && \array_key_exists('data', $payload)) {
+            unset($payload['data']);
+        }
+
         $segment = Inspector::startSegment('job', $job->resolveName())
-            ->addContext('Payload', $job->payload());
+            ->addContext('Payload', $payload);
 
         // Save the job under a unique ID
         $this->segments[$this->getJobId($job)] = $segment;
