@@ -32,23 +32,20 @@ class ExceptionsServiceProvider extends ServiceProvider
 
     /**
      * Attach the event to the current transaction.
-     *
-     * @param string $level
-     * @param mixed $message
-     * @param mixed $context
-     * @return void
      */
-    protected function handleLog($level, $message, $context)
+    protected function handleLog(string $level, mixed $message, mixed $context): void
     {
         if (
             isset($context['exception']) &&
             $context['exception'] instanceof \Throwable
         ) {
-            return $this->reportException($context['exception']);
+            $this->reportException($context['exception']);
+            return;
         }
 
         if ($message instanceof \Throwable) {
-            return $this->reportException($message);
+            $this->reportException($message);
+            return;
         }
 
         // Report general log messages
@@ -63,7 +60,7 @@ class ExceptionsServiceProvider extends ServiceProvider
         }
     }
 
-    protected function reportException(\Throwable $exception)
+    protected function reportException(\Throwable $exception): void
     {
         Inspector::reportException($exception, false);
         Inspector::transaction()->setResult('error');

@@ -13,7 +13,7 @@ trait FetchesStackTrace
      *
      * @return array
      */
-    protected function getCallerFromStackTrace()
+    protected function getCallerFromStackTrace(): array
     {
         $trace = collect(\debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))->forget(0);
 

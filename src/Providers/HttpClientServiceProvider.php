@@ -18,7 +18,7 @@ class HttpClientServiceProvider extends ServiceProvider
      *
      * @var Segment[]
      */
-    protected $segments = [];
+    protected array $segments = [];
 
     /**
      * Booting of services.

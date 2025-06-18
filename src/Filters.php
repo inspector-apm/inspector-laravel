@@ -63,23 +63,17 @@ class Filters
     /**
      * Determine if the given Job class should be monitored.
      *
-     * @param string $class
      * @param null|string[] $notAllowed
-     * @return bool
      */
-    public static function isApprovedJobClass(string $class, ?array $notAllowed)
+    public static function isApprovedJobClass(string $class, ?array $notAllowed): bool
     {
         return !\is_array($notAllowed) || !\in_array($class, $notAllowed);
     }
 
     /**
      * Hide the given request parameters.
-     *
-     * @param array $data
-     * @param array $hidden
-     * @return array
      */
-    public static function hideParameters($data, $hidden)
+    public static function hideParameters(array $data, array $hidden): array
     {
         foreach ($hidden as $parameter) {
             if (Arr::get($data, $parameter)) {

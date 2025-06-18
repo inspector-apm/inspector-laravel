@@ -10,20 +10,20 @@ class OutOfMemoryBootstrapper
      * A bit of reserved memory to ensure we are able to increase the memory
      * limit on an OOM.
      *
-     * We can't reserve all of the memory that we need to send OOM reports
+     * We can't reserve all the memory that we need to send OOM reports
      * because this would have a big overhead on every request, instead of just
      * on shutdown in requests with errors.
      *
      * @var string|null
      */
-    protected $reservedMemory;
+    protected ?string $reservedMemory;
 
     /**
      * A regex that matches PHP OOM errors.
      *
      * @var string
      */
-    protected $oomRegex = '/^Allowed memory size of (\d+) bytes exhausted \(tried to allocate \d+ bytes\)/';
+    protected string $oomRegex = '/^Allowed memory size of (\d+) bytes exhausted \(tried to allocate \d+ bytes\)/';
 
     /**
      * Allow Bugsnag to handle OOMs by registering a shutdown function that

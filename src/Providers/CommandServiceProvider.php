@@ -16,7 +16,7 @@ class CommandServiceProvider extends ServiceProvider
     /**
      * @var array
      */
-    protected $segments = [];
+    protected array $segments = [];
 
     /**
      * Booting of services.

@@ -22,7 +22,7 @@ class JobServiceProvider extends ServiceProvider
      *
      * @var Segment[]
      */
-    protected $segments = [];
+    protected array $segments = [];
 
     /**
      * Booting of services.
