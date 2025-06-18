@@ -39,7 +39,7 @@ class WebRequestMonitoring implements TerminableInterface
     }
 
     /**
-     * Determine if Inspector should monitor current request.
+     * Determine if Inspector should monitor the current request.
      *
      * @param \Illuminate\Http\Request $request
      * @return bool
