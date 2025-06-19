@@ -148,11 +148,8 @@ class JobServiceProvider extends ServiceProvider
 
     /**
      * Finalize the monitoring of the job.
-     *
-     * @param Job $job
-     * @param bool $failed
      */
-    public function handleJobEnd(Job $job, $failed = false)
+    public function handleJobEnd(Job $job, bool $failed = false)
     {
         $id = $this->getJobId($job);
 

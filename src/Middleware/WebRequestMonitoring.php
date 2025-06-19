@@ -126,11 +126,8 @@ class WebRequestMonitoring implements TerminableInterface
 
     /**
      * Normalize URI string.
-     *
-     * @param $uri
-     * @return string
      */
-    protected function normalizeUri($uri)
+    protected function normalizeUri(string $uri): string
     {
         return '/' . \trim($uri, '/');
     }
