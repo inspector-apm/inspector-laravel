@@ -19,7 +19,7 @@ class RedisServiceProvider extends ServiceProvider
     {
         $this->app['events']->listen(CommandExecuted::class, function (CommandExecuted $event) {
             if (Inspector::canAddSegments()) {
-                Inspector::startSegment('redis', "redis:{$event->command}")
+                Inspector::startSegment('db.redis', "redis:{$event->command}")
                     ->start(\microtime(true) - ($event->time/1000))
                     ->addContext('data', [
                         'connection' => $event->connectionName,

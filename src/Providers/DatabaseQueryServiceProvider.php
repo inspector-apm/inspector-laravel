@@ -32,9 +32,9 @@ class DatabaseQueryServiceProvider extends ServiceProvider
      * @param $time
      * @param $connection
      */
-    protected function handleQueryReport($sql, array $bindings, $time, $connection)
+    protected function handleQueryReport($sql, array $bindings, $time, $connection): void
     {
-        $segment = Inspector::startSegment($connection, $sql)
+        $segment = Inspector::startSegment('db.'.$connection, $sql)
             ->start(\microtime(true) - $time/1000);
 
         $context = [

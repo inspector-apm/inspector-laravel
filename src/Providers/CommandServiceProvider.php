@@ -38,7 +38,7 @@ class CommandServiceProvider extends ServiceProvider
                         'options' => $event->input->getOptions(),
                     ]);
             } elseif (Inspector::canAddSegments()) {
-                $this->segments[$event->command] = Inspector::startSegment('artisan', $event->command);
+                $this->segments[$event->command] = Inspector::startSegment('cli.command', $event->command);
             }
         });
 

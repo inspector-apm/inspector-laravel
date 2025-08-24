@@ -30,7 +30,7 @@ class NotificationServiceProvider extends ServiceProvider
             if (Inspector::canAddSegments()) {
                 $this->segments[
                     $event->notification->id
-                ] = Inspector::startSegment('notifications', \get_class($event->notification))
+                ] = Inspector::startSegment('notification', \get_class($event->notification))
                         ->addContext('data', [
                             'Channel' => $event->channel,
                             'Notifiable' => \is_string($event->notifiable) ? $event->notifiable : \get_class($event->notifiable),

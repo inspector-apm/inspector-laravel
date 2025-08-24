@@ -31,7 +31,7 @@ class HttpClientServiceProvider extends ServiceProvider
             if (Inspector::canAddSegments()) {
                 $this->segments[
                     $this->getSegmentKey($event->request)
-                ] = Inspector::startSegment('http', $event->request->url());
+                ] = Inspector::startSegment("http", $event->request->url());
             }
         });
 
