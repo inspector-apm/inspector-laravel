@@ -23,7 +23,7 @@ class WebRequestMonitoring implements TerminableInterface
      * @return mixed
      * @throws \Exception
      */
-    public function handle($request, Closure $next)
+    public function handle(\Illuminate\Http\Request $request, Closure $next): mixed
     {
         if (
             Inspector::needTransaction()
@@ -53,8 +53,9 @@ class WebRequestMonitoring implements TerminableInterface
      * Start a transaction for the incoming request.
      *
      * @param \Illuminate\Http\Request $request
+     * @throws \Exception
      */
-    protected function startTransaction($request)
+    protected function startTransaction($request): void
     {
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
@@ -76,7 +77,7 @@ class WebRequestMonitoring implements TerminableInterface
         }
     }
 
-    public function collectUser(Transaction $transaction)
+    public function collectUser(Transaction $transaction): void
     {
         if (Auth::check()) {
             $transaction->withUser(Auth::user()->getAuthIdentifier());
@@ -110,7 +111,7 @@ class WebRequestMonitoring implements TerminableInterface
      * @param \Illuminate\Http\Request $request
      * @return string
      */
-    protected function buildTransactionName($request)
+    protected function buildTransactionName($request): string
     {
         $route = $request->route();
 
