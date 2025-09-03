@@ -10,12 +10,36 @@ trait InspectorLivewire
 
     protected Segment $segment;
 
-    public function bootInspectorLivewire(): void
+    protected Segment $componentSegment;
+
+    protected string $livewireUrl = '/livewire/update';
+
+    public function getLivewireUrl(): string
+    {
+        return '/livewire/update';
+    }
+
+    public function bootInspectorLivewire()
     {
         $this->inspector = inspector();
-        $this->inspector->transaction()
-            ->setType('livewire')
-            ->name = get_class($this);
+    }
+
+    public function hydrateInspectorLivewire(): void
+    {
+        if (\str_contains($this->inspector->transaction()->name, 'POST '.$this->livewireUrl)) {
+            $this->inspector->transaction()
+                ->setType('livewire')
+                ->name = get_class($this);
+        } else {
+            $this->componentSegment = $this->inspector->startSegment('livewire', get_class($this));
+        }
+    }
+
+    public function dehydrateInspectorLivewire()
+    {
+        if (isset($this->componentSegment)) {
+            $this->componentSegment->end();
+        }
     }
 
     public function updatingInspectorLivewire($property, $value)
