@@ -12,8 +12,6 @@ trait InspectorLivewire
 
     protected Segment $componentSegment;
 
-    protected string $livewireUrl = '/livewire/update';
-
     public function getLivewireUrl(): string
     {
         return '/livewire/update';
@@ -26,7 +24,7 @@ trait InspectorLivewire
 
     public function hydrateInspectorLivewire(): void
     {
-        if (\str_contains($this->inspector->transaction()->name, 'POST '.$this->livewireUrl)) {
+        if (\str_contains($this->inspector->transaction()->name, 'POST '.trim($this->getLivewireUrl(), '/'))) {
             $this->inspector->transaction()
                 ->setType('livewire')
                 ->name = get_class($this);
