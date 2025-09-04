@@ -17,7 +17,7 @@ trait InspectorLivewire
         return '/livewire/update';
     }
 
-    public function bootInspectorLivewire()
+    public function bootInspectorLivewire(): void
     {
         $this->inspector = inspector();
     }
@@ -33,14 +33,14 @@ trait InspectorLivewire
         }
     }
 
-    public function dehydrateInspectorLivewire()
+    public function dehydrateInspectorLivewire(): void
     {
         if (isset($this->componentSegment)) {
             $this->componentSegment->end();
         }
     }
 
-    public function updatingInspectorLivewire($property, $value)
+    public function updatingInspectorLivewire($property, $value): void
     {
         if ($this->inspector->canAddSegments()) {
             $this->segment = $this->inspector->startSegment('livewire.update', $property)
@@ -48,14 +48,14 @@ trait InspectorLivewire
         }
     }
 
-    public function updatedInspectorLivewire($property)
+    public function updatedInspectorLivewire($property): void
     {
         if (isset($this->segment)) {
             $this->segment->end();
         }
     }
 
-    public function renderingInspectorLivewire($view, $data)
+    public function renderingInspectorLivewire($view, $data): void
     {
         if ($this->inspector->canAddSegments()) {
             $this->segment = $this->inspector->startSegment('livewire.render')
@@ -63,7 +63,7 @@ trait InspectorLivewire
         }
     }
 
-    public function renderedInspectorLivewire($view, $html)
+    public function renderedInspectorLivewire($view, $html): void
     {
         if (isset($this->segment)) {
             $this->segment->end();
