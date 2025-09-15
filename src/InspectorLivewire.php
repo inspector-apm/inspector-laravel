@@ -24,6 +24,10 @@ trait InspectorLivewire
 
     public function hydrateInspectorLivewire(): void
     {
+        if (!$this->inspector->canAddSegments()) {
+            return;
+        }
+
         if (\str_contains($this->inspector->transaction()->name, 'POST '.trim($this->getLivewireUrl(), '/'))) {
             $this->inspector->transaction()
                 ->setType('livewire')
