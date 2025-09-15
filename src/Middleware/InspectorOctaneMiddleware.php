@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class InspectorOctaneMiddleware extends WebRequestMonitoring
 {
-    public function handle(\Illuminate\Http\Request $request, Closure $next)
+    public function handle(\Illuminate\Http\Request $request, Closure $next): mixed
     {
         // https://github.com/inspector-apm/inspector-laravel/issues/45
         $_SERVER['REQUEST_METHOD'] = $request->getMethod();
