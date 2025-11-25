@@ -13,7 +13,7 @@ class FilterClassTest extends BasicTestCase
     public function testRequestApproved()
     {
         $this->app->router->get('test', function (Request $request) {
-            return Filters::isApprovedRequest([], $request);
+            return Filters::isApprovedRequest([], $request->path());
         });
 
         $response = $this->get('test');
@@ -34,11 +34,11 @@ class FilterClassTest extends BasicTestCase
 
     public function testJobApproved()
     {
-        $this->assertTrue(Filters::isApprovedJobClass(TestJob::class, []));
+        $this->assertTrue(Filters::isApprovedClass(TestJob::class, []));
     }
 
     public function testJobNotApproved()
     {
-        $this->assertFalse(Filters::isApprovedJobClass(TestJob::class, [TestJob::class]));
+        $this->assertFalse(Filters::isApprovedClass(TestJob::class, [TestJob::class]));
     }
 }

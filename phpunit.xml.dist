@@ -15,6 +15,5 @@
     </coverage>
     <php>
         <server name="INSPECTOR_INGESTION_KEY" value="xxx"/>
-        <server name="INSPECTOR_MAX_ITEMS" value="150"/>
     </php>
 </phpunit>
