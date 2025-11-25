@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel;
-
 
 use Illuminate\Support\Arr;
 
@@ -35,7 +35,7 @@ class Filters
      */
     public static function isApprovedArtisanCommand(string $command, ?array $notAllowed): bool
     {
-        if(\is_null($notAllowed)) {
+        if (\is_null($notAllowed)) {
             return true;
         }
 
@@ -51,13 +51,13 @@ class Filters
     public static function matchWithWildcard(string $value, string $pattern): bool
     {
         // Escape special regex characters in the pattern, except for '*'.
-        $escapedPattern = preg_quote($pattern, '/');
+        $escapedPattern = \preg_quote($pattern, '/');
 
         // Replace '*' in the pattern with '.*' for regex matching.
-        $regex = '/^' . str_replace('\*', '.*', $escapedPattern) . '$/';
+        $regex = '/^' . \str_replace('\*', '.*', $escapedPattern) . '$/';
 
         // Perform regex match.
-        return (bool)preg_match($regex, $value);
+        return (bool)\preg_match($regex, $value);
     }
 
     /**
@@ -65,7 +65,7 @@ class Filters
      *
      * @param null|string[] $notAllowed
      */
-    public static function isApprovedJobClass(string $class, ?array $notAllowed): bool
+    public static function isApprovedClass(string $class, ?array $notAllowed): bool
     {
         return !\is_array($notAllowed) || !\in_array($class, $notAllowed);
     }

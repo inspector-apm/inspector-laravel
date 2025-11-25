@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
-
 
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\ServiceProvider;
@@ -17,7 +17,7 @@ class ExceptionsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (class_exists(MessageLogged::class)) {
+        if (\class_exists(MessageLogged::class)) {
             // starting from L5.4 MessageLogged event class was introduced
             // https://github.com/laravel/framework/commit/57c82d095c356a0fe0f9381536afec768cdcc072
             $this->app['events']->listen(MessageLogged::class, function (MessageLogged $log) {

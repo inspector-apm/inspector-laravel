@@ -12,3 +12,4 @@ docs/*.pyc
 .DS_STORE
 .phpunit.result.cache
 *.bak
+.php-cs-fixer.cache

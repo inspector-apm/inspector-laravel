@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
-
 
 use Illuminate\Notifications\Events\NotificationSending;
 use Illuminate\Notifications\Events\NotificationSent;

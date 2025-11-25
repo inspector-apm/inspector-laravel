@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
 
@@ -42,7 +43,7 @@ class GateServiceProvider extends ServiceProvider
             return;
         }
 
-        $class = (\is_array($arguments)&&!empty($arguments))
+        $class = (\is_array($arguments) && !empty($arguments))
             ? (\is_string($arguments[0]) ? $arguments[0] : '')
             : '';
 
@@ -72,7 +73,7 @@ class GateServiceProvider extends ServiceProvider
         $arguments = $this->formatArguments($arguments);
         $key = $this->generateUniqueKey($this->formatArguments($arguments));
 
-        if (array_key_exists($key, $this->segments)) {
+        if (\array_key_exists($key, $this->segments)) {
             $this->segments[$key]
                 ->addContext('Check', [
                     'ability' => $ability,

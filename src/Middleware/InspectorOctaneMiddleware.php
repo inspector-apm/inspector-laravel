@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Laravel\Middleware;
 
 use Closure;
@@ -38,7 +40,7 @@ class InspectorOctaneMiddleware extends WebRequestMonitoring
         // We need to retrieve them using the Laravel Request class.
         try {
             inspector()->transaction()->http->request->headers = \array_merge(
-                inspector()->transaction()->http->request->headers??[],
+                inspector()->transaction()->http->request->headers ?? [],
                 $request->header()
             );
         } catch (\Throwable $exception) {

@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Laravel;
 
 use Inspector\Models\Segment;
 
+/**
+ * @deprecated Do not needed anymore. Livewire monitoring happens automatically.
+ */
 trait InspectorLivewire
 {
     protected Inspector $inspector;
@@ -28,12 +33,12 @@ trait InspectorLivewire
             return;
         }
 
-        if (\str_contains($this->inspector->transaction()->name, 'POST '.trim($this->getLivewireUrl(), '/'))) {
+        if (\str_contains($this->inspector->transaction()->name, 'POST '.\trim($this->getLivewireUrl(), '/'))) {
             $this->inspector->transaction()
                 ->setType('livewire')
-                ->name = get_class($this);
+                ->name = \get_class($this);
         } else {
-            $this->componentSegment = $this->inspector->startSegment('livewire', get_class($this));
+            $this->componentSegment = $this->inspector->startSegment('livewire', \get_class($this));
         }
     }
 

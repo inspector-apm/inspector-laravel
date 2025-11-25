@@ -1,7 +1,8 @@
 <?php
 
-namespace Inspector\Laravel\Facades;
+declare(strict_types=1);
 
+namespace Inspector\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use Inspector\Models\Error;

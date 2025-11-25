@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
-
 
 use Illuminate\Redis\Events\CommandExecuted;
 use Illuminate\Support\ServiceProvider;
@@ -20,7 +20,7 @@ class RedisServiceProvider extends ServiceProvider
         $this->app['events']->listen(CommandExecuted::class, function (CommandExecuted $event) {
             if (Inspector::canAddSegments()) {
                 Inspector::startSegment('db.redis', "redis:{$event->command}")
-                    ->start(\microtime(true) - ($event->time/1000))
+                    ->start(\microtime(true) - ($event->time / 1000))
                     ->addContext('data', [
                         'connection' => $event->connectionName,
                         'parameters' => $event->parameters

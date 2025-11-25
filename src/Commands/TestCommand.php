@@ -1,11 +1,11 @@
 <?php
 
-namespace Inspector\Laravel\Commands;
+declare(strict_types=1);
 
+namespace Inspector\Laravel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Support\Facades\Log;
 use Inspector\Models\Segment;
 
 class TestCommand extends Command
@@ -76,7 +76,7 @@ class TestCommand extends Command
         inspector()->addSegment(function (Segment $segment) {
             \usleep(10 * 1000);
 
-            function_exists('curl_version')
+            \function_exists('curl_version')
                 ? $this->info('✅ CURL extension is enabled.')
                 : $this->warn('❌ CURL is actually disabled so your app could not be able to send data to Inspector.');
         }, 'test', 'Check CURL extension');

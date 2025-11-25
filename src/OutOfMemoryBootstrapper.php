@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel;
-
 
 class OutOfMemoryBootstrapper
 {
@@ -57,7 +57,7 @@ class OutOfMemoryBootstrapper
             if (inspector() && inspector()->isRecording()) {
                 $currentMemoryLimit = (int) $matches[1];
 
-                \ini_set('memory_limit', $currentMemoryLimit + (5*1024*1024)); // 5MB
+                \ini_set('memory_limit', $currentMemoryLimit + (5 * 1024 * 1024)); // 5MB
             }
         });
     }

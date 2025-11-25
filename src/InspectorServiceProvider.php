@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Laravel;
 
 use Illuminate\Contracts\View\Engine;
@@ -15,6 +17,7 @@ use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\GateServiceProvider;
 use Inspector\Laravel\Providers\HttpClientServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
+use Inspector\Laravel\Providers\LivewireServiceProvider;
 use Inspector\Laravel\Providers\NotificationServiceProvider;
 use Inspector\Laravel\Providers\RedisServiceProvider;
 use Inspector\Laravel\Providers\ExceptionsServiceProvider;
@@ -29,7 +32,7 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    const VERSION = '4.15.2';
+    public const VERSION = '4.15.2';
 
     /**
      * Booting of services.
@@ -93,7 +96,7 @@ class InspectorServiceProvider extends ServiceProvider
         $this->app->register(GateServiceProvider::class);
 
         // For Laravel >=6
-        if (config('inspector.redis', true) && version_compare(app()->version(), '6.0.0', '>=')) {
+        if (config('inspector.redis', true) && \version_compare(app()->version(), '6.0.0', '>=')) {
             $this->app->register(RedisServiceProvider::class);
         }
 
@@ -115,6 +118,14 @@ class InspectorServiceProvider extends ServiceProvider
 
         if (config('inspector.notifications', true)) {
             $this->app->register(NotificationServiceProvider::class);
+        }
+
+        if (
+            config('inspector.livewire', true) &&
+            \class_exists('\Livewire\Livewire') &&
+            \class_exists('\Livewire\EventBus')
+        ) {
+            $this->app->register(LivewireServiceProvider::class);
         }
 
         // Compatibility with Laravel < 8.4

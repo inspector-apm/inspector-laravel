@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
-
 
 use Illuminate\Queue\Events\JobExceptionOccurred;
 use Illuminate\Queue\Events\JobFailed;
@@ -70,7 +70,7 @@ class JobServiceProvider extends ServiceProvider
             }
         );
 
-        if (version_compare(app()->version(), '9.0.0', '>=')) {
+        if (\version_compare(app()->version(), '9.0.0', '>=')) {
             $this->app['events']->listen(
                 JobReleasedAfterException::class,
                 function (JobReleasedAfterException $event) {
@@ -204,6 +204,6 @@ class JobServiceProvider extends ServiceProvider
      */
     protected function shouldBeMonitored(string $job): bool
     {
-        return Filters::isApprovedJobClass($job, config('inspector.ignore_jobs'));
+        return Filters::isApprovedClass($job, config('inspector.ignore_jobs'));
     }
 }

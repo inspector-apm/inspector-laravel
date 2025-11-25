@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -165,6 +167,23 @@ return [
     */
 
     'redis' => env('INSPECTOR_REDIS', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Livewire
+    |--------------------------------------------------------------------------
+    |
+    | Configure the livewire integration.
+    |
+    */
+
+    'livewire' => [
+        'enable' => env('INSPECTOR_LIVEWIRE', true),
+        'path' => env('INSPECTOR_LIVEWIRE_PATH', '/livewire/update'),
+        'ignore_components' => [
+            // \App\Livewire\MyComponent::class
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------

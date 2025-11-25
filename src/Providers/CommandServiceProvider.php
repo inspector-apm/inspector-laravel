@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
-
 
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
-use Symfony\Component\Console\Input\ArgvInput;
 
 class CommandServiceProvider extends ServiceProvider
 {

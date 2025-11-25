@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Views;
-
 
 use Illuminate\Contracts\View\Engine;
 use Illuminate\View\Factory;

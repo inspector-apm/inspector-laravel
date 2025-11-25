@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Tests;
-
 
 use Illuminate\Http\Request;
 use Inspector\Laravel\Filters;

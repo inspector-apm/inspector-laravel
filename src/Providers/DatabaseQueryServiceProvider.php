@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
-
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\ServiceProvider;
@@ -35,7 +35,7 @@ class DatabaseQueryServiceProvider extends ServiceProvider
     protected function handleQueryReport($sql, array $bindings, $time, $connection): void
     {
         $segment = Inspector::startSegment('db.'.$connection, $sql)
-            ->start(\microtime(true) - $time/1000);
+            ->start(\microtime(true) - $time / 1000);
 
         $context = [
             'connection' => $connection,

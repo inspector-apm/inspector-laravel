@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Middleware;
-
 
 use Closure;
 use Inspector\Laravel\Facades\Inspector;
@@ -65,7 +65,8 @@ class WebRequestMonitoring implements TerminableInterface
             $transaction->http
                 ->request
                 ->headers = Filters::hideParameters($request->headers->all(), config('inspector.hidden_parameters'));
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+        }
 
         $transaction->addContext(
             'Request Body',

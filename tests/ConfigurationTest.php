@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Tests;
-
 
 class ConfigurationTest extends BasicTestCase
 {

@@ -1,7 +1,8 @@
 <?php
 
-namespace Inspector\Laravel\Tests;
+declare(strict_types=1);
 
+namespace Inspector\Laravel\Tests;
 
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\InspectorServiceProvider;

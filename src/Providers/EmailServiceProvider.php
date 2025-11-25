@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
-
 
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Mail\Events\MessageSent;
@@ -30,12 +30,12 @@ class EmailServiceProvider extends ServiceProvider
             if (Inspector::canAddSegments()) {
                 $this->segments[
                     $this->getSegmentKey($event->message)
-                ] = Inspector::startSegment('email', get_class($event->message))
+                ] = Inspector::startSegment('email', \get_class($event->message))
                         // Compatibility with Laravel 5.5
                         ->addContext(
                             'data',
                             \property_exists($event, 'data')
-                                    ? \array_intersect_key($event->data, \array_flip( ['mailer'] ) )
+                                    ? \array_intersect_key($event->data, \array_flip(['mailer']))
                                     : []
                         );
             }
