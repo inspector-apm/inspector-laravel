@@ -67,7 +67,7 @@ class LivewireServiceProvider extends ServiceProvider
 
     protected function handleHydrate(Component $component): void
     {
-        if (!inspector()->canAddSegments() || !$this->shouldBeMonitored($component)) {
+        if (!inspector()->canAddSegments() || !$this->shouldBeMonitored(\get_class($component))) {
             return;
         }
 
