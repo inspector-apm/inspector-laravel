@@ -22,8 +22,6 @@ class LivewireServiceProvider extends ServiceProvider
 
     /**
      * Booting of services.
-     *
-     * @return void
      */
     public function boot(): void
     {
