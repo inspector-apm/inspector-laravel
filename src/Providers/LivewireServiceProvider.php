@@ -105,7 +105,7 @@ class LivewireServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->segments[$component->id().".call"] = inspector()->startSegment('livewire', $method)->addContext('Parameters', $params);
+        $this->segments[$component->id().".call"] = inspector()->startSegment('livewire', $method.'()')->addContext('Parameters', $params);
     }
 
     protected function handleCalled(Component $component): void
