@@ -58,7 +58,7 @@ class LivewireServiceProvider extends ServiceProvider
 
     protected function handleMount(Component $component): void
     {
-        if (!inspector()->canAddSegments() && !$this->shouldBeMonitored(\get_class($component))) {
+        if (!inspector()->canAddSegments() || !$this->shouldBeMonitored(\get_class($component))) {
             return;
         }
 
@@ -67,7 +67,7 @@ class LivewireServiceProvider extends ServiceProvider
 
     protected function handleHydrate(Component $component): void
     {
-        if (!inspector()->canAddSegments() && !$this->shouldBeMonitored($component)) {
+        if (!inspector()->canAddSegments() || !$this->shouldBeMonitored($component)) {
             return;
         }
 
@@ -101,7 +101,7 @@ class LivewireServiceProvider extends ServiceProvider
 
     protected function handleCalling(Component $component, string $method, array $params): void
     {
-        if (!inspector()->canAddSegments() && !$this->shouldBeMonitored($component)) {
+        if (!inspector()->canAddSegments() || $this->shouldBeMonitored($component)) {
             return;
         }
 
