@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
 
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\View;
