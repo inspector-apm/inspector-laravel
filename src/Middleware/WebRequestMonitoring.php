@@ -101,7 +101,7 @@ class WebRequestMonitoring implements TerminableInterface
                     'charset' => $response->getCharset(),
                     'headers' => Filters::hideParameters($response->headers->all(), config('inspector.hidden_parameters')),
                 ])
-                ->addContext('Response Body', \json_decode($response->getContent(), true))
+                ->addContext('Response Body', \json_decode($response->getContent()??'{}', true))
                 ->setResult((string)$response->getStatusCode());
         }
     }
