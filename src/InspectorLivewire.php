@@ -11,6 +11,7 @@ use function trim;
 
 /**
  * @deprecated Do not needed anymore. Livewire monitoring happens automatically.
+ * @phpstan-ignore trait.unused
  */
 trait InspectorLivewire
 {

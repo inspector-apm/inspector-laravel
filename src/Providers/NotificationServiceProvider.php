@@ -29,9 +29,8 @@ class NotificationServiceProvider extends ServiceProvider
     {
         $this->app['events']->listen(NotificationSending::class, function (NotificationSending $event): void {
             if (Inspector::canAddSegments()) {
-                $this->segments[
-                    $event->notification->id
-                ] = Inspector::startSegment('notification', $event->notification::class)
+                $this->segments[$event->notification->id] =
+                    Inspector::startSegment('notification', $event->notification::class)
                         ->addContext('data', [
                             'Channel' => $event->channel,
                             'Notifiable' => is_string($event->notifiable) ? $event->notifiable : $event->notifiable::class,

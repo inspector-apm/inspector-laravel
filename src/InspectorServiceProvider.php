@@ -7,7 +7,7 @@ namespace Inspector\Laravel;
 use Illuminate\Contracts\View\Engine;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Foundation\Application as LaravelApplication;
+use Illuminate\Foundation\Application;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory as ViewFactory;
 use Inspector\Laravel\Commands\TestCommand;
@@ -22,7 +22,6 @@ use Inspector\Laravel\Providers\NotificationServiceProvider;
 use Inspector\Laravel\Providers\RedisServiceProvider;
 use Inspector\Laravel\Providers\ExceptionsServiceProvider;
 use Inspector\Laravel\Views\ViewEngineDecorator;
-use Laravel\Lumen\Application as LumenApplication;
 use Inspector\Configuration;
 
 use function class_exists;
@@ -54,9 +53,9 @@ class InspectorServiceProvider extends ServiceProvider
      */
     protected function setupConfigFile()
     {
-        if ($this->app instanceof LaravelApplication) {
+        if ($this->app instanceof Application) {
             $this->publishes([__DIR__ . '/../config/inspector.php' => config_path('inspector.php')]);
-        } elseif ($this->app instanceof LumenApplication) {
+        } elseif (get_class($this->app) === 'Laravel\Lumen\Application') {
             $this->app->configure('inspector');
         }
     }

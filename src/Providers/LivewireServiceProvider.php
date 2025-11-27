@@ -129,8 +129,6 @@ class LivewireServiceProvider extends ServiceProvider
 
     /**
      * Determine if the current command should be monitored.
-     *
-     * @param null|string $command
      */
     protected function shouldBeMonitored(string $component): bool
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Inspector\Laravel\Tests;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Inspector\Laravel\Filters;
 use Inspector\Laravel\Tests\Jobs\TestJob;
 
@@ -12,7 +13,7 @@ class FilterClassTest extends BasicTestCase
 {
     public function testRequestApproved(): void
     {
-        $this->app->router->get('test', fn (Request $request): bool => Filters::isApprovedRequest([], $request->path()));
+        Route::get('test', fn (Request $request): bool => Filters::isApprovedRequest([], $request->path()));
 
         $response = $this->get('test');
 
@@ -21,7 +22,7 @@ class FilterClassTest extends BasicTestCase
 
     public function testRequestNotApproved(): void
     {
-        $this->app->router->get('test/dashboard', fn (Request $request): bool => Filters::isApprovedRequest(['test*'], $request->decodedPath()));
+        Route::get('test/dashboard', fn (Request $request): bool => Filters::isApprovedRequest(['test*'], $request->decodedPath()));
 
         $response = $this->get('test/dashboard');
 

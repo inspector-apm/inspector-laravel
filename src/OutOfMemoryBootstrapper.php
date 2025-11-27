@@ -51,10 +51,10 @@ class OutOfMemoryBootstrapper
                 return;
             }
 
-            // If inspector is recording bump the
-            // memory limit so we can report it. The service can be missing when
-            // the container isn't complete, e.g. when unit tests are running
-            if (inspector() && inspector()->isRecording()) {
+            // If inspector is recording bump the memory limit so we can report it.
+            // The service can be missing when the container isn't complete,
+            // e.g. when unit tests are running
+            if (inspector()->isRecording()) {
                 $currentMemoryLimit = (int) $matches[1];
 
                 ini_set('memory_limit', $currentMemoryLimit + (5 * 1024 * 1024)); // 5MB

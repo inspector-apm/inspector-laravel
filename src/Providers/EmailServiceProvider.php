@@ -9,7 +9,6 @@ use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Models\Segment;
-use Swift_Message;
 
 use function array_flip;
 use function array_intersect_key;
@@ -40,9 +39,7 @@ class EmailServiceProvider extends ServiceProvider
                         // Compatibility with Laravel 5.5
                         ->addContext(
                             'data',
-                            property_exists($event, 'data')
-                                    ? array_intersect_key($event->data, array_flip(['mailer']))
-                                    : []
+                            array_intersect_key($event->data, array_flip(['mailer']))
                         );
             }
         });
@@ -67,7 +64,7 @@ class EmailServiceProvider extends ServiceProvider
     /**
      * Generate a unique key for each message.
      *
-     * @param Swift_Message|\Symfony\Component\Mime\Email $message
+     * @param \Symfony\Component\Mime\Email $message
      */
     protected function getSegmentKey($message): string
     {

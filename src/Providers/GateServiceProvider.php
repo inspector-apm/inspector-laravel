@@ -39,7 +39,7 @@ class GateServiceProvider extends ServiceProvider
     /**
      * Intercepting before gate check.
      *
-     * @param \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable $user
      * @param string $ability
      * @param $arguments
      */
@@ -64,7 +64,7 @@ class GateServiceProvider extends ServiceProvider
     /**
      * Intercepting after gate check.
      *
-     * @param  \App\Models\User|\Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  string  $ability
      * @param  bool  $result
      * @param  array  $arguments
