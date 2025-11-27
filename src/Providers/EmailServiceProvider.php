@@ -14,7 +14,6 @@ use function array_flip;
 use function array_intersect_key;
 use function array_key_exists;
 use function json_encode;
-use function property_exists;
 use function sha1;
 
 class EmailServiceProvider extends ServiceProvider

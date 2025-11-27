@@ -26,6 +26,7 @@ use Inspector\Configuration;
 
 use function class_exists;
 use function version_compare;
+use function get_class;
 
 class InspectorServiceProvider extends ServiceProvider
 {

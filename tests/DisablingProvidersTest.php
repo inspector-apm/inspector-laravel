@@ -13,7 +13,7 @@ use Inspector\Laravel\Providers\ExceptionsServiceProvider;
 
 class DisablingProvidersTest extends BasicTestCase
 {
-    protected function resolveApplicationConfiguration($app)
+    protected function resolveApplicationConfiguration($app): void
     {
         parent::resolveApplicationConfiguration($app);
 

@@ -1,12 +1,20 @@
 includes:
     - vendor/larastan/larastan/extension.neon
     - vendor/nesbot/carbon/extension.neon
+    - vendor/tomasvotruba/type-coverage/config/extension.neon
 
 parameters:
 
     paths:
         - src/
         - tests/
+
+    type_coverage:
+            return: 90
+            param: 80
+            property: 100
+            declare: 100
+            constant: 0
 
     # Level 10 is the highest level
     level: 5

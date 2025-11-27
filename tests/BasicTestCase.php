@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Inspector\Laravel\Tests;
 
+use Illuminate\Foundation\Application;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\InspectorServiceProvider;
 use Orchestra\Testbench\TestCase;
@@ -13,11 +14,9 @@ class BasicTestCase extends TestCase
     /**
      * Get package providers.
      *
-     * @param  \Illuminate\Foundation\Application  $app
-     *
-     * @return array
+     * @param  Application  $app
      */
-    protected function getPackageProviders($app)
+    protected function getPackageProviders(mixed $app): array
     {
         return [InspectorServiceProvider::class];
     }
@@ -25,11 +24,9 @@ class BasicTestCase extends TestCase
     /**
      * Get package aliases.
      *
-     * @param  \Illuminate\Foundation\Application  $app
-     *
-     * @return array
+     * @param  Application  $app
      */
-    protected function getPackageAliases($app)
+    protected function getPackageAliases(mixed $app): array
     {
         return [
             'Inspector' => Inspector::class,
