@@ -6,8 +6,12 @@ namespace Inspector\Laravel;
 
 use Inspector\Models\Segment;
 
+use function str_contains;
+use function trim;
+
 /**
  * @deprecated Do not needed anymore. Livewire monitoring happens automatically.
+ * @phpstan-ignore trait.unused
  */
 trait InspectorLivewire
 {
@@ -33,12 +37,12 @@ trait InspectorLivewire
             return;
         }
 
-        if (\str_contains($this->inspector->transaction()->name, 'POST '.\trim($this->getLivewireUrl(), '/'))) {
+        if (str_contains((string) $this->inspector->transaction()->name, 'POST '.trim($this->getLivewireUrl(), '/'))) {
             $this->inspector->transaction()
                 ->setType('livewire')
-                ->name = \get_class($this);
+                ->name = $this::class;
         } else {
-            $this->componentSegment = $this->inspector->startSegment('livewire', \get_class($this));
+            $this->componentSegment = $this->inspector->startSegment('livewire', $this::class);
         }
     }
 

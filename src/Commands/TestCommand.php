@@ -7,6 +7,13 @@ namespace Inspector\Laravel\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Config\Repository;
 use Inspector\Models\Segment;
+use Exception;
+use Throwable;
+
+use function function_exists;
+use function proc_open;
+use function sleep;
+use function usleep;
 
 class TestCommand extends Command
 {
@@ -27,18 +34,16 @@ class TestCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param Repository $config
-     * @return void
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function handle(Repository $config)
+    public function handle(Repository $config): void
     {
         $this->line($this->description);
 
         // Test proc_open function availability
         try {
-            \proc_open("", [], $pipes);
-        } catch (\Throwable $exception) {
+            proc_open("", [], $pipes);
+        } catch (Throwable) {
             $this->warn("❌ proc_open function disabled.");
             return;
         }
@@ -49,20 +54,20 @@ class TestCommand extends Command
         }
 
         // Check Inspector API key
-        inspector()->addSegment(function (Segment $segment) use ($config) {
-            \usleep(10 * 1000);
+        inspector()->addSegment(function (Segment $segment) use ($config): void {
+            usleep(10 * 1000);
 
-            !empty($config->get('inspector.key'))
-                ? $this->info('✅ Inspector key installed.')
-                : $this->warn('❌ Inspector key not specified. Make sure you specify ' .
-                              'the INSPECTOR_INGESTION_KEY in your .env file.');
+            empty($config->get('inspector.key'))
+                ? $this->warn('❌ Inspector key not specified. Make sure you specify ' .
+                              'the INSPECTOR_INGESTION_KEY in your .env file.')
+                : $this->info('✅ Inspector key installed.');
 
             $segment->addContext('example payload', ['key' => $config->get('inspector.key')]);
         }, 'test', 'Check Ingestion key');
 
         // Check Inspector is enabled
-        inspector()->addSegment(function (Segment $segment) use ($config) {
-            \usleep(10 * 1000);
+        inspector()->addSegment(function (Segment $segment) use ($config): void {
+            usleep(10 * 1000);
 
             $config->get('inspector.enable')
                 ? $this->info('✅ Inspector is enabled.')
@@ -73,21 +78,21 @@ class TestCommand extends Command
         }, 'test', 'Check if Inspector is enabled');
 
         // Check CURL
-        inspector()->addSegment(function (Segment $segment) {
-            \usleep(10 * 1000);
+        inspector()->addSegment(function (Segment $segment): void {
+            usleep(10 * 1000);
 
-            \function_exists('curl_version')
+            function_exists('curl_version')
                 ? $this->info('✅ CURL extension is enabled.')
                 : $this->warn('❌ CURL is actually disabled so your app could not be able to send data to Inspector.');
         }, 'test', 'Check CURL extension');
 
         // Report a bad query
-        inspector()->addSegment(function () {
-            \sleep(1);
+        inspector()->addSegment(function (): void {
+            sleep(1);
         }, 'mysql', "SELECT name, (SELECT COUNT(*) FROM orders WHERE user_id = users.id) AS order_count FROM users");
 
         // Report Exception
-        inspector()->reportException(new \Exception('First Exception detected'));
+        inspector()->reportException(new Exception('First Exception detected'));
 
         // End the transaction
         inspector()->transaction()

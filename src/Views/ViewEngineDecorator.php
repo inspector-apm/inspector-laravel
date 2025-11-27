@@ -9,13 +9,16 @@ use Illuminate\View\Factory;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Models\Segment;
 
+use function basename;
+use function call_user_func_array;
+
 final class ViewEngineDecorator implements Engine
 {
     public const SHARED_KEY = '__inspector_view_name';
 
     public function __construct(
-        private Engine $engine,
-        private Factory $viewFactory
+        private readonly Engine $engine,
+        private readonly Factory $viewFactory
     ) {
     }
 
@@ -28,18 +31,18 @@ final class ViewEngineDecorator implements Engine
             return $this->engine->get($path, $data);
         }
 
-        $label = 'view::'.$this->viewFactory->shared(self::SHARED_KEY, \basename($path));
+        $label = 'view::'.$this->viewFactory->shared(self::SHARED_KEY, basename($path));
 
         return Inspector::addSegment(function (Segment $segment) use ($path, $data) {
-            $segment->addContext('info', \compact('path'))
+            $segment->addContext('info', ['path' => $path])
                 ->addContext('data', $data);
 
             return $this->engine->get($path, $data);
         }, 'view', $label);
     }
 
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
-        return \call_user_func_array([$this->engine, $name], $arguments);
+        return call_user_func_array([$this->engine, $name], $arguments);
     }
 }

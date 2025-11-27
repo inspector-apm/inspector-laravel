@@ -8,16 +8,16 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 
+use function microtime;
+
 class DatabaseQueryServiceProvider extends ServiceProvider
 {
     /**
      * Booting of services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query) {
+        $this->app['events']->listen(QueryExecuted::class, function (QueryExecuted $query): void {
             if (Inspector::canAddSegments() && $query->sql) {
                 $this->handleQueryReport($query->sql, $query->bindings, $query->time, $query->connectionName);
             }
@@ -28,14 +28,13 @@ class DatabaseQueryServiceProvider extends ServiceProvider
      * Attach a span to monitor query execution.
      *
      * @param $sql
-     * @param array $bindings
      * @param $time
      * @param $connection
      */
-    protected function handleQueryReport($sql, array $bindings, $time, $connection): void
+    protected function handleQueryReport($sql, array $bindings, $time, string $connection): void
     {
         $segment = Inspector::startSegment('db.'.$connection, $sql)
-            ->start(\microtime(true) - $time / 1000);
+            ->start(microtime(true) - $time / 1000);
 
         $context = [
             'connection' => $connection,
@@ -51,10 +50,8 @@ class DatabaseQueryServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }

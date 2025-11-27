@@ -8,7 +8,7 @@ use Inspector\Inspector;
 
 class HelpersTest extends BasicTestCase
 {
-    public function testGenerateInstance()
+    public function testGenerateInstance(): void
     {
         $this->assertInstanceOf(Inspector::class, inspector());
     }

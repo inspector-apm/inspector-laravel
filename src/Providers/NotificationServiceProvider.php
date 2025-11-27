@@ -10,6 +10,9 @@ use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Models\Segment;
 
+use function array_key_exists;
+use function is_string;
+
 class NotificationServiceProvider extends ServiceProvider
 {
     /**
@@ -21,25 +24,22 @@ class NotificationServiceProvider extends ServiceProvider
 
     /**
      * Booting of services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->app['events']->listen(NotificationSending::class, function (NotificationSending $event) {
+        $this->app['events']->listen(NotificationSending::class, function (NotificationSending $event): void {
             if (Inspector::canAddSegments()) {
-                $this->segments[
-                    $event->notification->id
-                ] = Inspector::startSegment('notification', \get_class($event->notification))
+                $this->segments[$event->notification->id] =
+                    Inspector::startSegment('notification', $event->notification::class)
                         ->addContext('data', [
                             'Channel' => $event->channel,
-                            'Notifiable' => \is_string($event->notifiable) ? $event->notifiable : \get_class($event->notifiable),
+                            'Notifiable' => is_string($event->notifiable) ? $event->notifiable : $event->notifiable::class,
                         ]);
             }
         });
 
-        $this->app['events']->listen(NotificationSent::class, function (NotificationSent $event) {
-            if (\array_key_exists($event->notification->id, $this->segments)) {
+        $this->app['events']->listen(NotificationSent::class, function (NotificationSent $event): void {
+            if (array_key_exists($event->notification->id, $this->segments)) {
                 $this->segments[$event->notification->id]
                     ->addContext('Response', $event->response)
                     ->end();
@@ -49,10 +49,8 @@ class NotificationServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }

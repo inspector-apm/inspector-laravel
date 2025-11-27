@@ -13,7 +13,7 @@ use Inspector\Laravel\Providers\ExceptionsServiceProvider;
 
 class DisablingProvidersTest extends BasicTestCase
 {
-    protected function resolveApplicationConfiguration($app)
+    protected function resolveApplicationConfiguration($app): void
     {
         parent::resolveApplicationConfiguration($app);
 
@@ -25,7 +25,7 @@ class DisablingProvidersTest extends BasicTestCase
         $app['config']->set('inspector.redis', false);
     }
 
-    public function testBindingDisabled()
+    public function testBindingDisabled(): void
     {
         // Bind Inspector service
         $this->assertInstanceOf(\Inspector\Inspector::class, $this->app['inspector']);

@@ -37,7 +37,10 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.75",
         "orchestra/testbench": "^8.0|^9.0|^10.0",
-        "livewire/livewire": "^3.7"
+        "livewire/livewire": "^3.7",
+        "larastan/larastan": "^3.0",
+        "rector/rector": "^2.2",
+        "tomasvotruba/type-coverage": "^2.0"
     },
     "autoload-dev": {
         "psr-4": {
@@ -49,8 +52,14 @@
         "test": [
             "@test:unit"
         ],
+        "analyse": [
+            "vendor/bin/phpstan analyse -v"
+        ],
         "format": [
             "php-cs-fixer fix --allow-risky=yes"
+        ],
+        "refactor": [
+            "vendor/bin/rector"
         ]
     },
     "extra": {
