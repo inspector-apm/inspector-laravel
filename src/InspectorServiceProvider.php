@@ -56,7 +56,7 @@ class InspectorServiceProvider extends ServiceProvider
     {
         if ($this->app instanceof Application) {
             $this->publishes([__DIR__ . '/../config/inspector.php' => config_path('inspector.php')]);
-        } elseif (get_class($this->app) === 'Laravel\Lumen\Application') {
+        } elseif ($this->app::class === 'Laravel\Lumen\Application') {
             $this->app->configure('inspector');
         }
     }
