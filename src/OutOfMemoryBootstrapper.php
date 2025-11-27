@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Inspector\Laravel;
 
+use function error_get_last;
+use function ini_set;
+use function preg_match;
+use function register_shutdown_function;
+use function str_repeat;
+
 class OutOfMemoryBootstrapper
 {
     /**
@@ -13,15 +19,11 @@ class OutOfMemoryBootstrapper
      * We can't reserve all the memory that we need to send OOM reports
      * because this would have a big overhead on every request, instead of just
      * on shutdown in requests with errors.
-     *
-     * @var string|null
      */
-    protected ?string $reservedMemory;
+    protected ?string $reservedMemory = null;
 
     /**
      * A regex that matches PHP OOM errors.
-     *
-     * @var string
      */
     protected string $oomRegex = '/^Allowed memory size of (\d+) bytes exhausted \(tried to allocate \d+ bytes\)/';
 
@@ -29,23 +31,21 @@ class OutOfMemoryBootstrapper
      * Allow Bugsnag to handle OOMs by registering a shutdown function that
      * increases the memory limit. This must happen before Laravel's shutdown
      * function is registered or it will have no effect.
-     *
-     * @return void
      */
-    public function bootstrap()
+    public function bootstrap(): void
     {
-        $this->reservedMemory = \str_repeat(' ', 1024 * 256);
+        $this->reservedMemory = str_repeat(' ', 1024 * 256);
 
-        \register_shutdown_function(function () {
+        register_shutdown_function(function (): void {
             $this->reservedMemory = null;
 
-            $lastError = \error_get_last();
+            $lastError = error_get_last();
 
             if (!$lastError) {
                 return;
             }
 
-            $isOom = \preg_match($this->oomRegex, $lastError['message'], $matches) === 1;
+            $isOom = preg_match($this->oomRegex, $lastError['message'], $matches) === 1;
 
             if (!$isOom) {
                 return;
@@ -57,7 +57,7 @@ class OutOfMemoryBootstrapper
             if (inspector() && inspector()->isRecording()) {
                 $currentMemoryLimit = (int) $matches[1];
 
-                \ini_set('memory_limit', $currentMemoryLimit + (5 * 1024 * 1024)); // 5MB
+                ini_set('memory_limit', $currentMemoryLimit + (5 * 1024 * 1024)); // 5MB
             }
         });
     }

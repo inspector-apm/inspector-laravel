@@ -7,6 +7,10 @@ namespace Inspector\Laravel\Middleware;
 use Closure;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Exception;
+use Throwable;
+
+use function array_merge;
 
 class InspectorOctaneMiddleware extends WebRequestMonitoring
 {
@@ -30,7 +34,7 @@ class InspectorOctaneMiddleware extends WebRequestMonitoring
      *
      * @param \Illuminate\Http\Request $request
      * @param \Illuminate\Http\Response $response
-     * @throws \Exception
+     * @throws Exception
      */
     public function terminate(Request $request, Response $response): void
     {
@@ -39,11 +43,11 @@ class InspectorOctaneMiddleware extends WebRequestMonitoring
         // Using Octane headers and cookies are not available with native apache functions.
         // We need to retrieve them using the Laravel Request class.
         try {
-            inspector()->transaction()->http->request->headers = \array_merge(
+            inspector()->transaction()->http->request->headers = array_merge(
                 inspector()->transaction()->http->request->headers ?? [],
                 $request->header()
             );
-        } catch (\Throwable $exception) {
+        } catch (Throwable) {
             // nothing to do
         }
 

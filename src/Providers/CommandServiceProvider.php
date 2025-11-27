@@ -10,21 +10,19 @@ use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
 
+use function array_key_exists;
+use function is_string;
+
 class CommandServiceProvider extends ServiceProvider
 {
-    /**
-     * @var array
-     */
     protected array $segments = [];
 
     /**
      * Booting of services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->app['events']->listen(CommandStarting::class, function (CommandStarting $event) {
+        $this->app['events']->listen(CommandStarting::class, function (CommandStarting $event): void {
             if (!$this->shouldBeMonitored($event->command)) {
                 return;
             }
@@ -41,14 +39,14 @@ class CommandServiceProvider extends ServiceProvider
             }
         });
 
-        $this->app['events']->listen(CommandFinished::class, function (CommandFinished $event) {
+        $this->app['events']->listen(CommandFinished::class, function (CommandFinished $event): void {
             if (!$this->shouldBeMonitored($event->command)) {
                 return;
             }
 
             if (Inspector::hasTransaction() && Inspector::transaction()->name === $event->command) {
                 Inspector::transaction()->setResult($event->exitCode === 0 ? 'success' : 'error');
-            } elseif (\array_key_exists($event->command, $this->segments)) {
+            } elseif (array_key_exists($event->command, $this->segments)) {
                 $this->segments[$event->command]->end()->addContext('Command', [
                     'exit_code' => $event->exitCode,
                     'arguments' => $event->input->getArguments(),
@@ -60,23 +58,18 @@ class CommandServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
 
     /**
      * Determine if the current command should be monitored.
-     *
-     * @param null|string $command
-     * @return bool
      */
     protected function shouldBeMonitored(?string $command): bool
     {
-        if (\is_string($command)) {
+        if (is_string($command)) {
             return Filters::isApprovedArtisanCommand($command, config('inspector.ignore_commands'));
         }
 

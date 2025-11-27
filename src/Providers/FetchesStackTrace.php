@@ -6,18 +6,20 @@ namespace Inspector\Laravel\Providers;
 
 use Illuminate\Support\Str;
 
+use function debug_backtrace;
+
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
+
 trait FetchesStackTrace
 {
     /**
      * Find the first frame in the stack trace outside of Telescope/Laravel.
-     *
-     * @return array
      */
     protected function getCallerFromStackTrace(): array
     {
-        $trace = collect(\debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS))->forget(0);
+        $trace = collect(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS))->forget(0);
 
-        return $trace->first(function ($frame) {
+        return $trace->first(function (array $frame): bool {
             if (! isset($frame['file'])) {
                 return false;
             }

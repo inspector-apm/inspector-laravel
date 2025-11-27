@@ -11,12 +11,12 @@ use Inspector\Models\Transaction;
 
 class MiddlewareTest extends BasicTestCase
 {
-    public function testIsRecording()
+    public function testIsRecording(): void
     {
         $this->assertTrue(Inspector::isRecording());
         $this->assertTrue(Inspector::needTransaction());
 
-        $this->app->router->get('test', function () {
+        $this->app->router->get('test', function (): void {
             // do nothing
         })->middleware(WebRequestMonitoring::class);
 
@@ -26,10 +26,10 @@ class MiddlewareTest extends BasicTestCase
         $this->assertInstanceOf(Transaction::class, Inspector::transaction());
     }
 
-    public function testResult()
+    public function testResult(): void
     {
         // test the middleware
-        $this->app->router->get('test', function () {
+        $this->app->router->get('test', function (): void {
             // do nothing
         })->middleware(WebRequestMonitoring::class);
 
@@ -40,14 +40,14 @@ class MiddlewareTest extends BasicTestCase
         $this->assertArrayHasKey('Response', Inspector::transaction()->getContext());
     }
 
-    public function testContext()
+    public function testContext(): void
     {
         // test the middleware
-        $this->app->router->post('test', function (Request $request) {
+        $this->app->router->post('test', function (Request $request): void {
             // do nothing
         })->middleware(WebRequestMonitoring::class);
 
-        $response = $this->post('test', ['foo' => 'bar']);
+        $this->post('test', ['foo' => 'bar']);
 
         // $this->assertArrayHasKey('Request Body', Inspector::transaction()->getContext());
         $this->assertArrayHasKey('Response', Inspector::transaction()->getContext());

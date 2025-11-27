@@ -6,7 +6,7 @@ namespace Inspector\Laravel\Tests\Jobs;
 
 class TestJob
 {
-    public function handle()
+    public function handle(): void
     {
         //do nothing
     }

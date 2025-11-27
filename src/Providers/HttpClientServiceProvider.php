@@ -11,6 +11,10 @@ use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Models\Segment;
 
+use function array_key_exists;
+use function array_merge;
+use function sha1;
+
 class HttpClientServiceProvider extends ServiceProvider
 {
     /**
@@ -22,12 +26,10 @@ class HttpClientServiceProvider extends ServiceProvider
 
     /**
      * Booting of services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->app['events']->listen(RequestSending::class, function (RequestSending $event) {
+        $this->app['events']->listen(RequestSending::class, function (RequestSending $event): void {
             if (Inspector::canAddSegments()) {
                 $this->segments[
                     $this->getSegmentKey($event->request)
@@ -35,7 +37,7 @@ class HttpClientServiceProvider extends ServiceProvider
             }
         });
 
-        $this->app['events']->listen(ResponseReceived::class, function (ResponseReceived $event) {
+        $this->app['events']->listen(ResponseReceived::class, function (ResponseReceived $event): void {
             $key = $this->getSegmentKey($event->request);
 
             $type = 'unknown';
@@ -45,7 +47,7 @@ class HttpClientServiceProvider extends ServiceProvider
                 $type = 'json';
             }
 
-            if (\array_key_exists($key, $this->segments)) {
+            if (array_key_exists($key, $this->segments)) {
                 $this->segments[$key]->end()
                     ->addContext('Url', [
                         'method' => $event->request->method(),
@@ -56,7 +58,7 @@ class HttpClientServiceProvider extends ServiceProvider
                         'headers' => $event->request->headers(),
                         'data' => $event->request->data(),
                     ])
-                    ->addContext('Response', \array_merge(
+                    ->addContext('Response', array_merge(
                         [
                             'status' => $event->response->status(),
                             'headers' => $event->response->headers(),
@@ -72,21 +74,16 @@ class HttpClientServiceProvider extends ServiceProvider
 
     /**
      * Generate the key to identify the segment in the segment collection.
-     *
-     * @param Request $request
-     * @return string
      */
-    protected function getSegmentKey(Request $request)
+    protected function getSegmentKey(Request $request): string
     {
-        return \sha1($request->body());
+        return sha1($request->body());
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }

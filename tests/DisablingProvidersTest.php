@@ -25,7 +25,7 @@ class DisablingProvidersTest extends BasicTestCase
         $app['config']->set('inspector.redis', false);
     }
 
-    public function testBindingDisabled()
+    public function testBindingDisabled(): void
     {
         // Bind Inspector service
         $this->assertInstanceOf(\Inspector\Inspector::class, $this->app['inspector']);

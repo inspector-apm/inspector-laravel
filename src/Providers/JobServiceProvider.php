@@ -15,6 +15,10 @@ use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Filters;
 use Inspector\Models\Segment;
 
+use function array_key_exists;
+use function sha1;
+use function version_compare;
+
 class JobServiceProvider extends ServiceProvider
 {
     /**
@@ -26,10 +30,8 @@ class JobServiceProvider extends ServiceProvider
 
     /**
      * Booting of services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         // This event is never called in Laravel Vapor.
         /*Queue::looping(
@@ -40,7 +42,7 @@ class JobServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(
             JobProcessing::class,
-            function (JobProcessing $event) {
+            function (JobProcessing $event): void {
                 if (config('inspector.enable') && !Inspector::isRecording()) {
                     Inspector::startRecording();
                 }
@@ -53,7 +55,7 @@ class JobServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(
             JobExceptionOccurred::class,
-            function (JobExceptionOccurred $event) {
+            function (JobExceptionOccurred $event): void {
                 // An unhandled exception will be reported by the ExceptionServiceProvider in case of a sync execution.
                 if (Inspector::canAddSegments() && $event->job->getConnectionName() !== 'sync') {
                     Inspector::reportException($event->exception, false);
@@ -63,17 +65,17 @@ class JobServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(
             JobProcessed::class,
-            function ($event) {
+            function ($event): void {
                 if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
                     $this->handleJobEnd($event->job);
                 }
             }
         );
 
-        if (\version_compare(app()->version(), '9.0.0', '>=')) {
+        if (version_compare(app()->version(), '9.0.0', '>=')) {
             $this->app['events']->listen(
                 JobReleasedAfterException::class,
-                function (JobReleasedAfterException $event) {
+                function (JobReleasedAfterException $event): void {
                     if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
                         $this->handleJobEnd($event->job, true);
 
@@ -91,7 +93,7 @@ class JobServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(
             JobFailed::class,
-            function (JobFailed $event) {
+            function (JobFailed $event): void {
                 if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
                     // JobExceptionOccurred event is called after JobFailed, so we have to report the exception here.
                     Inspector::reportException($event->exception, false);
@@ -112,8 +114,6 @@ class JobServiceProvider extends ServiceProvider
 
     /**
      * Determine the way to monitor the job.
-     *
-     * @param Job $job
      */
     protected function handleJobStart(Job $job)
     {
@@ -128,14 +128,12 @@ class JobServiceProvider extends ServiceProvider
 
     /**
      * Representing a job as a segment.
-     *
-     * @param Job $job
      */
     protected function initializeSegment(Job $job)
     {
         $payload = $job->payload();
 
-        if (!config('inspector.job_data') && \array_key_exists('data', $payload)) {
+        if (!config('inspector.job_data') && array_key_exists('data', $payload)) {
             unset($payload['data']);
         }
 
@@ -143,17 +141,17 @@ class JobServiceProvider extends ServiceProvider
             ->addContext('Payload', $payload);
 
         // Save the job under a unique ID
-        $this->segments[$this->getJobId($job)] = $segment;
+        $this->segments[static::getJobId($job)] = $segment;
     }
 
     /**
      * Finalize the monitoring of the job.
      */
-    public function handleJobEnd(Job $job, bool $failed = false)
+    public function handleJobEnd(Job $job, bool $failed = false): void
     {
-        $id = $this->getJobId($job);
+        $id = static::getJobId($job);
 
-        if (\array_key_exists($id, $this->segments)) {
+        if (array_key_exists($id, $this->segments)) {
             $this->segments[$id]->end();
         } else {
             Inspector::transaction()
@@ -174,7 +172,6 @@ class JobServiceProvider extends ServiceProvider
     /**
      * Get the job ID.
      *
-     * @param Job $job
      * @return string|int
      */
     public static function getJobId(Job $job)
@@ -183,24 +180,19 @@ class JobServiceProvider extends ServiceProvider
             return $jobId;
         }
 
-        return \sha1($job->getRawBody());
+        return sha1($job->getRawBody());
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }
 
     /**
      * Determine if the given job needs to be monitored.
-     *
-     * @param string $job
-     * @return bool
      */
     protected function shouldBeMonitored(string $job): bool
     {

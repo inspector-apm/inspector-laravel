@@ -6,14 +6,19 @@ namespace Inspector\Laravel;
 
 use Illuminate\Support\Arr;
 
+use function in_array;
+use function is_array;
+use function is_null;
+use function preg_match;
+use function preg_quote;
+use function str_replace;
+
 class Filters
 {
     /**
      * Determine if the given request path info should be monitored.
      *
      * @param string[] $notAllowed
-     * @param string $path
-     * @return bool
      */
     public static function isApprovedRequest(array $notAllowed, string $path): bool
     {
@@ -29,13 +34,11 @@ class Filters
     /**
      * Determine if the current command should be monitored.
      *
-     * @param string $command
      * @param null|string[] $notAllowed
-     * @return bool
      */
     public static function isApprovedArtisanCommand(string $command, ?array $notAllowed): bool
     {
-        if (\is_null($notAllowed)) {
+        if (is_null($notAllowed)) {
             return true;
         }
 
@@ -51,13 +54,13 @@ class Filters
     public static function matchWithWildcard(string $value, string $pattern): bool
     {
         // Escape special regex characters in the pattern, except for '*'.
-        $escapedPattern = \preg_quote($pattern, '/');
+        $escapedPattern = preg_quote($pattern, '/');
 
         // Replace '*' in the pattern with '.*' for regex matching.
-        $regex = '/^' . \str_replace('\*', '.*', $escapedPattern) . '$/';
+        $regex = '/^' . str_replace('\*', '.*', $escapedPattern) . '$/';
 
         // Perform regex match.
-        return (bool)\preg_match($regex, $value);
+        return (bool)preg_match($regex, $value);
     }
 
     /**
@@ -67,7 +70,7 @@ class Filters
      */
     public static function isApprovedClass(string $class, ?array $notAllowed): bool
     {
-        return !\is_array($notAllowed) || !\in_array($class, $notAllowed);
+        return !is_array($notAllowed) || !in_array($class, $notAllowed);
     }
 
     /**

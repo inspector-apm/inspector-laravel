@@ -13,6 +13,8 @@ use Inspector\Models\Segment;
 use Livewire\Component;
 use Livewire\EventBus;
 
+use function str_contains;
+
 class LivewireServiceProvider extends ServiceProvider
 {
     /**
@@ -41,14 +43,12 @@ class LivewireServiceProvider extends ServiceProvider
 
             $bus->after('destroy', fn (Component $component) => $this->handleDestroy($component));
             //$bus->before('exception', fn (Component $component) => Log::debug('Livewire exception', ['component' => get_class($component)]));
-        } catch (Exception $exception) {
+        } catch (Exception) {
         }
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -57,21 +57,21 @@ class LivewireServiceProvider extends ServiceProvider
 
     protected function handleMount(Component $component): void
     {
-        if (!inspector()->canAddSegments() || !$this->shouldBeMonitored(\get_class($component))) {
+        if (!inspector()->canAddSegments() || !$this->shouldBeMonitored($component::class)) {
             return;
         }
 
-        $this->segments[$component->id()] = inspector()->startSegment('livewire', \get_class($component));
+        $this->segments[$component->id()] = inspector()->startSegment('livewire', $component::class);
     }
 
     protected function handleHydrate(Component $component): void
     {
-        if (!inspector()->canAddSegments() || !$this->shouldBeMonitored(\get_class($component))) {
+        if (!inspector()->canAddSegments() || !$this->shouldBeMonitored($component::class)) {
             return;
         }
 
-        if (\str_contains(inspector()->transaction()->name, config('inspector.livewire.path'))) {
-            inspector()->transaction()->setType('livewire')->name = \get_class($component);
+        if (str_contains(inspector()->transaction()->name, (string) config('inspector.livewire.path'))) {
+            inspector()->transaction()->setType('livewire')->name = $component::class;
         }
     }
 
@@ -100,7 +100,7 @@ class LivewireServiceProvider extends ServiceProvider
 
     protected function handleCalling(Component $component, string $method, array $params): void
     {
-        if (!inspector()->canAddSegments() || $this->shouldBeMonitored(\get_class($component))) {
+        if (!inspector()->canAddSegments() || $this->shouldBeMonitored($component::class)) {
             return;
         }
 
@@ -131,7 +131,6 @@ class LivewireServiceProvider extends ServiceProvider
      * Determine if the current command should be monitored.
      *
      * @param null|string $command
-     * @return bool
      */
     protected function shouldBeMonitored(string $component): bool
     {

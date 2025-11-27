@@ -25,6 +25,9 @@ use Inspector\Laravel\Views\ViewEngineDecorator;
 use Laravel\Lumen\Application as LumenApplication;
 use Inspector\Configuration;
 
+use function class_exists;
+use function version_compare;
+
 class InspectorServiceProvider extends ServiceProvider
 {
     /**
@@ -36,10 +39,8 @@ class InspectorServiceProvider extends ServiceProvider
 
     /**
      * Booting of services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->setupConfigFile();
 
@@ -62,16 +63,14 @@ class InspectorServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         // Default package configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/inspector.php', 'inspector');
 
         // Bind Inspector service class
-        $this->app->singleton('inspector', function () {
+        $this->app->singleton('inspector', function (): \Inspector\Laravel\Inspector {
             $configuration = (new Configuration(config('inspector.key')))
                 ->setEnabled(config('inspector.enable', true))
                 ->setUrl(config('inspector.url', 'https://ingest.inspector.dev'))
@@ -89,14 +88,14 @@ class InspectorServiceProvider extends ServiceProvider
     /**
      * Bind Inspector service providers based on package configuration.
      */
-    public function registerInspectorServiceProviders()
+    public function registerInspectorServiceProviders(): void
     {
         $this->app->register(CommandServiceProvider::class);
 
         $this->app->register(GateServiceProvider::class);
 
         // For Laravel >=6
-        if (config('inspector.redis', true) && \version_compare(app()->version(), '6.0.0', '>=')) {
+        if (config('inspector.redis', true) && version_compare(app()->version(), '6.0.0', '>=')) {
             $this->app->register(RedisServiceProvider::class);
         }
 
@@ -122,8 +121,8 @@ class InspectorServiceProvider extends ServiceProvider
 
         if (
             config('inspector.livewire', true) &&
-            \class_exists('\Livewire\Livewire') &&
-            \class_exists('\Livewire\EventBus')
+            class_exists(\Livewire\Livewire::class) &&
+            class_exists(\Livewire\EventBus::class)
         ) {
             $this->app->register(LivewireServiceProvider::class);
         }
@@ -131,8 +130,8 @@ class InspectorServiceProvider extends ServiceProvider
         // Compatibility with Laravel < 8.4
         if (
             config('inspector.http_client', true) &&
-            \class_exists('\Illuminate\Http\Client\Events\RequestSending') &&
-            \class_exists('\Illuminate\Http\Client\Events\ResponseReceived')
+            class_exists(\Illuminate\Http\Client\Events\RequestSending::class) &&
+            class_exists(\Illuminate\Http\Client\Events\ResponseReceived::class)
         ) {
             $this->app->register(HttpClientServiceProvider::class);
         }
@@ -153,9 +152,7 @@ class InspectorServiceProvider extends ServiceProvider
             foreach (['file', 'php', 'blade'] as $engineName) {
                 $realEngine = $engineResolver->resolve($engineName);
 
-                $engineResolver->register($engineName, function () use ($realEngine) {
-                    return $this->wrapViewEngine($realEngine);
-                });
+                $engineResolver->register($engineName, fn (): \Illuminate\Contracts\View\Engine => $this->wrapViewEngine($realEngine));
             }
         };
 

@@ -10,6 +10,14 @@ use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Models\Segment;
 
+use function array_key_exists;
+use function array_map;
+use function is_array;
+use function is_callable;
+use function is_string;
+use function md5;
+use function serialize;
+
 class GateServiceProvider extends ServiceProvider
 {
     use FetchesStackTrace;
@@ -21,13 +29,11 @@ class GateServiceProvider extends ServiceProvider
 
     /**
      * Booting of services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        Gate::before([$this, 'beforeGateCheck']);
-        Gate::after([$this, 'afterGateCheck']);
+        Gate::before($this->beforeGateCheck(...));
+        Gate::after($this->afterGateCheck(...));
     }
 
     /**
@@ -37,14 +43,14 @@ class GateServiceProvider extends ServiceProvider
      * @param string $ability
      * @param $arguments
      */
-    public function beforeGateCheck($user, $ability, $arguments)
+    public function beforeGateCheck($user, $ability, $arguments): void
     {
         if (!Inspector::canAddSegments()) {
             return;
         }
 
-        $class = (\is_array($arguments) && !empty($arguments))
-            ? (\is_string($arguments[0]) ? $arguments[0] : '')
+        $class = (is_array($arguments) && $arguments !== [])
+            ? (is_string($arguments[0]) ? $arguments[0] : '')
             : '';
 
         $label = "Gate::{$ability}({$class})";
@@ -73,7 +79,7 @@ class GateServiceProvider extends ServiceProvider
         $arguments = $this->formatArguments($arguments);
         $key = $this->generateUniqueKey($this->formatArguments($arguments));
 
-        if (\array_key_exists($key, $this->segments)) {
+        if (array_key_exists($key, $this->segments)) {
             $this->segments[$key]
                 ->addContext('Check', [
                     'ability' => $ability,
@@ -96,29 +102,23 @@ class GateServiceProvider extends ServiceProvider
 
     /**
      * Generate a unique key to track segment's state.
-     *
-     * @param array $data
-     * @return string
      */
-    public function generateUniqueKey(array $data)
+    public function generateUniqueKey(array $data): string
     {
-        return \md5(\serialize($data));
+        return md5(serialize($data));
     }
 
     /**
      * Format gate arguments.
-     *
-     * @param array $arguments
-     * @return array
      */
-    public function formatArguments(array $arguments)
+    public function formatArguments(array $arguments): array
     {
-        return \array_map(function ($item) {
+        return array_map(function ($item) {
             if ($item instanceof Model) {
                 return $this->formatModel($item);
             }
 
-            if (\is_callable($item)) {
+            if (is_callable($item)) {
                 return 'callback';
             }
 
@@ -130,19 +130,16 @@ class GateServiceProvider extends ServiceProvider
      * Human-readable model.
      *
      * @param $model
-     * @return string
      */
-    public function formatModel($model)
+    public function formatModel($model): string
     {
-        return \get_class($model).':'.$model->getKey();
+        return $model::class.':'.$model->getKey();
     }
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }

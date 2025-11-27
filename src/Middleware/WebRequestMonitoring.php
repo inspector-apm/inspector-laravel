@@ -12,16 +12,20 @@ use Inspector\Models\Transaction;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\TerminableInterface;
+use Exception;
+use Throwable;
+
+use function array_shift;
+use function explode;
+use function json_decode;
+use function trim;
 
 class WebRequestMonitoring implements TerminableInterface
 {
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
-     * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(\Illuminate\Http\Request $request, Closure $next): mixed
     {
@@ -42,7 +46,6 @@ class WebRequestMonitoring implements TerminableInterface
      * Determine if Inspector should monitor the current request.
      *
      * @param \Illuminate\Http\Request $request
-     * @return bool
      */
     protected function shouldRecorded($request): bool
     {
@@ -53,7 +56,7 @@ class WebRequestMonitoring implements TerminableInterface
      * Start a transaction for the incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @throws \Exception
+     * @throws Exception
      */
     protected function startTransaction($request): void
     {
@@ -65,7 +68,7 @@ class WebRequestMonitoring implements TerminableInterface
             $transaction->http
                 ->request
                 ->headers = Filters::hideParameters($request->headers->all(), config('inspector.hidden_parameters'));
-        } catch (\Throwable $e) {
+        } catch (Throwable) {
         }
 
         $transaction->addContext(
@@ -101,7 +104,7 @@ class WebRequestMonitoring implements TerminableInterface
                     'charset' => $response->getCharset(),
                     'headers' => Filters::hideParameters($response->headers->all(), config('inspector.hidden_parameters')),
                 ])
-                ->addContext('Response Body', \json_decode($response->getContent()??'{}', true))
+                ->addContext('Response Body', json_decode($response->getContent() ?? '{}', true))
                 ->setResult((string)$response->getStatusCode());
         }
     }
@@ -110,7 +113,6 @@ class WebRequestMonitoring implements TerminableInterface
      * Generate readable name.
      *
      * @param \Illuminate\Http\Request $request
-     * @return string
      */
     protected function buildTransactionName($request): string
     {
@@ -119,8 +121,8 @@ class WebRequestMonitoring implements TerminableInterface
         if ($route instanceof \Illuminate\Routing\Route) {
             $uri = $request->route()->uri();
         } else {
-            $array = \explode('?', $_SERVER["REQUEST_URI"]);
-            $uri = \array_shift($array);
+            $array = explode('?', (string) $_SERVER["REQUEST_URI"]);
+            $uri = array_shift($array);
         }
 
         return $request->method() . ' ' . $this->normalizeUri($uri);
@@ -131,6 +133,6 @@ class WebRequestMonitoring implements TerminableInterface
      */
     protected function normalizeUri(string $uri): string
     {
-        return '/' . \trim($uri, '/');
+        return '/' . trim($uri, '/');
     }
 }

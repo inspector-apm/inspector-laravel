@@ -7,24 +7,26 @@ namespace Inspector\Laravel\Providers;
 use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
+use Throwable;
+
+use function array_merge;
+use function class_exists;
 
 class ExceptionsServiceProvider extends ServiceProvider
 {
     /**
      * Booting of services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        if (\class_exists(MessageLogged::class)) {
+        if (class_exists(MessageLogged::class)) {
             // starting from L5.4 MessageLogged event class was introduced
             // https://github.com/laravel/framework/commit/57c82d095c356a0fe0f9381536afec768cdcc072
-            $this->app['events']->listen(MessageLogged::class, function (MessageLogged $log) {
+            $this->app['events']->listen(MessageLogged::class, function (MessageLogged $log): void {
                 $this->handleLog($log->level, $log->message, $log->context);
             });
         } else {
-            $this->app['events']->listen('illuminate.log', function ($level, $message, $context) {
+            $this->app['events']->listen('illuminate.log', function (string $level, $message, $context): void {
                 $this->handleLog($level, $message, $context);
             });
         }
@@ -37,13 +39,13 @@ class ExceptionsServiceProvider extends ServiceProvider
     {
         if (
             isset($context['exception']) &&
-            $context['exception'] instanceof \Throwable
+            $context['exception'] instanceof Throwable
         ) {
             $this->reportException($context['exception']);
             return;
         }
 
-        if ($message instanceof \Throwable) {
+        if ($message instanceof Throwable) {
             $this->reportException($message);
             return;
         }
@@ -51,16 +53,16 @@ class ExceptionsServiceProvider extends ServiceProvider
         // Report general log messages
         if (Inspector::hasTransaction()) {
             Inspector::transaction()
-                ->addContext('logs', \array_merge(
+                ->addContext('logs', array_merge(
                     Inspector::transaction()->getContext()['logs'] ?? [],
                     [
-                        \compact('level', 'message')
+                        ['level' => $level, 'message' => $message]
                     ]
                 ));
         }
     }
 
-    protected function reportException(\Throwable $exception): void
+    protected function reportException(Throwable $exception): void
     {
         Inspector::reportException($exception, false);
         Inspector::transaction()->setResult('error');
@@ -68,10 +70,8 @@ class ExceptionsServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         //
     }

@@ -15,7 +15,7 @@ use Inspector\Laravel\Providers\ExceptionsServiceProvider;
 
 class ContainerBindingTest extends BasicTestCase
 {
-    public function testBinding()
+    public function testBinding(): void
     {
         // Bind Inspector service
         $this->assertInstanceOf(\Inspector\Inspector::class, $this->app['inspector']);
