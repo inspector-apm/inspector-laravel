@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -12,7 +13,6 @@ use Inspector\Models\Segment;
 
 use function array_key_exists;
 use function array_map;
-use function is_array;
 use function is_callable;
 use function is_string;
 use function md5;
@@ -38,20 +38,14 @@ class GateServiceProvider extends ServiceProvider
 
     /**
      * Intercepting before gate check.
-     *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
-     * @param string $ability
-     * @param $arguments
      */
-    public function beforeGateCheck($user, $ability, $arguments): void
+    public function beforeGateCheck(Authenticatable $user, string $ability, array $arguments): void
     {
         if (!Inspector::canAddSegments()) {
             return;
         }
 
-        $class = (is_array($arguments) && $arguments !== [])
-            ? (is_string($arguments[0]) ? $arguments[0] : '')
-            : '';
+        $class = is_string($arguments[0] ?? null) ? $arguments[0] : '';
 
         $label = "Gate::{$ability}({$class})";
 
@@ -63,14 +57,8 @@ class GateServiceProvider extends ServiceProvider
 
     /**
      * Intercepting after gate check.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  string  $ability
-     * @param  bool  $result
-     * @param  array  $arguments
-     * @return bool
      */
-    public function afterGateCheck($user, $ability, $result, $arguments)
+    public function afterGateCheck(Authenticatable $user, string $ability, bool $result, array $arguments): bool
     {
         if (!Inspector::canAddSegments()) {
             return $result;
@@ -113,7 +101,7 @@ class GateServiceProvider extends ServiceProvider
      */
     public function formatArguments(array $arguments): array
     {
-        return array_map(function ($item) {
+        return array_map(function (mixed $item) {
             if ($item instanceof Model) {
                 return $this->formatModel($item);
             }
@@ -128,10 +116,8 @@ class GateServiceProvider extends ServiceProvider
 
     /**
      * Human-readable model.
-     *
-     * @param $model
      */
-    public function formatModel($model): string
+    public function formatModel(Model $model): string
     {
         return $model::class.':'.$model->getKey();
     }

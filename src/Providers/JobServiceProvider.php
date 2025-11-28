@@ -65,7 +65,7 @@ class JobServiceProvider extends ServiceProvider
 
         $this->app['events']->listen(
             JobProcessed::class,
-            function ($event): void {
+            function (JobProcessed $event): void {
                 if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
                     $this->handleJobEnd($event->job);
                 }
@@ -115,7 +115,7 @@ class JobServiceProvider extends ServiceProvider
     /**
      * Determine the way to monitor the job.
      */
-    protected function handleJobStart(Job $job)
+    protected function handleJobStart(Job $job): void
     {
         if (Inspector::needTransaction()) {
             Inspector::startTransaction($job->resolveName())
@@ -129,7 +129,7 @@ class JobServiceProvider extends ServiceProvider
     /**
      * Representing a job as a segment.
      */
-    protected function initializeSegment(Job $job)
+    protected function initializeSegment(Job $job): void
     {
         $payload = $job->payload();
 
@@ -171,10 +171,8 @@ class JobServiceProvider extends ServiceProvider
 
     /**
      * Get the job ID.
-     *
-     * @return string|int
      */
-    public static function getJobId(Job $job)
+    public static function getJobId(Job $job): string|int
     {
         if ($jobId = $job->getJobId()) {
             return $jobId;

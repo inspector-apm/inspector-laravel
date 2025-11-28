@@ -2,6 +2,7 @@
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
+use PhpCsFixer\Runner\Parallel\ParallelConfigFactory;
 
 $finder = Finder::create()
     ->in(__DIR__)
@@ -24,4 +25,5 @@ return (new Config())
             'import_functions' => true,
         ]
     ])
+    ->setParallelConfig(ParallelConfigFactory::detect())
     ->setFinder($finder);

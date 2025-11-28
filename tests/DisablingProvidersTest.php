@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Inspector\Laravel\Tests;
 
+use Illuminate\Foundation\Application;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
 use Inspector\Laravel\Providers\JobServiceProvider;
@@ -13,16 +14,21 @@ use Inspector\Laravel\Providers\ExceptionsServiceProvider;
 
 class DisablingProvidersTest extends BasicTestCase
 {
-    protected function resolveApplicationConfiguration($app): void
+    /**
+     * @param  Application  $app
+     */
+    protected function resolveApplicationConfiguration(mixed $app): void
     {
         parent::resolveApplicationConfiguration($app);
 
-        $app['config']->set('inspector.job', false);
-        $app['config']->set('inspector.query', false);
-        $app['config']->set('inspector.email', false);
-        $app['config']->set('inspector.notifications', false);
-        $app['config']->set('inspector.unhandled_exceptions', false);
-        $app['config']->set('inspector.redis', false);
+        $app['config']->set([
+            'inspector.job' => false,
+            'inspector.query' => false,
+            'inspector.email' => false,
+            'inspector.notifications' => false,
+            'inspector.unhandled_exceptions' => false,
+            'inspector.redis' => false,
+        ]);
     }
 
     public function testBindingDisabled(): void
