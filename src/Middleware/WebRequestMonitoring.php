@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Inspector\Laravel\Middleware;
 
 use Closure;
+use Illuminate\Http\Response;
 use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inspector\Laravel\Filters;
 use Inspector\Models\Transaction;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Exception;
 use Throwable;
@@ -88,10 +90,10 @@ class WebRequestMonitoring implements TerminableInterface
     /**
      * Terminates a request/response cycle.
      *
-     * @param  Request  $request
-     * @param \Illuminate\Http\Response $response
+     * @param Request  $request
+     * @param Response $response
      */
-    public function terminate(\Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Response $response): void
+    public function terminate(SymfonyRequest $request, SymfonyResponse $response): void
     {
         if (Inspector::isRecording() && Inspector::hasTransaction()) {
             Inspector::transaction()
