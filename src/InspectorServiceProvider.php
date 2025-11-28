@@ -26,7 +26,6 @@ use Inspector\Configuration;
 
 use function class_exists;
 use function version_compare;
-use function get_class;
 
 class InspectorServiceProvider extends ServiceProvider
 {
@@ -52,7 +51,7 @@ class InspectorServiceProvider extends ServiceProvider
     /**
      * Setup configuration file.
      */
-    protected function setupConfigFile()
+    protected function setupConfigFile(): void
     {
         if ($this->app instanceof Application) {
             $this->publishes([__DIR__ . '/../config/inspector.php' => config_path('inspector.php')]);

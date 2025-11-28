@@ -91,7 +91,7 @@ class WebRequestMonitoring implements TerminableInterface
      * @param  Request  $request
      * @param \Illuminate\Http\Response $response
      */
-    public function terminate(Request $request, Response $response): void
+    public function terminate(\Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Response $response): void
     {
         if (Inspector::isRecording() && Inspector::hasTransaction()) {
             Inspector::transaction()
@@ -111,7 +111,7 @@ class WebRequestMonitoring implements TerminableInterface
      *
      * @param  Request  $request
      */
-    protected function buildTransactionName($request): string
+    protected function buildTransactionName(Request $request): string
     {
         $route = $request->route();
 

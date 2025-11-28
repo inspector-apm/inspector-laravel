@@ -26,7 +26,7 @@ class ExceptionsServiceProvider extends ServiceProvider
                 $this->handleLog($log->level, $log->message, $log->context);
             });
         } else {
-            $this->app['events']->listen('illuminate.log', function (string $level, $message, $context): void {
+            $this->app['events']->listen('illuminate.log', function (string $level, mixed $message, mixed $context): void {
                 $this->handleLog($level, $message, $context);
             });
         }

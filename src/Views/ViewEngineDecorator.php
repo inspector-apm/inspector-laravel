@@ -24,8 +24,9 @@ final readonly class ViewEngineDecorator implements Engine
 
     /**
      * {@inheritdoc}
+     * @param string $path
      */
-    public function get($path, array $data = [])
+    public function get(mixed $path, array $data = []): mixed
     {
         if (!Inspector::canAddSegments()) {
             return $this->engine->get($path, $data);
