@@ -63,8 +63,6 @@ class EmailServiceProvider extends ServiceProvider
 
     /**
      * Generate a unique key for each message.
-     *
-     * @param Email $message
      */
     protected function getSegmentKey(Email $message): string
     {

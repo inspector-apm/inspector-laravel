@@ -171,8 +171,6 @@ class JobServiceProvider extends ServiceProvider
 
     /**
      * Get the job ID.
-     *
-     * @return string|int
      */
     public static function getJobId(Job $job): string|int
     {

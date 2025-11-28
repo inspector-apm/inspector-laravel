@@ -108,8 +108,6 @@ class WebRequestMonitoring implements TerminableInterface
 
     /**
      * Generate readable name.
-     *
-     * @param  Request  $request
      */
     protected function buildTransactionName(Request $request): string
     {
