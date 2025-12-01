@@ -9,6 +9,7 @@ use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
 use Inspector\Models\Segment;
+use Symfony\Component\Mime\Email;
 
 use function array_flip;
 use function array_intersect_key;
@@ -62,10 +63,8 @@ class EmailServiceProvider extends ServiceProvider
 
     /**
      * Generate a unique key for each message.
-     *
-     * @param \Symfony\Component\Mime\Email $message
      */
-    protected function getSegmentKey($message): string
+    protected function getSegmentKey(Email $message): string
     {
         return sha1(json_encode($message->getTo()).$message->getSubject());
     }

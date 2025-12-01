@@ -26,12 +26,8 @@ class DatabaseQueryServiceProvider extends ServiceProvider
 
     /**
      * Attach a span to monitor query execution.
-     *
-     * @param $sql
-     * @param $time
-     * @param $connection
      */
-    protected function handleQueryReport($sql, array $bindings, $time, string $connection): void
+    protected function handleQueryReport(string $sql, array $bindings, int|float|null $time, string $connection): void
     {
         $segment = Inspector::startSegment('db.'.$connection, $sql)
             ->start(microtime(true) - $time / 1000);

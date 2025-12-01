@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Inspector\Laravel\Middleware;
 
 use Closure;
+use Illuminate\Http\Response;
 use Inspector\Laravel\Facades\Inspector;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inspector\Laravel\Filters;
 use Inspector\Models\Transaction;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Exception;
 use Throwable;
@@ -27,7 +29,7 @@ class WebRequestMonitoring implements TerminableInterface
      *
      * @throws Exception
      */
-    public function handle(\Illuminate\Http\Request $request, Closure $next): mixed
+    public function handle(Request $request, Closure $next): mixed
     {
         if (
             Inspector::needTransaction()
@@ -44,10 +46,8 @@ class WebRequestMonitoring implements TerminableInterface
 
     /**
      * Determine if Inspector should monitor the current request.
-     *
-     * @param \Illuminate\Http\Request $request
      */
-    protected function shouldRecorded($request): bool
+    protected function shouldRecorded(Request $request): bool
     {
         return true;
     }
@@ -55,10 +55,9 @@ class WebRequestMonitoring implements TerminableInterface
     /**
      * Start a transaction for the incoming request.
      *
-     * @param \Illuminate\Http\Request $request
      * @throws Exception
      */
-    protected function startTransaction($request): void
+    protected function startTransaction(Request $request): void
     {
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
@@ -91,10 +90,10 @@ class WebRequestMonitoring implements TerminableInterface
     /**
      * Terminates a request/response cycle.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Http\Response $response
+     * @param Request  $request
+     * @param Response $response
      */
-    public function terminate(Request $request, Response $response): void
+    public function terminate(SymfonyRequest $request, SymfonyResponse $response): void
     {
         if (Inspector::isRecording() && Inspector::hasTransaction()) {
             Inspector::transaction()
@@ -111,10 +110,8 @@ class WebRequestMonitoring implements TerminableInterface
 
     /**
      * Generate readable name.
-     *
-     * @param \Illuminate\Http\Request $request
      */
-    protected function buildTransactionName($request): string
+    protected function buildTransactionName(Request $request): string
     {
         $route = $request->route();
 

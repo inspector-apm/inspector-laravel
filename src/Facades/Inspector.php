@@ -29,7 +29,7 @@ class Inspector extends Facade
     /**
      * @inheritDoc
      */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return 'inspector';
     }
