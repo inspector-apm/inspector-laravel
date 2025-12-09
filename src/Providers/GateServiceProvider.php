@@ -58,7 +58,7 @@ class GateServiceProvider extends ServiceProvider
     /**
      * Intercepting after gate check.
      */
-    public function afterGateCheck(Authenticatable $user, string $ability, bool|null $result, array $arguments): bool
+    public function afterGateCheck(Authenticatable $user, string $ability, ?bool $result, array $arguments): ?bool
     {
         if (!Inspector::canAddSegments()) {
             return $result;
