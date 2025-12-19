@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Inspector\Laravel\Providers;
 
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
+use Inspector\Models\Segment;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Inspector\Laravel\Facades\Inspector;
-use Inspector\Models\Segment;
+use Illuminate\Contracts\Auth\Authenticatable;
 
-use function array_key_exists;
-use function array_map;
-use function is_callable;
-use function is_string;
 use function md5;
+use function array_map;
+use function is_string;
 use function serialize;
+use function is_callable;
+use function array_key_exists;
 
 class GateServiceProvider extends ServiceProvider
 {
@@ -57,11 +58,15 @@ class GateServiceProvider extends ServiceProvider
 
     /**
      * Intercepting after gate check.
+     *
+     * @param bool|Response|null $result
      */
-    public function afterGateCheck(Authenticatable $user, string $ability, ?bool $result, array $arguments): ?bool
+    public function afterGateCheck(Authenticatable $user, string $ability, mixed $result, array $arguments): ?bool
     {
+        $isAllowed = $result instanceof Response ? $result->allowed() : $result;
+
         if (!Inspector::canAddSegments()) {
-            return $result;
+            return $isAllowed;
         }
 
         $arguments = $this->formatArguments($arguments);
@@ -71,7 +76,7 @@ class GateServiceProvider extends ServiceProvider
             $this->segments[$key]
                 ->addContext('Check', [
                     'ability' => $ability,
-                    'result' => $result ? 'allowed' : 'denied',
+                    'result' => $isAllowed ? 'allowed' : 'denied',
                     'arguments' => $arguments,
                 ])
                 ->end();
