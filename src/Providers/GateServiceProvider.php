@@ -63,7 +63,7 @@ class GateServiceProvider extends ServiceProvider
      */
     public function afterGateCheck(Authenticatable $user, string $ability, mixed $result, array $arguments): ?bool
     {
-        $isAllowed = $result instanceof Response ? $result->allowed() : $result;
+        $isAllowed = $result instanceof Response ? $result->allowed() : ($result === null ? null : (bool) $result);
 
         if (!Inspector::canAddSegments()) {
             return $isAllowed;
@@ -90,7 +90,7 @@ class GateServiceProvider extends ServiceProvider
             }
         }
 
-        return $result;
+        return $isAllowed;
     }
 
     /**
