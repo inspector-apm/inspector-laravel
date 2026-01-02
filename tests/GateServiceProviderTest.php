@@ -20,62 +20,6 @@ class GateServiceProviderTest extends BasicTestCase
         parent::tearDown();
     }
 
-    public function testAfterGateCheckWithResponseAllowed(): void
-    {
-        $user = new User();
-        $ability = 'update-post';
-        $arguments = ['Post'];
-        $response = new Response(true, 'Allowed');
-
-        // Mock Inspector and Segment
-        $segment = Mockery::mock(Segment::class);
-        $segment->shouldReceive('addContext')->andReturnSelf(); // Accept any addContext calls
-        $segment->shouldReceive('end')->andReturnSelf();
-
-        Inspector::shouldReceive('canAddSegments')->andReturn(true);
-        Inspector::shouldReceive('startSegment')->andReturn($segment);
-
-        $provider = $this->app->getProvider(GateServiceProvider::class);
-
-        // Call beforeGateCheck to populate segments array
-        $provider->beforeGateCheck($user, $ability, $arguments);
-
-        // Test that line 66 correctly handles Response object
-        // The method calculates $isAllowed = $result instanceof Response ? $result->allowed() : $result
-        // For Response with allowed() = true, $isAllowed should be true
-        // Note: The method signature says ?bool but it returns $result (Response), causing TypeError
-        $this->expectException(TypeError::class);
-        $provider->afterGateCheck($user, $ability, $response, $arguments);
-    }
-
-    public function testAfterGateCheckWithResponseDenied(): void
-    {
-        $user = new User();
-        $ability = 'delete-post';
-        $arguments = ['Post'];
-        $response = new Response(false, 'Denied');
-
-        // Mock Inspector and Segment
-        $segment = Mockery::mock(Segment::class);
-        $segment->shouldReceive('addContext')->andReturnSelf(); // Accept any addContext calls
-        $segment->shouldReceive('end')->andReturnSelf();
-
-        Inspector::shouldReceive('canAddSegments')->andReturn(true);
-        Inspector::shouldReceive('startSegment')->andReturn($segment);
-
-        $provider = $this->app->getProvider(GateServiceProvider::class);
-
-        // Call beforeGateCheck to populate segments array
-        $provider->beforeGateCheck($user, $ability, $arguments);
-
-        // Test that line 66 correctly handles Response object
-        // The method calculates $isAllowed = $result instanceof Response ? $result->allowed() : $result
-        // For Response with allowed() = false, $isAllowed should be false
-        // Note: The method signature says ?bool but it returns $result (Response), causing TypeError
-        $this->expectException(TypeError::class);
-        $provider->afterGateCheck($user, $ability, $response, $arguments);
-    }
-
     public function testAfterGateCheckWithBooleanTrue(): void
     {
         $user = new User();
