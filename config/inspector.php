@@ -252,7 +252,8 @@ return [
         'view*',
         'vapor*',
         'nova*',
-        'wayfinder*'
+        'wayfinder*',
+        'reverb*',
     ],
 
     /*
