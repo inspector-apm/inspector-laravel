@@ -14,8 +14,7 @@ Code Execution Monitoring for Laravel applications.
 - [Configure the Ingestion Key](#key)
 - [Middleware](#middleware)
 - [Test everything is working](#test)
-- [Official Documentation](https://docs.inspector.dev/guides/laravel)
-- [Contribution Guidelines](#contribution)
+- [AI Assisted Integration](#agentic)
 
 <a name="requirements"></a>
 
@@ -104,6 +103,17 @@ php artisan inspector:test
 ```
 
 Go to [https://app.inspector.dev](https://app.inspector.dev) to explore your data.
+
+<a name="agentinc"></a>
+
+## Agentic Integration
+
+You can connect the Inspector library documentation to your coding assistant as a Model Context Protocol (MCP) server.
+
+It makes it easy for tools like Claude Code, Cursor, and VS Code extensions reliably understand what Inspector 
+client library can do, its configurations, how to use it.
+
+[AI Assisted Integration](https://docs.inspector.dev/concepts/agentic-integration)
 
 ## Official documentation
 
