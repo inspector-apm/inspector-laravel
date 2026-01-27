@@ -20,8 +20,8 @@ Code Execution Monitoring for Laravel applications.
 
 ## Requirements
 
-- PHP >= 7.2.0
-- Laravel >= 5.5
+- PHP >= 8.1
+- Laravel >= 9.0
 
 <a name="install"></a>
 
