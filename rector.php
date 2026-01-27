@@ -10,7 +10,7 @@ return RectorConfig::configure()
         __DIR__ . '/src',
         __DIR__ . '/tests',
     ])
-    ->withPhpSets(php82: true)
+    ->withPhpSets(php81: true)
     ->withPreparedSets(
         codeQuality: true,
         deadCode: true,
@@ -20,11 +20,4 @@ return RectorConfig::configure()
     ->withRules([
         AddReturnTypeDeclarationRector::class
     ])
-    ->withSkip([
-        \Rector\DeadCode\Rector\For_\RemoveDeadIfForeachForRector::class => [
-            __DIR__ . '/src/Workflow/WorkflowHandler.php'
-        ],
-        \Rector\Php81\Rector\ClassMethod\NewInInitializerRector::class => [
-            __DIR__ . '/src/Workflow/Workflow.php'
-        ]
-    ]);
+    ->withSkip([]);

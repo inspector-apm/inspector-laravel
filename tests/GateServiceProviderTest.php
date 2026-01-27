@@ -10,7 +10,6 @@ use Inspector\Laravel\Facades\Inspector;
 use Inspector\Laravel\Providers\GateServiceProvider;
 use Inspector\Models\Segment;
 use Mockery;
-use TypeError;
 
 class GateServiceProviderTest extends BasicTestCase
 {
@@ -29,12 +28,15 @@ class GateServiceProviderTest extends BasicTestCase
 
         // Mock Inspector and Segment
         $segment = Mockery::mock(Segment::class);
+        /** @phpstan-ignore method.notFound */
         $segment->shouldReceive('addContext')->andReturnSelf(); // Accept any addContext calls
+        /** @phpstan-ignore method.notFound */
         $segment->shouldReceive('end')->andReturnSelf();
 
         Inspector::shouldReceive('canAddSegments')->andReturn(true);
         Inspector::shouldReceive('startSegment')->andReturn($segment);
 
+        /** @var GateServiceProvider $provider */
         $provider = $this->app->getProvider(GateServiceProvider::class);
 
         // Call beforeGateCheck to populate segments array
@@ -55,12 +57,15 @@ class GateServiceProviderTest extends BasicTestCase
 
         // Mock Inspector and Segment
         $segment = Mockery::mock(Segment::class);
+        /** @phpstan-ignore method.notFound */
         $segment->shouldReceive('addContext')->andReturnSelf(); // Accept any addContext calls
+        /** @phpstan-ignore method.notFound */
         $segment->shouldReceive('end')->andReturnSelf();
 
         Inspector::shouldReceive('canAddSegments')->andReturn(true);
         Inspector::shouldReceive('startSegment')->andReturn($segment);
 
+        /** @var GateServiceProvider $provider */
         $provider = $this->app->getProvider(GateServiceProvider::class);
 
         // Call beforeGateCheck to populate segments array
@@ -81,12 +86,15 @@ class GateServiceProviderTest extends BasicTestCase
 
         // Mock Inspector and Segment
         $segment = Mockery::mock(Segment::class);
+        /** @phpstan-ignore method.notFound */
         $segment->shouldReceive('addContext')->andReturnSelf(); // Accept any addContext calls
+        /** @phpstan-ignore method.notFound */
         $segment->shouldReceive('end')->andReturnSelf();
 
         Inspector::shouldReceive('canAddSegments')->andReturn(true);
         Inspector::shouldReceive('startSegment')->andReturn($segment);
 
+        /** @var GateServiceProvider $provider */
         $provider = $this->app->getProvider(GateServiceProvider::class);
 
         // Call beforeGateCheck to populate segments array
@@ -107,6 +115,7 @@ class GateServiceProviderTest extends BasicTestCase
         $arguments = ['Post'];
         $result = true;
 
+        /** @var GateServiceProvider $provider */
         $provider = $this->app->getProvider(GateServiceProvider::class);
         $returnValue = $provider->afterGateCheck($user, $ability, $result, $arguments);
 
@@ -122,6 +131,7 @@ class GateServiceProviderTest extends BasicTestCase
         $arguments = ['Post'];
         $response = new Response(true, 'Allowed');
 
+        /** @var GateServiceProvider $provider */
         $provider = $this->app->getProvider(GateServiceProvider::class);
         $result = $provider->afterGateCheck($user, $ability, $response, $arguments);
 
