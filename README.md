@@ -104,7 +104,7 @@ php artisan inspector:test
 
 Go to [https://app.inspector.dev](https://app.inspector.dev) to explore your data.
 
-<a name="agentinc"></a>
+<a name="agentic"></a>
 
 ## Agentic Integration
 
