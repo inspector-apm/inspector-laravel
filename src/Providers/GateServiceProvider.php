@@ -46,12 +46,14 @@ class GateServiceProvider extends ServiceProvider
             return;
         }
 
+        $arguments = $this->formatArguments($arguments);
+
         $class = is_string($arguments[0] ?? null) ? $arguments[0] : '';
 
         $label = "Gate::{$ability}({$class})";
 
         $this->segments[
-            $this->generateUniqueKey($this->formatArguments($arguments))
+            $this->generateUniqueKey($arguments)
         ] = Inspector::startSegment('auth.gate', $label)
                 ->addContext('user', $user);
     }

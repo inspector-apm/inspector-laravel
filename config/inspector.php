@@ -254,6 +254,7 @@ return [
         'nova*',
         'wayfinder*',
         'reverb*',
+        'clear-compiled',
     ],
 
     /*
