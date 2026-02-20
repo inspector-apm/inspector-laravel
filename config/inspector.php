@@ -206,7 +206,7 @@ return [
     */
 
     'http_client' => env('INSPECTOR_HTTP_CLIENT', true),
-    'http_client_body' => env('INSPECTOR_HTTP_CLIENT_BODY', false),
+    'http_client_body' => env('INSPECTOR_HTTP_CLIENT_BODY', true),
 
     /*
     |--------------------------------------------------------------------------
