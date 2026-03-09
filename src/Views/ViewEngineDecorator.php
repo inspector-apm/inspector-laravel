@@ -12,7 +12,7 @@ use Inspector\Models\Segment;
 use function basename;
 use function call_user_func_array;
 
-final readonly class ViewEngineDecorator implements Engine
+class ViewEngineDecorator implements Engine
 {
     public const SHARED_KEY = '__inspector_view_name';
 
