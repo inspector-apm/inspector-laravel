@@ -3,8 +3,6 @@
 namespace Inspector\Laravel\Middleware;
 
 use Illuminate\Http\Request;
-use Inspector\Laravel\Middleware\WebRequestMonitoring;
-use Inspector\Models\Transaction;
 
 class McpRequestMonitoring extends WebRequestMonitoring
 {
