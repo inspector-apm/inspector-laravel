@@ -6,6 +6,7 @@ namespace Inspector\Laravel\Middleware;
 
 use Closure;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Route;
 use Inspector\Laravel\Facades\Inspector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,7 +58,7 @@ class WebRequestMonitoring implements TerminableInterface
      *
      * @throws Exception
      */
-    protected function startTransaction(Request $request): void
+    protected function startTransaction(Request $request): Transaction
     {
         $transaction = Inspector::startTransaction(
             $this->buildTransactionName($request)
@@ -78,6 +79,8 @@ class WebRequestMonitoring implements TerminableInterface
         if (config('inspector.user')) {
             $this->collectUser($transaction);
         }
+
+        return $transaction;
     }
 
     public function collectUser(Transaction $transaction): void
@@ -115,7 +118,7 @@ class WebRequestMonitoring implements TerminableInterface
     {
         $route = $request->route();
 
-        if ($route instanceof \Illuminate\Routing\Route) {
+        if ($route instanceof Route) {
             $uri = $request->route()->uri();
         } else {
             $array = explode('?', (string) $_SERVER["REQUEST_URI"]);
