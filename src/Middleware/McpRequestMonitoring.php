@@ -6,8 +6,17 @@ use Illuminate\Http\Request;
 
 class McpRequestMonitoring extends WebRequestMonitoring
 {
+    /**
+     * Build transaction name from MCP JSON-RPC method instead of the HTTP route.
+     *
+     * MCP requests are JSON-RPC 2.0 envelopes. The `method` field holds the
+     * operation name (e.g. `initialize`, `tools/list`, `tools/call`).
+     * For `tools/call` we append the tool name from `params.name`.
+     */
     protected function buildTransactionName(Request $request): string
     {
+        $route = $this->normalizeUri($request->route()->uri());
+
         $body = json_decode($request->getContent(), true);
 
         $method = $body['method'] ?? null;
@@ -16,14 +25,14 @@ class McpRequestMonitoring extends WebRequestMonitoring
             return parent::buildTransactionName($request);
         }
 
-        if (in_array($method, ['tools/call', 'prompts/get'])) {
-            $name = $body['params']['name'] ?? null;
+        if ($method === 'tools/call') {
+            $toolName = $body['params']['name'] ?? null;
 
-            if ($name) {
-                return 'MCP /'.$method.'/'.$name;
+            if ($toolName) {
+                return "{$request->method()} {$route}/{$method}/{$toolName}";
             }
         }
 
-        return 'MCP /'.$method;
+        return "{$request->method()} {$route}/{$method}";
     }
 }
