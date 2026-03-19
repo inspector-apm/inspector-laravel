@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Inspector\Laravel\Middleware;
 
 use Illuminate\Http\Request;
+
+use function json_decode;
 
 class McpRequestMonitoring extends WebRequestMonitoring
 {

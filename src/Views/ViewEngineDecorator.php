@@ -17,8 +17,8 @@ class ViewEngineDecorator implements Engine
     public const SHARED_KEY = '__inspector_view_name';
 
     public function __construct(
-        private Engine $engine,
-        private Factory $viewFactory
+        private readonly Engine $engine,
+        private readonly Factory $viewFactory
     ) {
     }
 
