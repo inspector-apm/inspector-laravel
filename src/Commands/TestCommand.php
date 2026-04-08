@@ -53,12 +53,12 @@ class TestCommand extends Command
             return;
         }
 
-        // Check Inspector API key
+        // Check Inspector Ingestion Key
         inspector()->addSegment(function (Segment $segment) use ($config): void {
             usleep(10 * 1000);
 
             empty($config->get('inspector.key'))
-                ? $this->warn('❌ Inspector key not specified. Make sure you specify ' .
+                ? $this->warn('❌ Inspector Ingestion Key not found. Make sure you have ' .
                               'the INSPECTOR_INGESTION_KEY in your .env file.')
                 : $this->info('✅ Inspector key installed.');
 
