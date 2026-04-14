@@ -14,3 +14,4 @@ docs/*.pyc
 *.bak
 .php-cs-fixer.cache
 /**/CLAUDE.md
+.claude
