@@ -13,3 +13,4 @@ docs/*.pyc
 .phpunit.result.cache
 *.bak
 .php-cs-fixer.cache
+/**/CLAUDE.md
