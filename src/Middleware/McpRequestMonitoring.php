@@ -4,12 +4,39 @@ declare(strict_types=1);
 
 namespace Inspector\Laravel\Middleware;
 
+use Closure;
 use Illuminate\Http\Request;
+use Inspector\Laravel\Facades\Inspector;
+use Inspector\Laravel\Filters;
 
 use function json_decode;
 
 class McpRequestMonitoring extends WebRequestMonitoring
 {
+    /**
+     * Handle an incoming request.
+     *
+     * Override the parent to also update an existing transaction's name
+     * when the global WebRequestMonitoring middleware has already started one.
+     *
+     * @throws \Exception
+     */
+    public function handle(Request $request, Closure $next): mixed
+    {
+        if (
+            Filters::isApprovedRequest(config('inspector.ignore_url'), $request->decodedPath())
+            && $this->shouldRecorded($request)
+        ) {
+            if (Inspector::needTransaction()) {
+                $this->startTransaction($request);
+            } elseif (Inspector::hasTransaction()) {
+                Inspector::transaction()->name = $this->buildTransactionName($request);
+            }
+        }
+
+        return $next($request);
+    }
+
     /**
      * Build transaction name from MCP JSON-RPC method instead of the HTTP route.
      *
