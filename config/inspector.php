@@ -255,6 +255,7 @@ return [
         'wayfinder*',
         'reverb*',
         'clear-compiled',
+        'boost*',
     ],
 
     /*
