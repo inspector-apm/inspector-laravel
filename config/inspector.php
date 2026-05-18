@@ -236,6 +236,7 @@ return [
         'serve',
         'horizon*',
         'queue*',
+        'octane*',
         'make*',
         'db*',
         'migrate*',
