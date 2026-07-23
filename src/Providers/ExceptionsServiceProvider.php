@@ -10,7 +10,6 @@ use Inspector\Laravel\Facades\Inspector;
 use Throwable;
 
 use function array_merge;
-use function class_exists;
 
 class ExceptionsServiceProvider extends ServiceProvider
 {
@@ -19,17 +18,9 @@ class ExceptionsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (class_exists(MessageLogged::class)) {
-            // starting from L5.4 MessageLogged event class was introduced
-            // https://github.com/laravel/framework/commit/57c82d095c356a0fe0f9381536afec768cdcc072
-            $this->app['events']->listen(MessageLogged::class, function (MessageLogged $log): void {
-                $this->handleLog($log->level, $log->message, $log->context);
-            });
-        } else {
-            $this->app['events']->listen('illuminate.log', function (string $level, mixed $message, mixed $context): void {
-                $this->handleLog($level, $message, $context);
-            });
-        }
+        $this->app['events']->listen(MessageLogged::class, function (MessageLogged $log): void {
+            $this->handleLog($log->level, $log->message, $log->context);
+        });
     }
 
     /**

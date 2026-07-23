@@ -17,7 +17,6 @@ use Inspector\Models\Segment;
 
 use function array_key_exists;
 use function sha1;
-use function version_compare;
 
 class JobServiceProvider extends ServiceProvider
 {
@@ -72,24 +71,22 @@ class JobServiceProvider extends ServiceProvider
             }
         );
 
-        if (version_compare(app()->version(), '9.0.0', '>=')) {
-            $this->app['events']->listen(
-                JobReleasedAfterException::class,
-                function (JobReleasedAfterException $event): void {
-                    if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
-                        $this->handleJobEnd($event->job, true);
+        $this->app['events']->listen(
+            JobReleasedAfterException::class,
+            function (JobReleasedAfterException $event): void {
+                if ($this->shouldBeMonitored($event->job->resolveName()) && Inspector::isRecording()) {
+                    $this->handleJobEnd($event->job, true);
 
-                        // Laravel throws the current exception after raising the failed events.
-                        // So after flushing, we turn off the monitoring to avoid ExceptionServiceProvider will report
-                        // the exception again causing a new transaction to start.
-                        // We'll restart recording in the JobProcessing event at the start of the job lifecycle
-                        if ($event->job->getConnectionName() !== 'sync') {
-                            Inspector::stopRecording();
-                        }
+                    // Laravel throws the current exception after raising the failed events.
+                    // So after flushing, we turn off the monitoring to avoid ExceptionServiceProvider will report
+                    // the exception again causing a new transaction to start.
+                    // We'll restart recording in the JobProcessing event at the start of the job lifecycle
+                    if ($event->job->getConnectionName() !== 'sync') {
+                        Inspector::stopRecording();
                     }
                 }
-            );
-        }
+            }
+        );
 
         $this->app['events']->listen(
             JobFailed::class,

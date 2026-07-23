@@ -170,6 +170,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Laravel AI SDK
+    |--------------------------------------------------------------------------
+    |
+    | Enable this if you'd like us to monitor Laravel AI SDK agents and tools
+    | (laravel/ai). Each agent prompt and tool invocation is reported as a
+    | segment in your Inspector timeline.
+    |
+    | Set "ai_body" to false to avoid recording the prompt and response text,
+    | keeping only metadata and token usage.
+    |
+    */
+
+    'ai' => env('INSPECTOR_AI', true),
+
+    'ai_body' => env('INSPECTOR_AI_BODY', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Livewire
     |--------------------------------------------------------------------------
     |

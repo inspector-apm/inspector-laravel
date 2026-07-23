@@ -11,6 +11,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Factory as ViewFactory;
 use Inspector\Laravel\Commands\TestCommand;
+use Inspector\Laravel\Providers\AiServiceProvider;
 use Inspector\Laravel\Providers\CommandServiceProvider;
 use Inspector\Laravel\Providers\DatabaseQueryServiceProvider;
 use Inspector\Laravel\Providers\EmailServiceProvider;
@@ -25,7 +26,6 @@ use Inspector\Laravel\Views\ViewEngineDecorator;
 use Inspector\Configuration;
 
 use function class_exists;
-use function version_compare;
 
 class InspectorServiceProvider extends ServiceProvider
 {
@@ -34,7 +34,7 @@ class InspectorServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const VERSION = '4.19.3';
+    public const VERSION = '5.0.0';
 
     /**
      * Booting of services.
@@ -55,8 +55,6 @@ class InspectorServiceProvider extends ServiceProvider
     {
         if ($this->app instanceof Application) {
             $this->publishes([__DIR__ . '/../config/inspector.php' => config_path('inspector.php')]);
-        } elseif ($this->app::class === 'Laravel\Lumen\Application') {
-            $this->app->configure('inspector');
         }
     }
 
@@ -93,8 +91,7 @@ class InspectorServiceProvider extends ServiceProvider
 
         $this->app->register(GateServiceProvider::class);
 
-        // For Laravel >=6
-        if (config('inspector.redis', true) && version_compare(app()->version(), '6.0.0', '>=')) {
+        if (config('inspector.redis', true)) {
             $this->app->register(RedisServiceProvider::class);
         }
 
@@ -126,13 +123,15 @@ class InspectorServiceProvider extends ServiceProvider
             $this->app->register(LivewireServiceProvider::class);
         }
 
-        // Compatibility with Laravel < 8.4
-        if (
-            config('inspector.http_client', true) &&
-            class_exists(\Illuminate\Http\Client\Events\RequestSending::class) &&
-            class_exists(\Illuminate\Http\Client\Events\ResponseReceived::class)
-        ) {
+        if (config('inspector.http_client', true)) {
             $this->app->register(HttpClientServiceProvider::class);
+        }
+
+        if (
+            config('inspector.ai', true) &&
+            class_exists(\Laravel\Ai\Events\PromptingAgent::class)
+        ) {
+            $this->app->register(AiServiceProvider::class);
         }
 
         if (config('inspector.views')) {

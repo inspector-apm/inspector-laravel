@@ -20,8 +20,8 @@ Code Execution Monitoring for Laravel applications.
 
 ## Requirements
 
-- PHP >= 8.1
-- Laravel >= 9.0
+- PHP >= 8.3
+- Laravel >= 12.0
 
 <a name="install"></a>
 
@@ -32,14 +32,6 @@ Install the latest version by:
 ```
 composer require inspector-apm/inspector-laravel
 ```
-
-## For Lumen
-If your application is based on Lumen you need to manually register the `InspectorServiceProvider`:
-
-```php
-$app->register(\Inspector\Laravel\InspectorServiceProvider::class);
-```
-
 
 <a name="key"></a>
 
@@ -59,27 +51,6 @@ You can obtain an `INSPECTOR_INGESTION_KEY` creating a new project in your [Insp
 
 To monitor HTTP requests you should attach the `WebMonitoringMiddleware` in your http application route groups.
 
-**Laravel <= 10**
-```php
-/**
- * The application's route middleware groups.
- *
- * @var array
- */
-protected $middlewareGroups = [
-    'web' => [
-        ...,
-        \Inspector\Laravel\Middleware\WebRequestMonitoring::class,
-    ],
-
-    'api' => [
-        ...,
-        \Inspector\Laravel\Middleware\WebRequestMonitoring::class,
-    ]
-];
-```
-
-**Laravel >= 11**
 ```php
 use \Inspector\Laravel\Middleware\WebRequestMonitoring;
 
