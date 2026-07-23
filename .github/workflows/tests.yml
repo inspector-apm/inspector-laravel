@@ -29,7 +29,7 @@ jobs:
         tools: composer
         coverage: none
 
-    - name: Setup Problem Matches
+    - name: Setup Matches
       run: |
         echo "::add-matcher::${{ runner.tool_cache }}/php.json"
         echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
